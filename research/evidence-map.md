@@ -20,9 +20,22 @@
 
 - A stable weak-EL PM6:Y6 reference can keep fabrication-attributable ΔVnr scatter below 5 mV.
 - A four-temperature absolute-EL/sensitive-EQE workflow can achieve ≤10 mV total equivalent ΔVnr uncertainty on the relevant weak-signal regime.
-- Five independent R2 substrates are adequate for a screening-level mechanism/process-control pilot when analyzed hierarchically.
+- Five independent R2 substrates are adequate for **reference qualification / fabrication-variance screening** when analyzed hierarchically; they are no longer assumed adequate for confirmatory H1–H4 mechanism identification.
 - Witness UV-vis can become a useful low-cost process proxy rather than merely a thickness measurement.
 - An interface/EPC control law can eventually migrate from laboratory spectroscopy to a scalable manufacturing proxy.
+
+## Synthetic/model results — not experimental evidence
+
+### v3.3 R2 mechanism-recovery study
+
+Using the frozen v3.2 low-dimensional H1–H4 classifier and explicit synthetic planning assumptions (10 mV mechanism-driven ΔVnr effect SD, 4 mV ΔVnr noise SD, seed `20260826`, 2,000 datasets per true class):
+
+- 5 independent substrates recovered H1/H2/H3 at 66.55% / 79.15% / 76.50%.
+- 7 independent substrates recovered H1/H2/H3 at 79.75% / 86.85% / 88.65%.
+- 9 independent substrates recovered H1/H2/H3 at 88.20% / 90.15% / 94.85%.
+- H4 was intentionally generated as a strong alert-positive injection/state-filling artifact and was recovered at 100% in the nominal simulation; this does not establish real-world H4 sensitivity.
+
+This synthetic negative result narrows the claim: `N=5` is exploratory for mechanism classification. A confirmatory mechanism design must first demonstrate >=80% recovery for each relevant class under committed effect/noise assumptions. See `technical/r2-mechanism-recovery-v3.3.md`.
 
 ## Core falsifiable hypotheses
 
@@ -53,6 +66,7 @@ Inline-compatible witness optical observables predict ΔVnr out of substrate, im
 - We do not claim P3HT/C60 is a commercially competitive product stack.
 - We do not claim ISOS research stability procedures are IEC/UL product certification.
 - We do not claim the current soft-sensor concept is patentable before a prior-art/FTO review and prospective validation.
+- We do not claim a five-substrate R2 audit can confirm H1–H4 mechanisms; the current synthetic recovery study says it is exploratory under nominal assumptions.
 
 ## Source index
 
