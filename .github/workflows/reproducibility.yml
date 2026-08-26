@@ -46,7 +46,14 @@ jobs:
         run: |
           cp models/delta_vnr_literature_benchmark_v3_8.csv /tmp/delta-vnr-before.csv
           python models/delta_vnr_literature_benchmark.py
-          cmp /tmp/delta-vnr-before.csv models/delta_vnr_literature_benchmark_v3_8.csv
+          python - <<'PY'
+          from pathlib import Path
+          before = Path('/tmp/delta-vnr-before.csv').read_text(encoding='utf-8').replace('\r\n', '\n')
+          after = Path('models/delta_vnr_literature_benchmark_v3_8.csv').read_text(encoding='utf-8').replace('\r\n', '\n')
+          if before != after:
+              raise SystemExit('regenerated benchmark CSV differs beyond newline convention')
+          print('DELTA_VNR_FROZEN_CSV=PASS')
+          PY
       - name: Raw-spectrum deterministic smoke run
         run: |
           rm -rf /tmp/r2-raw-spectrum-ci
