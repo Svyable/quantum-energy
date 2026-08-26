@@ -1,0 +1,9 @@
+feature,definition,physical_interpretation,calculation,class
+A_450_550,mean absorbance 450-550 nm,PM6-rich visible band / thickness proxy,baseline-corrected absorbance,hypothesis
+A_600_850,integrated absorbance 600-850 nm,Y6-dominated absorption / thickness+composition,trapezoidal integral,hypothesis
+lambda_Y6_peak,peak wavelength 650-850 nm,acceptor packing / polymorph-sensitive proxy,argmax after QC,established sensitivity; predictive link hypothesis
+edge_10pct,long-wave 10% absorption-edge wavelength,aggregate/energetic-order proxy,linear interpolation,hypothesis
+ratio_Y6_PM6,A_600_850 / A_450_550,composition/morphology proxy with partial thickness cancellation,ratio,hypothesis
+OD_750,absorbance at 750 nm,simple inline-compatible scalar,interpolation,hypothesis
+thickness_nm,profilometer/ellipsometry witness thickness,separate nuisance/process variable,measured not inferred only from UV-vis,established measurement
+spectral_residual_RMS,RMS versus nominal-control spectrum after thickness normalization,global process-deviation score,RMS 400-900 nm,novel process-control concept
