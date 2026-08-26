@@ -1,0 +1,22 @@
+name: voc-intensity-realdata
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run public Zenodo regression benchmark
+        run: python models/voc_intensity_realdata_benchmark.py
