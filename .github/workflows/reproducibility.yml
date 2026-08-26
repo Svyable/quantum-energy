@@ -55,6 +55,19 @@ jobs:
             echo 'ImageVersion='"${ImageVersion:-unset}"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Generate and independently cross-check SHA-256 fixture manifest
+        shell: bash
+        run: |
+          python tools/generate_scientific_attestation_manifest.py \
+            --output /tmp/scientific-fixtures-v3.11.sha256.json
+          python - <<'PY' >/tmp/scientific-fixtures.sha256
+          import json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/scientific-fixtures-v3.11.sha256.json').read_text())
+          for item in m['files']:
+              print(f"{item['sha256']}  {item['path']}")
+          PY
+          sha256sum -c /tmp/scientific-fixtures.sha256
       - name: Run publication reproducibility gate
         run: python tests/reproducibility_gate.py
       - name: Re-run published DeltaVnr benchmark
