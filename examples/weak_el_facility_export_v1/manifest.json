@@ -7,7 +7,7 @@
     {"path": "wavelength_calibration.csv", "role": "channel wavelength and bin-width calibration", "sha256": "2d502859ad87de1dfc2921e1e75b7cde31270232defd971ae4dec0475ea009e7"},
     {"path": "radiometric_calibration.csv", "role": "wavelength-resolved absolute radiometric factor", "sha256": "b7f07b975c3efccdd5493e0715f356fee4ed370306dbf41217a41acb6217e6d7"},
     {"path": "linearity.csv", "role": "detector-chain relative linearity characterization", "sha256": "d24917ea1c4b70d8da126b289926fb397d58a4711b668ef0c0f4772edccfd48d"},
-    {"path": "README.md", "role": "human-readable package notes and claim boundary", "sha256": "905f8a8aa75639592cfff72c65be421c216b7f725bdb32ba1077a2bfe9196c81"}
+    {"path": "README.md", "role": "human-readable package notes and claim boundary", "sha256": "072fd7ac0c5f2342c877137ffd5afdc1d0cd10ebc233b2680ab45b53a4dd46bd"}
   ],
   "license_spdx_or_uri": "NOASSERTION",
   "linearity_valid_count_rate_cps": {"maximum": 500.0, "minimum": 10.0},
