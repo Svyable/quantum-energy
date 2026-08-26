@@ -1,0 +1,40 @@
+{
+  "config": {
+    "background_scale": 1.0,
+    "ct_center_eV": 1.15,
+    "dark_rate_cps": 3.0,
+    "fit_energy_max_eV": 1.48,
+    "fit_energy_min_eV": 0.84,
+    "integration_s": 30.0,
+    "nominal_system_throughput": 0.13,
+    "photon_density_peak_scale": 400000.0,
+    "read_noise_counts_rms": 2.0,
+    "residual_calibration_slope_fraction": 0.003,
+    "stray_rate_cps": 1.5,
+    "throughput_bump": 0.06,
+    "throughput_center_nm": 1080.0,
+    "throughput_width_nm": 280.0,
+    "wavelength_max_nm": 1500.0,
+    "wavelength_min_nm": 800.0,
+    "wavelength_step_nm": 1.0
+  },
+  "nsim_nominal_and_stress": 300,
+  "nsim_signal_sensitivity": 200,
+  "numpy": "2.3.5",
+  "python": "3.13.5",
+  "scipy": "1.17.0",
+  "seed": 20260826,
+  "self_test_pass": true,
+  "self_tests": {
+    "integral_convergence_ratio_1nm_to_0p5nm": 4.000000055014013,
+    "integral_convergence_ratio_2nm_to_1nm": 4.0000002018901135,
+    "integral_error_0p5nm": 2.1618409978316493e-07,
+    "integral_error_1nm": 8.647364110258146e-07,
+    "integral_error_2nm": 3.458945818684991e-06,
+    "noiseless_curvefit_sigma_error_meV": 1.4210854715202004e-14,
+    "noiseless_fwhm_sigma_error_meV": 0.000568579569730332,
+    "photon_integral_relative_error": 8.647364110258146e-07,
+    "wrong_no_jacobian_center_shift_meV": 11.05048019778665
+  },
+  "status": "synthetic verification only; not experimental R2 data"
+}
