@@ -1,0 +1,29 @@
+{
+  "created_utc": "2026-08-26T22:00:00Z",
+  "facility": {"acquisition_software": "synthetic fixture", "facility_id": "SYNTHETIC", "instrument_id": "SYNTHETIC-3CH"},
+  "files": [
+    {"path": "measurements.csv", "role": "measurement/device/environment/injection metadata", "sha256": "78407d993c377428a13fbc047da72c9cac643fdb448102a1bece6c2184b48ac9"},
+    {"path": "spectra.csv", "role": "native-like sample/background/dark detector counts", "sha256": "163611bfe79a6df80e9c3f29e9fd138c5b7d1663f4081f0be04ce15fbc9041b9"},
+    {"path": "wavelength_calibration.csv", "role": "channel wavelength and bin-width calibration", "sha256": "2d502859ad87de1dfc2921e1e75b7cde31270232defd971ae4dec0475ea009e7"},
+    {"path": "radiometric_calibration.csv", "role": "wavelength-resolved absolute radiometric factor", "sha256": "b7f07b975c3efccdd5493e0715f356fee4ed370306dbf41217a41acb6217e6d7"},
+    {"path": "linearity.csv", "role": "detector-chain relative linearity characterization", "sha256": "d24917ea1c4b70d8da126b289926fb397d58a4711b668ef0c0f4772edccfd48d"},
+    {"path": "README.md", "role": "human-readable package notes and claim boundary", "sha256": "072fd7ac0c5f2342c877137ffd5afdc1d0cd10ebc233b2680ab45b53a4dd46bd"}
+  ],
+  "license_spdx_or_uri": "NOASSERTION",
+  "linearity_valid_count_rate_cps": {"maximum": 500.0, "minimum": 10.0},
+  "measurement_definition": {
+    "background_counts_definition": "detector counts with device emission suppressed/blocked while retaining optical background and detector dark",
+    "current_sign_convention": "positive_forward_injection",
+    "dark_counts_definition": "detector dark diagnostic with optical path blocked; QC only and not subtracted again",
+    "radiometric_factor_definition": "emitted photons represented by one background-subtracted detector count for each channel; includes calibrated collection/detection chain",
+    "sample_counts_definition": "detector counts with device emission plus background and detector dark",
+    "spectral_density_definition": "photon_rate_per_bin divided by bin_width_nm",
+    "technique": "absolute_electroluminescence"
+  },
+  "open_science_status": "SYNTHETIC_EXAMPLE_NOT_EXPERIMENTAL",
+  "package_id": "SYNTHETIC-WEAK-EL-V1",
+  "schema_name": "quantum-energy.weak-el-facility-export",
+  "schema_version": "1.0.0",
+  "synthetic_expected": {"delta_vnr_300K_V": 0.23912590245957163, "emitted_photon_rate_s-1": 60000000000.0, "eqe_el_fraction": 9.613059803999998e-05, "measurement_id": "M001"},
+  "uncertainty_convention": {"correlated_radiometric_scale": "rows sharing correlation_group are not independent uncertainty terms", "full_covariance_required_for_publication_claim": "yes", "reported_uncertainties": "one-sigma standard uncertainties unless explicitly stated otherwise"}
+}

@@ -1,0 +1,4 @@
+detector_channel,wavelength_nm,wavelength_standard_uncertainty_nm,bin_width_nm
+0,1000.0,0.10,2.0
+1,1002.0,0.10,2.0
+2,1004.0,0.10,2.0

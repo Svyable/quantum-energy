@@ -1,0 +1,4 @@
+detector_channel,emitted_photons_per_count,relative_standard_uncertainty,correlation_group
+0,1.0e8,0.020,CAL_ABS_001
+1,1.0e8,0.020,CAL_ABS_001
+2,1.0e8,0.020,CAL_ABS_001

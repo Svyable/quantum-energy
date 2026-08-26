@@ -1,0 +1,7 @@
+measurement_id,replicate_id,detector_channel,integration_time_s,sample_counts,background_counts,dark_counts
+M001,R1,0,10.0,1100,100,60
+M001,R1,1,10.0,2100,100,60
+M001,R1,2,10.0,3100,100,60
+M002,R1,0,10.0,1110,100,60
+M002,R1,1,10.0,2090,100,60
+M002,R1,2,10.0,3095,100,60
