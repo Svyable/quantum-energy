@@ -1,0 +1,61 @@
+name: scientific-release-attestation
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  attest-scientific-fixture-manifest:
+    name: Attest reviewed scientific fixture manifest
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Generate deterministic SHA-256 fixture manifest
+        run: |
+          mkdir -p dist
+          python tools/generate_scientific_attestation_manifest.py \
+            --output dist/scientific-fixtures-v3.11.sha256.json
+      - name: Independently cross-check SHA-256 values
+        shell: bash
+        run: |
+          python - <<'PY' >/tmp/scientific-fixtures.sha256
+          import json
+          from pathlib import Path
+          m=json.loads(Path('dist/scientific-fixtures-v3.11.sha256.json').read_text())
+          for item in m['files']:
+              print(f"{item['sha256']}  {item['path']}")
+          PY
+          sha256sum -c /tmp/scientific-fixtures.sha256
+      - name: Upload manifest as release artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: scientific-fixtures-v3.11-sha256
+          path: dist/scientific-fixtures-v3.11.sha256.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Generate GitHub artifact attestation
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: dist/scientific-fixtures-v3.11.sha256.json
+      - name: Explain claim boundary
+        run: |
+          {
+            echo '## Scientific fixture release attestation'
+            echo 'This attestation binds the generated SHA-256 manifest to this repository/workflow/commit.'
+            echo 'It does **not** attest that any physical mechanism, measurement, or device-performance claim is true.'
+            echo 'The manifest derives only from fixtures already frozen by provenance/scientific-fixtures-v3.10.json.'
+          } >> "$GITHUB_STEP_SUMMARY"

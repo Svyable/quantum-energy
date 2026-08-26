@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "manifest_version": "v3.10",
+  "created_utc": "2026-08-26T20:00:00Z",
+  "anchor_commit": "24655934665818778e4a7fc07f408b8f7002c4d2",
+  "purpose": "Pin the exact Git blob identity of decision-driving scientific fixtures used by the publication CI. Git blob SHA-1 is the repository-native content identity; CI independently emits SHA-256 for each file at runtime as a second digest path.",
+  "files": [
+    {
+      "path": "models/delta_vnr_literature_benchmark.py",
+      "git_blob_sha1": "c56aca82780fe2bc1d1584e782a8c52320337368",
+      "role": "published EQE_EL to DeltaVnr benchmark implementation"
+    },
+    {
+      "path": "models/delta_vnr_literature_benchmark_v3_8.csv",
+      "git_blob_sha1": "c2924d6bba9f7bbea97b8dfcf6b66cbc8c44cbad",
+      "role": "frozen published benchmark fixture"
+    },
+    {
+      "path": "models/r2_raw_spectrum_harness.py",
+      "git_blob_sha1": "f35a0c7055c71a1a2865577886047ff4781ae72f",
+      "role": "raw-spectrum synthetic numerical harness"
+    },
+    {
+      "path": "tests/reproducibility_gate.py",
+      "git_blob_sha1": "f56ac4951cce7dbadf2b3f6fb3d897823a7663ef",
+      "role": "publication numerical regression tests"
+    },
+    {
+      "path": "requirements/ci-baseline.txt",
+      "git_blob_sha1": "e374d105f4a05104e5d9a28f01eca13da03f6365",
+      "role": "baseline scientific dependency set"
+    },
+    {
+      "path": "requirements/ci-current.txt",
+      "git_blob_sha1": "1f15567aece0660b4628e801b8f4f4eae22dddd1",
+      "role": "current-stable scientific dependency set frozen 2026-08-26"
+    }
+  ]
+}

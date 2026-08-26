@@ -1,0 +1,5 @@
+# Frozen compatibility baseline used for v3.9 reproducibility CI.
+# NumPy 2.3.5 matches the environment recorded in the v3.7 raw-spectrum work.
+# SciPy 1.17.0 is pinned here as the baseline optimizer implementation for CI.
+numpy==2.3.5
+scipy==1.17.0
