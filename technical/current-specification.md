@@ -102,10 +102,12 @@ R2 is a **metrology transfer standard**, not a commercial product and not a core
 - encapsulation lid: ~18 × 18 mm planning
 
 ### Pilot topology
-Current pilot recommendation: 5 independent substrates × 2 measured pixels.
+Current **reference-qualification** pilot recommendation: 5 independent substrates × 2 measured pixels.
 - Pixel A: nominal control on every substrate.
 - Pixel B: controlled thickness/registration/encapsulation perturbation.
 - Five Pixel-A controls repeated in three nonconsecutive 300 K EL sessions.
+
+Five substrates are **not** automatically sufficient for confirmatory mechanism identification; see the v3.3 synthetic-recovery gate below.
 
 ### Fabrication-variance gate
 fabrication σ = sqrt(σ_substrate² + σ_pixel²)
@@ -150,6 +152,32 @@ Competing explanations:
 Highest-value additional audit: FTPS / sensitive EQE.
 
 Supporting discriminator: Voc versus light intensity, using dVoc/dln(I)=n kBT/q as an empirical recombination diagnostic while explicitly avoiding a one-to-one mechanistic interpretation of ideality factor.
+
+### v3.3 mechanism-recovery power gate
+
+A synthetic blinded recovery study now separates **reference qualification** from **mechanism classification**.
+
+Nominal synthetic scenario: 10 mV mechanism-driven ΔVnr effect SD, 4 mV ΔVnr noise SD, 2,000 datasets per true class, seed `20260826`.
+
+Per-class recovery with 5 independent substrates:
+- H1: 66.55%
+- H2: 79.15%
+- H3: 76.50%
+- H4: 100% in the deliberately strong alert-positive synthetic H4 case
+
+At the same nominal assumptions:
+- 7 substrates: H1 79.75%, H2 86.85%, H3 88.65%
+- 9 substrates: H1 88.20%, H2 90.15%, H3 94.85%
+
+Therefore:
+- `N=5` remains valid for R2 fabrication/reference screening and only **exploratory** H1–H4 interpretation.
+- A confirmatory H1–H4 mechanism claim requires the exact proposed design to demonstrate `>=80%` synthetic recovery for every class before data collection.
+- Under the current nominal assumptions, `N=9` is the practical confirmatory design; even then H1 remains below a preferred 90% strong-publication target.
+- An alternative design may use fewer substrates only if added independent observables or lower demonstrated metrology noise raise preregistered recovery above the same gate.
+
+Full assumptions, confusion matrix, independent analytic H4 cross-check, and sensitivity results are in `technical/r2-mechanism-recovery-v3.3.md` and `models/r2_mechanism_recovery.py`.
+
+H5/EPC is not a classifier output. Residual unexplained behavior after H1–H4 is not EPC evidence.
 
 ## Witness optical soft sensor
 
