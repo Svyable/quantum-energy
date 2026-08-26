@@ -31,6 +31,7 @@ New files:
 - `provenance/README.md`
 - `tools/verify_provenance.py`
 - `technical/scientific-provenance-gate-v3.10.md`
+- `research/corrections/2026-08-26-v3.10-shallow-checkout.md`
 - this session record
 
 Updated:
@@ -110,11 +111,13 @@ A provenance mismatch is first treated as source/data drift, dependency mismatch
 
 ## Corrections / superseded claims
 
-No physical result is corrected. One infrastructure limitation is narrowed: v3.9 identified `ubuntu-latest` as mutable; v3.10 uses `ubuntu-24.04` but explicitly retains hosted-image drift as an unresolved risk.
+The first v3.10 CI run (`33008578861`) failed in all six jobs at the provenance step because the default shallow `actions/checkout` did not contain enough commit history for `git merge-base --is-ancestor` to prove the frozen anchor relationship. The fix was to set `fetch-depth: 0`; the ancestry invariant was retained rather than weakened. No scientific fixture or physical result changed. The correction is preserved in `research/corrections/2026-08-26-v3.10-shallow-checkout.md`.
+
+One infrastructure limitation is narrowed: v3.9 identified `ubuntu-latest` as mutable; v3.10 uses `ubuntu-24.04` but explicitly retains hosted-image drift as an unresolved risk.
 
 ## Verification status
 
-The manifest values were frozen from GitHub's canonical blob identities before the fixture files were modified; none of the six scientific fixtures is intentionally changed by v3.10. The full acceptance test is the actual PR CI after this session branch becomes the reviewed PR head. A green result is required before v3.10 may be described as reproduced publication infrastructure.
+After the shallow-checkout correction, the full six-job publication matrix passed on GitHub Actions run `33008748725` for the reviewed head. The passing run verified fixture identities, exact dependency versions, runtime fingerprints, and every existing v3.9 numerical gate. v3.10 is therefore **reproduced publication infrastructure** in the project evidence-level terminology; it is not experimental evidence.
 
 ## Unresolved risks
 
