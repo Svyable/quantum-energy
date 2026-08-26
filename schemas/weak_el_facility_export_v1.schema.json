@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Svyable/quantum-energy/schemas/weak_el_facility_export_v1.schema.json",
+  "title": "Quantum Energy weak-EL facility export manifest v1",
+  "type": "object",
+  "required": [
+    "schema_name", "schema_version", "package_id", "open_science_status",
+    "license_spdx_or_uri", "created_utc", "facility", "measurement_definition",
+    "linearity_valid_count_rate_cps", "uncertainty_convention", "files"
+  ],
+  "properties": {
+    "schema_name": {"const": "quantum-energy.weak-el-facility-export"},
+    "schema_version": {"const": "1.0.0"},
+    "package_id": {"type": "string", "minLength": 1},
+    "open_science_status": {"type": "string", "minLength": 1},
+    "license_spdx_or_uri": {"type": "string", "minLength": 1},
+    "created_utc": {"type": "string", "format": "date-time"},
+    "facility": {
+      "type": "object",
+      "required": ["facility_id", "instrument_id", "acquisition_software"],
+      "properties": {
+        "facility_id": {"type": "string"},
+        "instrument_id": {"type": "string"},
+        "acquisition_software": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "measurement_definition": {
+      "type": "object",
+      "required": [
+        "technique", "current_sign_convention", "sample_counts_definition",
+        "background_counts_definition", "dark_counts_definition",
+        "radiometric_factor_definition", "spectral_density_definition"
+      ],
+      "additionalProperties": true
+    },
+    "linearity_valid_count_rate_cps": {
+      "type": "object",
+      "required": ["minimum", "maximum"],
+      "properties": {
+        "minimum": {"type": "number", "minimum": 0},
+        "maximum": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "uncertainty_convention": {"type": "object"},
+    "files": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "role"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "role": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}
