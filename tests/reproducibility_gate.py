@@ -20,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 K_B_SI = 1.380649e-23
 Q_SI = 1.602176634e-19
+SI_CROSSCHECK_ABS_TOL_V = 1e-14
 
 
 def load_module(name: str, path: Path):
@@ -44,11 +45,18 @@ def check_delta_vnr_benchmark() -> None:
     mod.validate(rows)
 
     # Independent constants/unit path: use exact SI J/K and C rather than the
-    # eV/K constant used by the primary implementation.
+    # rounded/truncated eV/K constant used by the primary implementation. The
+    # 1e-14 V tolerance is deliberately above the ~5e-15 V difference caused
+    # solely by the committed decimal representation of k_B in eV/K.
     for p, row in zip(mod.POINTS, rows, strict=True):
         independent_v = -(K_B_SI * mod.T_BENCHMARK_K / Q_SI) * math.log(p.eqe_el_fraction)
         primary_v = float(row["calculated_delta_vnr_300k_v"])
-        if not math.isclose(independent_v, primary_v, rel_tol=0.0, abs_tol=2e-15):
+        if not math.isclose(
+            independent_v,
+            primary_v,
+            rel_tol=0.0,
+            abs_tol=SI_CROSSCHECK_ABS_TOL_V,
+        ):
             raise AssertionError(
                 f"independent SI cross-check failed for {p.device}: "
                 f"{independent_v:.16g} vs {primary_v:.16g} V"
