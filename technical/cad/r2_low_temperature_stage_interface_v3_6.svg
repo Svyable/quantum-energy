@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="700" viewBox="0 0 900 700">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 18px; }
+    .small { font-size: 15px; }
+    .dim { stroke:#333; stroke-width:1.5; fill:none; }
+    .part { stroke:#111; stroke-width:2; fill:#eee; }
+    .keep { stroke:#b33; stroke-width:2; fill:none; stroke-dasharray:8 6; }
+    .sensor { stroke:#167; stroke-width:2; fill:#cfeff2; }
+    .pad { stroke:#333; fill:#ddd; }
+  </style>
+  <text x="40" y="35" font-weight="bold">R2 low-temperature device-side interface v3.6 — NOT vendor stage geometry</text>
+  <text x="40" y="62" class="small">All dimensions mm. Stage-side adapter boundary remains TBD until facility/vendor drawing is received.</text>
+  <rect x="180" y="120" width="500" height="500" class="part"/>
+  <text x="360" y="650">25.00 × 25.00 mm R2 coupon</text>
+  <rect x="420" y="360" width="62" height="62" class="pad"/>
+  <text x="405" y="350" class="small">3.10 × 3.10 measured aperture</text>
+  <circle cx="451" cy="391" r="80" class="keep"/>
+  <text x="520" y="300" class="small">Ø8 optical keep-out</text>
+  <rect x="208" y="150" width="60" height="45" class="pad"/><text x="210" y="140" class="small">contact pad ≥2.5×3</text>
+  <rect x="590" y="150" width="60" height="45" class="pad"/>
+  <rect x="208" y="545" width="60" height="45" class="pad"/>
+  <rect x="590" y="545" width="60" height="45" class="pad"/>
+  <rect x="505" y="405" width="55" height="34" rx="4" class="sensor"/>
+  <text x="565" y="425" class="small">calibrated DUT sensor</text>
+  <line x1="505" y1="422" x2="482" y2="400" class="dim"/>
+  <text x="565" y="447" class="small">center ≤5 mm from selected pixel where practical</text>
+  <line x1="180" y1="95" x2="680" y2="95" class="dim"/>
+  <line x1="180" y1="88" x2="180" y2="102" class="dim"/><line x1="680" y1="88" x2="680" y2="102" class="dim"/>
+  <text x="410" y="88">25.00</text>
+  <line x1="150" y1="120" x2="150" y2="620" class="dim"/>
+  <line x1="143" y1="120" x2="157" y2="120" class="dim"/><line x1="143" y1="620" x2="157" y2="620" class="dim"/>
+  <text x="108" y="385" transform="rotate(-90 108 385)">25.00</text>
+  <text x="40" y="675" class="small">Critical rule: clamp/probe/sensor hardware must not enter the Ø8 optical zone or load the encapsulation lid. Direct substrate/stage thermal contact must be characterized empirically.</text>
+</svg>

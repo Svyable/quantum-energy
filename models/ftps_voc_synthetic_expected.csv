@@ -1,0 +1,9 @@
+quantity,value,unit,status,notes
+seed,20260826,,synthetic,"Frozen deterministic seed"
+kBT_over_q_300K,0.025851999786,V,arithmetic_check,"kB=8.617333262e-5 eV/K"
+EU_true,25.000000,meV,synthetic,"Synthetic Urbach tail truth"
+EU_fit_seeded,25.002282,meV,synthetic_expected,"Expected deterministic OLS recovery with 2% log-domain noise"
+EU_endpoint_noise_free,25.000000,meV,independent_check,"Two-endpoint analytic cross-check"
+ideality_true,1.300000,,synthetic,"Synthetic Voc-intensity truth"
+ideality_fit_seeded,1.285977,,synthetic_expected,"Expected deterministic recovery with 0.5 mV Gaussian Voc noise"
+Voc_slope_true_300K,77.384358,mV_per_decade,arithmetic_check,"n*kBT/q*ln(10), n=1.30"
