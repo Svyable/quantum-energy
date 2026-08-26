@@ -7,7 +7,7 @@ Added an automated GitHub Actions gate that reruns the v3.8 published `EQE_EL ->
 ## Claim classes
 
 - **Established evidence:** the v3.8 source paper provides published `EQE_EL`/nonradiative-loss benchmark values; exact SI values of `k_B` and `q` are fixed definitions; current official release pages identify the software/action versions recorded below.
-- **Reproduced calculation:** the existing v3.8 benchmark and v3.7 numerical self-tests are now encoded as CI requirements.
+- **Reproduced calculation:** the existing v3.8 benchmark and v3.7 numerical self-tests are now encoded as CI requirements and passed the final six-job matrix.
 - **Cross-check:** `DeltaVnr` is independently recomputed from SI `J/K` and `C` constants rather than the primary eV/K path.
 - **Engineering assumption:** stability across the six tested Python/scientific-stack combinations is a useful minimum software portability gate. It does not establish experimental robustness.
 - **Synthetic/model result:** the v3.7 raw-spectrum smoke and self-tests remain synthetic verification only.
@@ -22,37 +22,50 @@ Added an automated GitHub Actions gate that reruns the v3.8 published `EQE_EL ->
 
 ## Quantitative verification contract
 
-The CI gate checks:
+The final CI gate checks:
 
 1. v3.8 literature benchmark maximum rounded-value error remains <=1 mV;
-2. independent SI and primary eV/K `DeltaVnr` paths agree within `2e-15 V`;
-3. the frozen benchmark CSV matches executable output within `1e-12` numerical tolerance;
+2. independent SI and primary eV/K `DeltaVnr` paths agree within `1e-14 V`;
+3. the frozen benchmark CSV matches executable output within `1e-12` numerical tolerance, and the command-line regeneration matches after normalizing CRLF/LF newline convention;
 4. v3.7 photon conservation remains `<2e-6` at 1 nm grid;
 5. integration convergence ratios remain between 3.5 and 4.5 when step size halves;
 6. nonlinear-fit and independent FWHM noiseless linewidth regressions remain inside their frozen gates;
 7. the deliberate missing-Jacobian negative control remains `>5 meV` discriminating;
 8. a deterministic raw-spectrum CLI smoke run creates complete outputs under seed `20260826`.
 
-## Software sensitivity
+## Software sensitivity and final result
 
 The workflow spans Python 3.12/3.13/3.14 crossed with:
 
 - baseline: NumPy 2.3.5 / SciPy 1.17.0;
 - current stable on 2026-08-26: NumPy 2.5.2 / SciPy 1.18.1.
 
-A stack-dependent failure is treated as a software/numerical compatibility problem until diagnosed, not as physical evidence.
+Final GitHub Actions run `33003811519` completed successfully in **all six matrix jobs**. Every job passed:
+
+- publication reproducibility gate;
+- independent SI cross-check;
+- benchmark regeneration / normalized fixture comparison;
+- deterministic raw-spectrum CLI smoke run.
+
+A stack-dependent failure in future is treated as a software/numerical compatibility problem until diagnosed, not as physical evidence.
+
+## Corrections discovered by running the gate
+
+Three defects in the newly introduced CI infrastructure were exposed before the final pass and are preserved in `research/corrections/2026-08-26-v3.9-ci-import.md`:
+
+1. custom dynamic import failed to register modules in `sys.modules`, breaking dataclass introspection before calculations ran;
+2. the first SI cross-check tolerance (`2e-15 V`) was false precision relative to the frozen decimal representation of `k_B` in eV/K; it is now `1e-14 V` with the rationale documented;
+3. raw bytewise CSV comparison falsely failed on CRLF versus LF newline convention after the numerical gate had passed; comparison now normalizes newline convention while keeping exact text/value identity otherwise.
+
+None of these changes alter a v3.7/v3.8 physical or numerical conclusion. They strengthen the publication infrastructure and make its own limitations visible.
 
 ## Statistical independence
 
 No new physical samples or experimental statistics are introduced. The smoke-run Monte Carlo is deterministic software testing and must not be counted toward R2 mechanism power.
 
-## Conventional/null explanations for failure
+## Conventional/null explanations for future failure
 
-Dependency/API drift, floating-point/optimizer changes, accidental fixture edits, unit/sign/Jacobian regressions, or an earlier calculation defect must be investigated before any physical interpretation.
-
-## Corrections / supersession
-
-No existing scientific result is corrected this run. The change strengthens publication enforcement around already-committed calculations.
+Dependency/API drift, floating-point/optimizer changes, accidental fixture edits, unit/sign/Jacobian regressions, serialization differences, or an earlier calculation defect must be investigated before any physical interpretation.
 
 ## Unresolved risks
 
