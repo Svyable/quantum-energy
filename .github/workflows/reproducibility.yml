@@ -1,0 +1,55 @@
+name: scientific-reproducibility
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  publication-gate:
+    name: Python ${{ matrix.python }} / ${{ matrix.stack }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13", "3.14"]
+        stack: [baseline, current]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements/ci-${{ matrix.stack }}.txt
+      - name: Install frozen scientific stack
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements/ci-${{ matrix.stack }}.txt
+      - name: Record runtime
+        run: |
+          python --version
+          python - <<'PY'
+          import numpy, scipy
+          print("numpy=" + numpy.__version__)
+          print("scipy=" + scipy.__version__)
+          PY
+      - name: Run publication reproducibility gate
+        run: python tests/reproducibility_gate.py
+      - name: Re-run published DeltaVnr benchmark
+        run: |
+          cp models/delta_vnr_literature_benchmark_v3_8.csv /tmp/delta-vnr-before.csv
+          python models/delta_vnr_literature_benchmark.py
+          cmp /tmp/delta-vnr-before.csv models/delta_vnr_literature_benchmark_v3_8.csv
+      - name: Raw-spectrum deterministic smoke run
+        run: |
+          rm -rf /tmp/r2-raw-spectrum-ci
+          python models/r2_raw_spectrum_harness.py --outdir /tmp/r2-raw-spectrum-ci --nsim 8 --seed 20260826
+          test -s /tmp/r2-raw-spectrum-ci/metadata.json
+          test -s /tmp/r2-raw-spectrum-ci/linewidth_recovery_summary.csv
