@@ -11,7 +11,10 @@ permissions:
 jobs:
   publication-gate:
     name: Python ${{ matrix.python }} / ${{ matrix.stack }}
-    runs-on: ubuntu-latest
+    # Pin the OS family/version rather than the mutable ubuntu-latest alias.
+    # GitHub-hosted runner image contents can still change; ImageOS/ImageVersion
+    # and a full runtime fingerprint are recorded below on every run.
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -32,14 +35,23 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements/ci-${{ matrix.stack }}.txt
-      - name: Record runtime
+      - name: Verify scientific provenance and record runtime fingerprint
         run: |
-          python --version
-          python - <<'PY'
-          import numpy, scipy
-          print("numpy=" + numpy.__version__)
-          print("scipy=" + scipy.__version__)
-          PY
+          python tools/verify_provenance.py \
+            --stack "${{ matrix.stack }}" \
+            --write-runtime /tmp/scientific-runtime.json
+          {
+            echo '## Scientific runtime fingerprint'
+            echo '```json'
+            cat /tmp/scientific-runtime.json
+            echo '```'
+            echo '## Runner OS release'
+            echo '```text'
+            cat /etc/os-release
+            echo 'ImageOS='"${ImageOS:-unset}"
+            echo 'ImageVersion='"${ImageVersion:-unset}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Run publication reproducibility gate
         run: python tests/reproducibility_gate.py
       - name: Re-run published DeltaVnr benchmark
