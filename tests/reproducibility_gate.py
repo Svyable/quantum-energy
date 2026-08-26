@@ -14,6 +14,7 @@ from __future__ import annotations
 import csv
 import importlib.util
 import math
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +27,14 @@ def load_module(name: str, path: Path):
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load {path}")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # dataclasses and other runtime introspection expect the executing module to
+    # already be registered in sys.modules, as it would be under normal import.
+    sys.modules[name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(name, None)
+        raise
     return module
 
 
