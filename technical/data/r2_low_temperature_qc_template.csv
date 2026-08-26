@@ -1,0 +1,7 @@
+temperature_K,usable,linewidth_sd_meV,dut_temp_accuracy_K,dut_temp_stability_K,max_self_heating_K,spectral_snr,status
+120,no,2.0,0.5,0.20,0.40,15,CONDITIONAL_SYNTHETIC
+150,yes,2.0,0.5,0.20,0.40,25,SYNTHETIC_PLANNING
+240,yes,2.0,0.5,0.20,0.30,30,SYNTHETIC_PLANNING
+270,yes,2.0,0.5,0.20,0.30,35,SYNTHETIC_PLANNING
+300,yes,2.0,0.5,0.20,0.25,40,SYNTHETIC_PLANNING
+330,yes,2.0,0.5,0.20,0.30,35,SYNTHETIC_PLANNING
