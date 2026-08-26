@@ -1,0 +1,4 @@
+count_rate_cps,relative_response,relative_standard_uncertainty
+10,1.000,0.010
+100,1.000,0.010
+500,0.995,0.012
