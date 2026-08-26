@@ -14,7 +14,7 @@ This increment adds **publication infrastructure**. Passing CI does not add expe
 `tests/reproducibility_gate.py` fails unless all of the following hold:
 
 - the v3.8 published `DeltaVnr` benchmark passes its <=1 mV rounded-literature gate;
-- an independent SI-constant implementation agrees with the primary eV/K implementation within `2e-15 V` per benchmark point;
+- an independent SI-constant implementation agrees with the primary eV/K implementation within `1e-14 V` per benchmark point;
 - the committed v3.8 CSV agrees with executable output within `1e-12` numerical tolerance;
 - the v3.7 raw-spectrum photon-number conservation error is `<2e-6` on the frozen 1 nm grid;
 - trapezoid integration error improves by approximately fourfold when the wavelength grid is halved (`3.5 < ratio < 4.5` for 2->1 nm and 1->0.5 nm);
@@ -37,7 +37,16 @@ using the exact SI constants:
 - `k_B = 1.380649e-23 J/K`
 - `q = 1.602176634e-19 C`.
 
-The two paths must agree within `2e-15 V`. This is an implementation/unit cross-check, not an uncertainty statement about the source measurements.
+The exact ratio is `k_B/q = 8.617333262145179e-5 V/K`, while the committed primary decimal is `8.617333262145e-5`. That representation difference alone creates approximately `5.16e-15 V` difference for the PM6:Y6 benchmark point. The independent-path gate is therefore `1e-14 V`, deliberately above the representation effect while still many orders of magnitude below any experimental requirement. It is an implementation/unit cross-check, not a source-measurement uncertainty.
+
+## Visible corrections discovered by the CI itself
+
+The first real workflow execution exposed two issues in the newly added test infrastructure. Both are preserved in `research/corrections/2026-08-26-v3.9-ci-import.md`.
+
+1. **Dynamic import registration:** the custom test loader did not register modules in `sys.modules` before executing them. That broke Python `dataclass` introspection before any calculation ran. The loader now mirrors normal import semantics.
+2. **False-precision tolerance:** the initial independent SI agreement gate was `2e-15 V`, tighter than the decimal precision of the already committed eV/K constant. The resulting ~5.16 fV discrepancy was correctly identified as representation precision, not physics. The gate is now `1e-14 V`.
+
+Neither issue changes any v3.7 or v3.8 scientific result.
 
 ## Software-environment sensitivity
 
@@ -48,7 +57,7 @@ The same tests run on Python 3.12, 3.13, and 3.14 under two pinned scientific st
 - NumPy `2.3.5`
 - SciPy `1.17.0`
 
-NumPy 2.3.5 matches the version recorded in the v3.7 raw-spectrum work. SciPy 1.17.0 is frozen as the baseline optimizer version for this CI layer.
+NumPy 2.3.5 matches the version recorded in the v3.7 raw-spectrum work. SciPy 1.17.0 is frozen as the baseline optimizer version for this CI layer; v3.7 did not record a SciPy version, so this is a compatibility baseline rather than a claim about its exact historical runtime.
 
 ### Current-stable compatibility stack frozen 2026-08-26
 
