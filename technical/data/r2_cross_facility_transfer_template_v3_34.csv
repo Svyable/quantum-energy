@@ -1,0 +1,10 @@
+device_id,leg,facility_id,elapsed_h,DeltaVnr_mV,qc_status,config_id,analysis_commit,operator_note
+R2-P1,A1,FACILITY_A,,,PENDING,,, 
+R2-P1,B,FACILITY_B,,,PENDING,,, 
+R2-P1,A2,FACILITY_A,,,PENDING,,, 
+R2-P2,A1,FACILITY_A,,,PENDING,,, 
+R2-P2,B,FACILITY_B,,,PENDING,,, 
+R2-P2,A2,FACILITY_A,,,PENDING,,, 
+R2-P3,A1,FACILITY_A,,,PENDING,,, 
+R2-P3,B,FACILITY_B,,,PENDING,,, 
+R2-P3,A2,FACILITY_A,,,PENDING,,, 
