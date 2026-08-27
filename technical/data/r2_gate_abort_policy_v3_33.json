@@ -1,0 +1,43 @@
+{
+  "schema_version": "3.33",
+  "project": "Svyable/quantum-energy",
+  "purpose": "Dependency-aware execution/abort/salvage policy for R2 facility qualification. Prevents downstream scientific acquisition after failed prerequisites while preserving independent evidence branches and negative results.",
+  "source_contract": "technical/data/r2_facility_capability_contract_v3_27.json",
+  "claim_boundary": {
+    "classification": "engineering_execution_policy",
+    "does_not_establish": ["R2 device performance","electron-phonon coupling mechanism","open-quantum transport mechanism","commercial photovoltaic performance"]
+  },
+  "status_semantics": {
+    "PASS": "Gate evidence is complete and frozen criteria pass.",
+    "FAIL": "Evidence is complete enough to test, but a frozen criterion is violated. Preserve as a negative result.",
+    "INCOMPLETE": "Material evidence/provenance is absent. Missing evidence may not be represented as zero uncertainty or PASS.",
+    "BLOCKED": "Gate must not execute because at least one prerequisite is not PASS."
+  },
+  "rules": [
+    "A gate is runnable only when every declared prerequisite has status PASS.",
+    "FAIL and INCOMPLETE both block dependent gates; neither is silently coerced to PASS.",
+    "Independent branches may continue when their own prerequisites pass, even if another branch fails.",
+    "Raw/minimally processed evidence collected before a stop decision remains publishable with its actual status and provenance.",
+    "Combined uncertainty propagation requires every declared prerequisite to PASS; absent terms remain INCOMPLETE rather than zero.",
+    "A later rerun after remediation is a new session/configuration record and does not erase the earlier failure."
+  ],
+  "gates": [
+    {"id":"packet_preflight","depends_on":[],"salvage_on_fail":["packet_manifest","configuration/provenance defects","negative preflight result"]},
+    {"id":"instrument_temporal_fidelity","depends_on":["packet_preflight"],"salvage_on_fail":["instrument_temporal_raw","configured-chain response characterization","negative temporal-fidelity result"]},
+    {"id":"optical_dut_settling","depends_on":["instrument_temporal_fidelity"],"salvage_on_fail":["settling_transient_raw","history/settling characterization","negative settling result"]},
+    {"id":"spectral_shape_gate","depends_on":["packet_preflight"],"salvage_on_fail":["source_spectrum_data","responsivity inputs","spectral-mismatch diagnosis"]},
+    {"id":"reference_repeatability_training","depends_on":["packet_preflight"],"salvage_on_fail":["reference_repeatability_raw","training diagnostics","model inadequacy evidence"]},
+    {"id":"reference_repeatability_freeze","depends_on":["reference_repeatability_training"],"salvage_on_fail":["training dataset","candidate freeze record","explicit reason freeze could not be accepted"]},
+    {"id":"reference_repeatability_holdout","depends_on":["reference_repeatability_training","reference_repeatability_freeze"],"salvage_on_fail":["untouched holdout measurements","failed prospective-validation result"]},
+    {"id":"voc_intensity_monotonic","depends_on":["instrument_temporal_fidelity","optical_dut_settling","spectral_shape_gate"],"salvage_on_fail":["voc_intensity_raw","measurement-system diagnosis","no mechanism promotion"]},
+    {"id":"voc_intensity_randomized_order","depends_on":["voc_intensity_monotonic"],"salvage_on_fail":["randomized_order_raw","time/history-confound diagnosis","no mechanism promotion"]},
+    {"id":"combined_uncertainty_propagation","depends_on":["reference_repeatability_holdout","spectral_shape_gate","voc_intensity_randomized_order"],"salvage_on_fail":["partial uncertainty components labeled INCOMPLETE","explicit missing-component register"]}
+  ],
+  "independent_branch_examples": [
+    {"condition":"optical_dut_settling FAIL while packet_preflight PASS","allowed_to_continue":["spectral_shape_gate","reference_repeatability_training"],"blocked":["voc_intensity_monotonic","voc_intensity_randomized_order","combined_uncertainty_propagation"]},
+    {"condition":"spectral_shape_gate FAIL while packet_preflight PASS","allowed_to_continue":["instrument_temporal_fidelity","reference_repeatability_training"],"blocked":["voc_intensity_monotonic","voc_intensity_randomized_order","combined_uncertainty_propagation"]},
+    {"condition":"reference_repeatability_holdout FAIL","allowed_to_continue":["already-qualified acquisition branches for diagnostic purposes"],"blocked":["combined_uncertainty_propagation as a complete qualification result"]}
+  ],
+  "statistical_hierarchy": ["lot","substrate","device_or_pixel","session","sweep_or_step_replicate","measurement"],
+  "safety_boundary": "Stop/continue logic never overrides facility optical, electrical, thermal, source-duty, interlock, or instrument-rating requirements."
+}
