@@ -1,0 +1,45 @@
+{
+  "schema_version": "3.28",
+  "classification": "prospective_public_evidence_audit",
+  "evidence_checked_date": "2026-08-27",
+  "required_capability_count": 7,
+  "candidate_count": 3,
+  "candidates": {
+    "FRAUNHOFER_ISE_CALLAB": {
+      "known_available": 2,
+      "needs_confirmation": 5,
+      "unavailable": 0,
+      "publicly_evidenced_fraction": 0.2857142857142857,
+      "known_capabilities": [
+        "reference_detector_traceability",
+        "spectral_characterization"
+      ]
+    },
+    "IPVF": {
+      "known_available": 1,
+      "needs_confirmation": 6,
+      "unavailable": 0,
+      "publicly_evidenced_fraction": 0.14285714285714285,
+      "known_capabilities": [
+        "spectral_characterization"
+      ]
+    },
+    "NLR_PVDPC": {
+      "known_available": 2,
+      "needs_confirmation": 5,
+      "unavailable": 0,
+      "publicly_evidenced_fraction": 0.2857142857142857,
+      "known_capabilities": [
+        "reference_detector_traceability",
+        "spectral_characterization"
+      ]
+    }
+  },
+  "union_known_capabilities": [
+    "reference_detector_traceability",
+    "spectral_characterization"
+  ],
+  "union_known_count": 2,
+  "complete_candidate_publicly_confirmed": false,
+  "claim_boundary": "Counts describe only capabilities explicitly supported by reviewed public sources; they do not certify service availability, configuration compatibility, measurement uncertainty, scheduling, cost, or a facility's willingness to execute the R2 protocol."
+}
