@@ -1,0 +1,38 @@
+name: r2-facility-packet-preflight
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_facility_packet_preflight_v3_22.py'
+      - 'models/r2_facility_packet_test_v3_22.py'
+      - 'technical/r2-facility-packet-preflight-v3.22.md'
+      - '.github/workflows/r2-facility-packet-preflight.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_facility_packet_preflight_v3_22.py models/r2_facility_packet_test_v3_22.py
+      - name: Adversarial packet contract
+        run: python models/r2_facility_packet_test_v3_22.py
+      - name: Independent SHA-256 utility check
+        run: |
+          tmp=$(mktemp -d)
+          printf 'r2-v3.22-independent-hash-check\n' > "$tmp/payload.txt"
+          host=$(sha256sum "$tmp/payload.txt" | awk '{print $1}')
+          py=$(python - "$tmp/payload.txt" <<'PY'
+          import hashlib,sys
+          print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())
+          PY
+          )
+          test "$host" = "$py"
+          echo "PASS independent sha256sum/hashlib agreement: $host"
