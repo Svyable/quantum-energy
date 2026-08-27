@@ -1,0 +1,2 @@
+qualification_id,channel,direction,dummy_id,carrier_id,package_id,logger_id,logger_model,logger_calibration_reference,reference_instrument_id,reference_calibration_reference,run_id,timestamp_utc,time_s,logger_value,logger_u,reference_value,reference_u,pulse_width_ms,software_version,qc_status,note
+,,,,,,,,,,,,,,,,,,,,,
