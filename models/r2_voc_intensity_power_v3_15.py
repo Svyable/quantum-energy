@@ -203,7 +203,7 @@ def main() -> int:
 
     if len(sys.argv) > 1:
         with open(sys.argv[1], "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
+            writer = csv.writer(f, lineterminator="\n")
             writer.writerow(["section", "condition", "metric", "value", "class", "unit"])
             writer.writerows(rows)
     return 0
