@@ -1,0 +1,45 @@
+name: r2-settling-gate
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_settling_gate_v3_25.py'
+      - 'models/r2_settling_gate_test_v3_25.py'
+      - 'models/fixtures/r2_settling_sensitivity_v3_25.csv'
+      - 'technical/data/r2_settling_transient_template_v3_25.csv'
+      - '.github/workflows/r2-settling-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_settling_gate_v3_25.py models/r2_settling_gate_test_v3_25.py
+      - name: Limiting and adversarial checks
+        run: python models/r2_settling_gate_test_v3_25.py
+      - name: Verify frozen sensitivity table independently
+        run: |
+          python - <<'PY'
+          import csv,math
+          rows=list(csv.DictReader(open('models/fixtures/r2_settling_sensitivity_v3_25.csv')))
+          kb=8.617333262e-5; T=300.0
+          h=math.log(2.0/0.05)/16
+          l1=6/(7*h*kb*T)
+          vtol=0.01/l1
+          dv=kb*T*math.log(2.0/0.05)
+          for r in rows:
+              tau=float(r['tau_s'])
+              dwell=tau*math.log(dv/vtol)
+              assert math.isclose(float(r['curvature_weight_l1_per_V']),l1,rel_tol=0,abs_tol=1e-10)
+              assert math.isclose(float(r['settling_voltage_limit_V']),vtol,rel_tol=0,abs_tol=1e-15)
+              assert math.isclose(float(r['analytic_min_dwell_s']),dwell,rel_tol=0,abs_tol=1e-11)
+          print('PASS independent sensitivity derivation')
+          PY
