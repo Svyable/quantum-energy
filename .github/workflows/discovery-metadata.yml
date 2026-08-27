@@ -1,0 +1,45 @@
+name: discovery-metadata
+
+on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'llms.txt'
+      - 'CITATION.cff'
+      - 'codemeta.json'
+      - 'DISCOVERY.md'
+      - 'machine/project-index.json'
+      - 'tools/validate_discovery_metadata.py'
+      - '.github/workflows/discovery-metadata.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate discovery metadata consistency
+        run: python tools/validate_discovery_metadata.py
+      - name: Parse JSON with standard library
+        run: |
+          python -m json.tool codemeta.json >/dev/null
+          python -m json.tool machine/project-index.json >/dev/null
+      - name: Guard unresolved license metadata
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cm=json.loads(Path('codemeta.json').read_text())
+          idx=json.loads(Path('machine/project-index.json').read_text())
+          if not Path('LICENSE').exists():
+              assert 'license' not in cm
+              assert idx['licensing']['status']=='unresolved'
+          print('PASS license metadata guard')
+          PY
