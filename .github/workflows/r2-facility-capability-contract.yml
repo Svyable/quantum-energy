@@ -1,0 +1,24 @@
+name: r2-facility-capability-contract
+
+on:
+  pull_request:
+    paths:
+      - 'technical/data/r2_facility_capability_contract_v3_27.json'
+      - 'technical/r2-facility-handoff-v3.27.md'
+      - 'tools/validate_r2_facility_capability_v3_27.py'
+      - '.github/workflows/r2-facility-capability-contract.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate facility capability contract
+        run: python tools/validate_r2_facility_capability_v3_27.py
