@@ -1,0 +1,25 @@
+name: r2-illumination-qualification
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_illumination_qualification_v3_16.py'
+      - 'models/r2_illumination_qualification_v3_16.csv'
+      - '.github/workflows/r2-illumination-qualification.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run qualification model
+        run: python models/r2_illumination_qualification_v3_16.py /tmp/generated.csv
+      - name: Require exact frozen output
+        run: diff -u models/r2_illumination_qualification_v3_16.csv /tmp/generated.csv
