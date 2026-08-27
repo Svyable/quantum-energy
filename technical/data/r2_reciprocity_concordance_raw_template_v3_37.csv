@@ -1,0 +1,2 @@
+lot_id,substrate_id,device_id,pixel_id,session_id,temperature_target_K,temperature_measured_K,direct_delta_vnr_mV,direct_u_mV,direct_raw_ref,direct_analysis_commit,reciprocity_delta_vnr_mV,reciprocity_u_mV,reciprocity_raw_ref,reciprocity_analysis_commit,rho_shared_systematic,configuration_match,qc_status,notes
+,,,,,300,,,,,,,,,,,UNKNOWN,UNKNOWN,
