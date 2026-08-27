@@ -89,7 +89,6 @@ No merged arithmetic is corrected. Interpretation is narrowed: ascending/descend
 - `research/sessions/2026-08-27-r2-order-drift-v3.24.md`
 - `venture/v3.24-order-drift-decision.md`
 - `.github/workflows/r2-order-drift.yml`
-- canonical `research/evidence-map.md` and `technical/current-specification.md` updates.
 
 ## Unresolved risks
 
