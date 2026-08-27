@@ -3,24 +3,92 @@
   "failed_gates": [],
   "incomplete_gates": [],
   "metrics": {
-    "ascending_curvature": {"status": "INFO", "unit": "dimensionless", "value": 0.09871232334131297},
-    "calibration_curvature_bias": {"limit": 0.01, "status": "PASS", "unit": "dimensionless", "value": -0.0012876766592818667},
-    "calibration_log_gain": {"status": "INFO", "unit": "fraction", "value": -1.6786572132332367e-13},
-    "calibration_residual": {"limit": 0.005, "status": "PASS", "unit": "fraction", "value": 0.0006251953534153198},
-    "descending_curvature": {"status": "INFO", "unit": "dimensionless", "value": 0.0987123233413143},
-    "point_voc_sd": {"limit": 0.0005, "status": "PASS", "unit": "V", "value": 0.0003},
-    "reference_anchor_drift": {"limit": 0.002, "status": "PASS", "unit": "fraction", "value": 0.0010010010010010895},
-    "spectral_mismatch": {"limit": 0.01, "note": "max_u=0.002; source_spectrum_id_count=1", "status": "PASS", "unit": "fraction", "value": 0.0020000000000000018},
-    "sweep_curvature_difference": {"limit": 0.03, "status": "PASS", "unit": "dimensionless", "value": 1.3322676295501878e-15},
-    "sweep_median_voc_difference": {"limit": 0.0005, "status": "PASS", "unit": "V", "value": 9.999999999998899e-05},
-    "temperature_excursion": {"limit": 0.5, "status": "PASS", "unit": "K", "value": 0.04999951032755234},
-    "temperature_sd": {"limit": 0.25, "status": "PASS", "unit": "K", "value": 0.03607487967073207},
-    "voc_anchor_drift": {"limit": 0.0005, "status": "PASS", "unit": "V", "value": 0.00019999999999997797}
+    "ascending_curvature": {
+      "status": "INFO",
+      "unit": "dimensionless",
+      "value": 0.09871232334131297
+    },
+    "calibration_curvature_bias": {
+      "limit": 0.01,
+      "status": "PASS",
+      "unit": "dimensionless",
+      "value": -0.0012876766592818667
+    },
+    "calibration_log_gain": {
+      "status": "INFO",
+      "unit": "fraction",
+      "value": -1.6786572132332367e-13
+    },
+    "calibration_residual": {
+      "limit": 0.005,
+      "status": "PASS",
+      "unit": "fraction",
+      "value": 0.0006251953534153198
+    },
+    "descending_curvature": {
+      "status": "INFO",
+      "unit": "dimensionless",
+      "value": 0.0987123233413143
+    },
+    "point_voc_sd": {
+      "limit": 0.0005,
+      "status": "PASS",
+      "unit": "V",
+      "value": 0.0003
+    },
+    "reference_anchor_drift": {
+      "limit": 0.002,
+      "status": "PASS",
+      "unit": "fraction",
+      "value": 0.0010010010010010895
+    },
+    "spectral_mismatch": {
+      "limit": 0.01,
+      "note": "max_u=0.002; source_spectrum_id_count=1",
+      "status": "PASS",
+      "unit": "fraction",
+      "value": 0.0020000000000000018
+    },
+    "sweep_curvature_difference": {
+      "limit": 0.03,
+      "status": "PASS",
+      "unit": "dimensionless",
+      "value": 1.3322676295501878e-15
+    },
+    "sweep_median_voc_difference": {
+      "limit": 0.0005,
+      "status": "PASS",
+      "unit": "V",
+      "value": 9.999999999998899e-05
+    },
+    "temperature_excursion": {
+      "limit": 0.5,
+      "status": "PASS",
+      "unit": "K",
+      "value": 0.04999951032755234
+    },
+    "temperature_sd": {
+      "limit": 0.25,
+      "status": "PASS",
+      "unit": "K",
+      "value": 0.03607487967073207
+    },
+    "voc_anchor_drift": {
+      "limit": 0.0005,
+      "status": "PASS",
+      "unit": "V",
+      "value": 0.00019999999999997797
+    }
   },
   "overall_status": "PASS",
   "power_model_inputs": {
     "calibration_curvature_bias_abs": 0.0012876766592818667,
-    "calibration_uncertainty_groups": {"smooth_shape": {"max_relative_u_1sigma": 0.001, "n_points": 34}},
+    "calibration_uncertainty_groups": {
+      "smooth_shape": {
+        "max_relative_u_1sigma": 0.001,
+        "n_points": 34
+      }
+    },
     "max_point_voc_sd_V": 0.0003
   },
   "schema_version": "r2-voc-intensity-qualification-v3.17"
