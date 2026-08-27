@@ -1,0 +1,2 @@
+transfer_id,arm,substrate_id,timestamp_utc,temperature_c,temperature_u_c,rh_percent,rh_u_percent,acceleration_g,acceleration_u_g,logger_id,logger_model,logger_calibration_reference,logger_calibration_date,logger_timebase,transfer_start_utc,transfer_end_utc,carrier_id,package_id,note
+,,,,,,,,,,,,,,,,,,,
