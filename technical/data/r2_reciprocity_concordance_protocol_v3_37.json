@@ -1,0 +1,55 @@
+{
+  "protocol_id": "r2_reciprocity_concordance_v3_37",
+  "status": "prospective_engineering_screen",
+  "claim_class": "engineering_assumption_and_falsifiable_metrology_hypothesis",
+  "purpose": "Make the existing R2 direct-EQE_EL versus reciprocity-derived delta_Vnr agreement gate executable without promoting agreement to mechanism evidence.",
+  "primary_gate": {
+    "metric": "absolute_pair_difference_mV",
+    "equation": "d = delta_vnr_direct_mV - delta_vnr_reciprocity_mV; gate = abs(d) <= 20 mV",
+    "threshold_mV": 20.0,
+    "threshold_provenance": "inherited planning window from technical/current-specification.md; not standards-derived",
+    "pass_requires": [
+      "same substrate/device/pixel identity",
+      "same frozen temperature target and recorded measured temperature",
+      "same declared injection/reference condition where applicable",
+      "independent analysis provenance for direct and reciprocity paths",
+      "raw/minimally processed source-data references for both paths",
+      "declared uncertainty components and correlation treatment",
+      "no frozen QC exclusion violation"
+    ]
+  },
+  "uncertainty_diagnostic": {
+    "equation": "u_d = sqrt(u_direct^2 + u_reciprocity^2 - 2*rho*u_direct*u_reciprocity)",
+    "units": "mV",
+    "rho_definition": "declared correlation coefficient for shared systematic uncertainty between the two delta_Vnr estimates",
+    "required_rho_sensitivity": [-0.5, 0.0, 0.5],
+    "interpretation": "diagnostic only; uncertainty does not relax the 20 mV engineering screen"
+  },
+  "states": {
+    "PASS": "all provenance/configuration requirements complete and abs(d) <= 20 mV",
+    "FAIL": "all provenance/configuration requirements complete and abs(d) > 20 mV, or a frozen invalidating condition is present",
+    "INCOMPLETE": "required data, provenance, uncertainty/correlation declaration, or configuration matching is missing"
+  },
+  "statistical_unit": "substrate for fabrication inference; paired pixel-level concordance is a metrology observation and does not increase fabrication N",
+  "predefined_exclusions": [
+    "identity/provenance mismatch",
+    "missing direct or reciprocity value",
+    "missing raw-data reference",
+    "frozen configuration mismatch",
+    "unsafe/damaged sample state that invalidates acquisition"
+  ],
+  "non_exclusions": [
+    "large disagreement",
+    "unfavorable sign",
+    "result that weakens a mechanism narrative"
+  ],
+  "conventional_explanations": [
+    "spectral truncation or low-signal tail bias",
+    "absolute radiometric calibration bias",
+    "temperature mismatch",
+    "injection/state-filling mismatch",
+    "background subtraction error",
+    "shared calibration systematic that makes two paths agree spuriously"
+  ],
+  "claim_boundary": "PASS establishes only metrology-path concordance under the tested configuration. It is not evidence of EPC, open-quantum transport, improved efficiency, or facility equivalence."
+}
