@@ -1,0 +1,6 @@
+metric,value
+max_abs_smm_minus_1,0.003180480547837594
+synthetic_curvature_bias,0.0012150763546945748
+spectral_curvature_u_1sigma,1.739868418986084e-05
+mc_curvature_u_1sigma,1.737721669704672e-05
+mc_relative_difference,0.0012338572606903897
