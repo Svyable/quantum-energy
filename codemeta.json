@@ -1,0 +1,44 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "name": "Quantum Energy Venture Lab",
+  "description": "Open, evidence-first research and engineering repository for programmable open-quantum transport, environment-assisted excitation transport, organic photovoltaics, exciton and polariton systems, electron-phonon coupling, metrology, manufacturing controls, and reproducible scientific software.",
+  "codeRepository": "https://github.com/Svyable/quantum-energy",
+  "issueTracker": "https://github.com/Svyable/quantum-energy/issues",
+  "url": "https://github.com/Svyable/quantum-energy",
+  "developmentStatus": "active",
+  "isAccessibleForFree": true,
+  "programmingLanguage": [
+    "Python"
+  ],
+  "applicationCategory": [
+    "Research software",
+    "Scientific computing",
+    "Energy research",
+    "Materials science"
+  ],
+  "keywords": [
+    "open science",
+    "reproducible research",
+    "open quantum systems",
+    "quantum transport",
+    "environment-assisted quantum transport",
+    "exciton transport",
+    "exciton polaritons",
+    "organic photovoltaics",
+    "electron-phonon coupling",
+    "spectroscopy",
+    "metrology",
+    "uncertainty quantification",
+    "scientific software"
+  ],
+  "author": [
+    {
+      "@type": "Organization",
+      "name": "Quantum Energy Venture Lab contributors",
+      "url": "https://github.com/Svyable/quantum-energy/graphs/contributors"
+    }
+  ],
+  "citation": "https://github.com/Svyable/quantum-energy/blob/main/CITATION.cff",
+  "readme": "https://github.com/Svyable/quantum-energy/blob/main/README.md"
+}
