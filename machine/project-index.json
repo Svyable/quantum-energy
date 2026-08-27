@@ -34,6 +34,8 @@
     {"path": "AGENTS.md", "role": "agent working instructions and scientific integrity rules"},
     {"path": "llms.txt", "role": "curated LLM navigation index"},
     {"path": "machine/analysis-registry.json", "role": "canonical authority map for analysis implementations and superseded review candidates"},
+    {"path": "technical/r2-facility-time-budget-v3.32.md", "role": "parametric facility instrument-time and RFQ planning model; timing scenarios are synthetic assumptions until replaced by facility-provided values"},
+    {"path": "models/r2_facility_time_planner_v3_32.py", "role": "executable facility-time planner and structural self-test"},
     {"path": "OPEN_SCIENCE.md", "role": "publication charter and evidence levels"},
     {"path": "research/CALCULATION_VERIFICATION.md", "role": "calculation, uncertainty, statistics, and correction protocol"},
     {"path": "research/session-history.md", "role": "chronological research record"},
