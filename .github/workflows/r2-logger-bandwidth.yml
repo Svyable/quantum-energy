@@ -1,0 +1,51 @@
+name: r2-logger-bandwidth
+
+on:
+  pull_request:
+    paths:
+      - 'machine/r2-logger-bandwidth-qualification-v3.39.json'
+      - 'data/templates/r2-logger-bandwidth-qualification-v3.39.csv'
+      - 'models/r2_logger_bandwidth_v3_39.py'
+      - 'technical/r2-logger-bandwidth-qualification-v3.39.md'
+      - '.github/workflows/r2-logger-bandwidth.yml'
+  push:
+    paths:
+      - 'machine/r2-logger-bandwidth-qualification-v3.39.json'
+      - 'models/r2_logger_bandwidth_v3_39.py'
+      - '.github/workflows/r2-logger-bandwidth.yml'
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_logger_bandwidth_v3_39.py
+      - name: Executable synthetic and limiting checks
+        run: python models/r2_logger_bandwidth_v3_39.py --self-test
+      - name: Independent contract arithmetic
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          p=json.loads(Path('machine/r2-logger-bandwidth-qualification-v3.39.json').read_text())
+          assert p['schema_version']=='3.39'
+          assert p['sampling_rule']['samples_per_time_constant_min']==5
+          assert p['sampling_rule']['class']=='synthetic_engineering_assumption'
+          # Independent direct arithmetic, not importing the model module.
+          tau=120.0
+          assert abs(tau/5.0-24.0)<1e-12
+          rpass=(0.95-0.03)/(1.00+0.02)
+          rfail=(0.94-0.03)/(1.00+0.02)
+          assert rpass>=0.90 and rfail<0.90
+          assert p['acceleration_pulse_screen']['required_widths_ms']==[10,100,1000]
+          assert p['thermal_rh_fit']['minimum_independent_step_runs_per_direction']==3
+          assert p['acceleration_pulse_screen']['minimum_independent_pulses_per_width']==3
+          print('independent contract checks PASS')
+          PY
