@@ -1,0 +1,124 @@
+{
+  "schema_version": "3.27",
+  "project": "Svyable/quantum-energy",
+  "purpose": "Machine-readable capability and evidence-return contract for a cooperating facility executing the R2 metrology qualification stack.",
+  "claim_boundary": {
+    "classification": "engineering_contract",
+    "does_not_establish": [
+      "R2 device performance",
+      "electron-phonon coupling mechanism",
+      "open-quantum transport mechanism",
+      "commercial photovoltaic performance"
+    ]
+  },
+  "required_capabilities": [
+    {
+      "id": "reference_detector_traceability",
+      "description": "Calibrated broadband reference detector with calibration certificate/report and configuration applicability metadata.",
+      "evidence_roles": ["reference_certificate_source", "reference_certificate_metadata"]
+    },
+    {
+      "id": "spectral_characterization",
+      "description": "Wavelength-resolved source spectra across the frozen R2 intensity grid and reference/DUT responsivity data on a declared wavelength grid.",
+      "evidence_roles": ["source_spectrum_data", "source_spectrum_metadata", "dut_responsivity_data", "reference_responsivity_data"]
+    },
+    {
+      "id": "linearity_characterization",
+      "description": "Detector/source linearity characterization over the acquisition range used for R2.",
+      "evidence_roles": ["detector_linearity_data", "detector_linearity_metadata"]
+    },
+    {
+      "id": "repeatability_campaign",
+      "description": "Repeated reference-detector sweeps with session/day/sweep hierarchy preserved for empirical covariance estimation and prospective holdout.",
+      "evidence_roles": ["reference_repeatability_raw"]
+    },
+    {
+      "id": "electrical_step_characterization",
+      "description": "Repeated characterized electrical reference steps through the exact SMU/digitizer/cabling/software path with fixed range/filter/aperture and autorange disabled.",
+      "evidence_roles": ["instrument_temporal_raw"]
+    },
+    {
+      "id": "optical_step_characterization",
+      "description": "Repeated large optical intensity-step transients on the same qualified R2 pixel under the intended acquisition configuration.",
+      "evidence_roles": ["settling_transient_raw"]
+    },
+    {
+      "id": "voc_intensity_acquisition",
+      "description": "Standard monotonic and frozen randomized-order Voc-intensity acquisition on the same qualified pixel after prerequisite gates.",
+      "evidence_roles": ["voc_intensity_raw", "randomized_order_raw"]
+    }
+  ],
+  "frozen_configuration_fields": [
+    "facility_id",
+    "source_id",
+    "reference_detector_id",
+    "smu_or_digitizer_id",
+    "range_id",
+    "filter_id",
+    "aperture_s",
+    "software_version",
+    "analysis_commit_sha",
+    "source_geometry_id",
+    "dut_fixture_id"
+  ],
+  "required_packet_roles": [
+    "analysis_freeze_record",
+    "reference_certificate_source",
+    "reference_certificate_metadata",
+    "source_spectrum_data",
+    "source_spectrum_metadata",
+    "dut_responsivity_data",
+    "reference_responsivity_data",
+    "detector_linearity_data",
+    "detector_linearity_metadata",
+    "reference_repeatability_raw",
+    "instrument_temporal_raw",
+    "settling_transient_raw",
+    "voc_intensity_raw",
+    "randomized_order_raw",
+    "packet_manifest"
+  ],
+  "execution_order": [
+    "freeze_configuration",
+    "packet_preflight",
+    "instrument_temporal_fidelity",
+    "optical_dut_settling",
+    "spectral_shape_gate",
+    "reference_repeatability_training",
+    "reference_repeatability_freeze",
+    "reference_repeatability_holdout",
+    "voc_intensity_monotonic",
+    "voc_intensity_randomized_order",
+    "combined_uncertainty_propagation"
+  ],
+  "gate_dependencies": {
+    "instrument_temporal_fidelity": ["packet_preflight"],
+    "optical_dut_settling": ["instrument_temporal_fidelity"],
+    "spectral_shape_gate": ["packet_preflight"],
+    "reference_repeatability_training": ["packet_preflight"],
+    "reference_repeatability_holdout": ["reference_repeatability_training", "reference_repeatability_freeze"],
+    "voc_intensity_monotonic": ["instrument_temporal_fidelity", "optical_dut_settling", "spectral_shape_gate"],
+    "voc_intensity_randomized_order": ["voc_intensity_monotonic"],
+    "combined_uncertainty_propagation": ["reference_repeatability_holdout", "spectral_shape_gate", "voc_intensity_randomized_order"]
+  },
+  "status_semantics": {
+    "PASS": "All evidence required for this gate is present and the frozen gate criteria pass.",
+    "FAIL": "Required evidence is present but a frozen criterion is violated. The failed result must remain visible.",
+    "INCOMPLETE": "Material required evidence or provenance is absent. Missing evidence may not be represented as zero uncertainty or PASS."
+  },
+  "data_integrity": {
+    "manifest_hash": "SHA-256",
+    "raw_processed_separation_required": true,
+    "immutable_source_files_required": true,
+    "excluded_rows_retained_with_reason": true
+  },
+  "statistical_hierarchy": [
+    "lot",
+    "substrate",
+    "device_or_pixel",
+    "session",
+    "sweep_or_step_replicate",
+    "measurement"
+  ],
+  "safety_boundary": "Facility optical, electrical, thermal, source-duty, interlock, and instrument-rating rules remain controlling. Randomization or qualification testing never overrides a safety limit."
+}
