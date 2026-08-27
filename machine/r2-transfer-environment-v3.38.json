@@ -1,0 +1,44 @@
+{
+  "schema_version": "3.38",
+  "status": "engineering_protocol_not_experimental_result",
+  "purpose": "Preserve environmental-exposure provenance during R2 HOME/TRAVEL and A-B-A transfer experiments so shipping/handling state changes are not silently attributed to facility effects.",
+  "required_channels": [
+    {"name": "temperature_c", "unit": "degC", "uncertainty_field": "temperature_u_c"},
+    {"name": "rh_percent", "unit": "%RH", "uncertainty_field": "rh_u_percent"},
+    {"name": "acceleration_g", "unit": "g", "uncertainty_field": "acceleration_u_g"}
+  ],
+  "required_provenance": [
+    "transfer_id",
+    "arm",
+    "substrate_id",
+    "logger_id",
+    "logger_model",
+    "logger_calibration_reference",
+    "logger_calibration_date",
+    "logger_timebase",
+    "transfer_start_utc",
+    "transfer_end_utc",
+    "carrier_id",
+    "package_id"
+  ],
+  "planning_assumptions": {
+    "max_allowed_sample_gap_s": 900,
+    "max_allowed_sample_gap_s_class": "synthetic_planning_assumption",
+    "rationale": "A 15-minute maximum gap is a provisional data-completeness screen only; it is not a device-safety or shipping qualification limit and must be retired or justified from the selected logger/process before physical qualification."
+  },
+  "optional_engineering_limits": {
+    "temperature_lower_c": null,
+    "temperature_upper_c": null,
+    "rh_upper_percent": null,
+    "acceleration_upper_g": null,
+    "rule": "Null limits mean UNKNOWN, never zero. Exposure acceptability cannot be PASS/FAIL until a limit has documented provenance."
+  },
+  "classification": {
+    "LOG_COMPLETE": "All required provenance/channels exist, timestamps are monotonic, endpoints bracket the declared transfer window, and no sample gap exceeds the frozen completeness gap.",
+    "INCOMPLETE": "Required provenance/channels are missing or the record has a timing gap/provenance defect.",
+    "WITHIN_DECLARED_LIMITS": "All supplied non-null engineering limits pass after conservative measurement-uncertainty expansion.",
+    "EXCEEDS_DECLARED_LIMIT": "At least one supplied non-null engineering limit fails after conservative measurement-uncertainty expansion.",
+    "LIMITS_UNKNOWN": "One or more relevant engineering limits are null; no safety/material-compatibility pass is claimed."
+  },
+  "claim_boundary": "A complete or within-limit exposure log does not establish device stability, facility equivalence, shipping qualification, electrical stability, or any quantum mechanism."
+}

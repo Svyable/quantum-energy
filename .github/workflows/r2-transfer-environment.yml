@@ -1,0 +1,45 @@
+name: r2-transfer-environment
+
+on:
+  pull_request:
+    paths:
+      - 'machine/r2-transfer-environment-v3.38.json'
+      - 'data/templates/r2-transfer-environment-v3.38.csv'
+      - 'models/r2_transfer_environment_v3_38.py'
+      - 'technical/r2-transfer-environment-v3.38.md'
+      - '.github/workflows/r2-transfer-environment.yml'
+  push:
+    paths:
+      - 'machine/r2-transfer-environment-v3.38.json'
+      - 'models/r2_transfer_environment_v3_38.py'
+      - '.github/workflows/r2-transfer-environment.yml'
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run executable self-test
+        run: python models/r2_transfer_environment_v3_38.py --self-test
+      - name: Independent contract checks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('machine/r2-transfer-environment-v3.38.json').read_text())
+          assert p['schema_version'] == '3.38'
+          assert p['planning_assumptions']['max_allowed_sample_gap_s'] == 900
+          assert p['planning_assumptions']['max_allowed_sample_gap_s_class'] == 'synthetic_planning_assumption'
+          limits = p['optional_engineering_limits']
+          assert set(limits) >= {'temperature_lower_c','temperature_upper_c','rh_upper_percent','acceleration_upper_g'}
+          assert all(limits[k] is None for k in ['temperature_lower_c','temperature_upper_c','rh_upper_percent','acceleration_upper_g'])
+          assert len(p['required_channels']) == 3
+          assert len(p['required_provenance']) == 12
+          print('independent contract checks PASS')
+          PY
