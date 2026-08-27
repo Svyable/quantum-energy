@@ -8,7 +8,7 @@ This is an engineering execution policy. It is not experimental evidence of R2 p
 
 ## Source provenance
 
-Canonical input: `technical/data/r2_facility_capability_contract_v3_27.json`, reviewed from `main` on 2026-08-27. The dependency-controlled gates and prerequisite sets are copied exactly and checked programmatically. The policy adds only an explicit root `packet_preflight`, `BLOCKED` semantics, and evidence-salvage rules.
+Canonical input: `technical/data/r2_facility_capability_contract_v3_27.json`, reviewed from `main` on 2026-08-27. The dependency-controlled gates and prerequisite sets are copied exactly and checked programmatically. The policy adds explicit graph nodes for `packet_preflight` and the already-declared `reference_repeatability_freeze` execution stage, plus `BLOCKED` semantics and evidence-salvage rules.
 
 Open PR #24 was read before this increment. It models facility time and quote planning. v3.33 intentionally does not add timing, rates, vendor quotes, or expected failure probabilities. Open PR #7 is overlapping historical calibration work and is not used as a second analysis authority.
 
@@ -27,19 +27,22 @@ Governing logical model for gate `g` with prerequisite set `D_g`:
 
 ## Dependency policy
 
-Nine gates are represented in `technical/data/r2_gate_abort_policy_v3_33.json`:
+Ten explicit stages are represented in `technical/data/r2_gate_abort_policy_v3_33.json`:
 
 1. packet preflight;
 2. instrument temporal fidelity;
 3. optical/DUT settling;
 4. spectral-shape gate;
 5. reference-repeatability training;
-6. prospective repeatability holdout;
-7. monotonic Voc-intensity acquisition;
-8. randomized-order Voc-intensity acquisition;
-9. combined uncertainty propagation.
+6. reference-repeatability freeze;
+7. prospective repeatability holdout;
+8. monotonic Voc-intensity acquisition;
+9. randomized-order Voc-intensity acquisition;
+10. combined uncertainty propagation.
 
-The v3.27 dependencies are unchanged. In particular, monotonic Voc-intensity acquisition is blocked unless instrument temporal fidelity, optical/DUT settling, and spectral-shape qualification all pass. A complete combined uncertainty result is blocked unless prospective repeatability holdout, spectral-shape qualification, and randomized-order acquisition all pass.
+The v3.27 dependency-controlled prerequisite sets are unchanged. The v3.27 `execution_order` already contains `reference_repeatability_freeze`; v3.33 makes that stage an explicit graph node depending on training so the holdout dependency is fully closed rather than dangling.
+
+Monotonic Voc-intensity acquisition is blocked unless instrument temporal fidelity, optical/DUT settling, and spectral-shape qualification all pass. A complete combined uncertainty result is blocked unless prospective repeatability holdout, spectral-shape qualification, and randomized-order acquisition all pass.
 
 ## Evidence salvage instead of all-or-nothing shutdown
 
@@ -47,6 +50,7 @@ A failed prerequisite blocks its dependents, **not every independent branch**. E
 
 - If optical/DUT settling fails after packet preflight and instrument fidelity pass, spectral characterization and reference-repeatability work may continue. Monotonic/randomized Voc-intensity work is blocked.
 - If spectral-shape qualification fails, instrument temporal characterization and repeatability work may continue. Voc-intensity mechanism-facing acquisition is blocked.
+- If the repeatability freeze cannot be accepted, the prospective holdout remains untouched and blocked rather than being consumed during model tuning.
 - If prospective repeatability holdout fails, the untouched holdout remains a useful negative validation result. Complete combined uncertainty qualification is blocked rather than repaired post hoc by switching estimator branches.
 
 Raw/minimally processed evidence collected before the stop remains publishable with its true status and provenance. Remediation/rerun is a new session/configuration record; it never erases the earlier failure.
@@ -58,26 +62,30 @@ Executable validator: `models/r2_gate_abort_policy_v3_33.py`.
 Checks:
 
 1. exact equality between v3.27 dependency sets and v3.33 policy dependencies;
-2. acyclic dependency graph/topological order;
-3. exhaustive local truth tables for every dependency-controlled gate and every `PASS/FAIL/INCOMPLETE` combination;
-4. adversarial branch-salvage cases for optical-settling and spectral-shape failures;
-5. prospective-holdout failure blocks complete uncertainty propagation;
-6. every gate carries a nonempty salvage record;
-7. explicit non-claim boundary is retained.
+2. explicit closure of the v3.27 repeatability-freeze execution stage;
+3. acyclic dependency graph/topological order;
+4. exhaustive local truth tables for every dependency-controlled stage and every `PASS/FAIL/INCOMPLETE` combination;
+5. adversarial branch-salvage cases for optical-settling and spectral-shape failures;
+6. incomplete freeze blocks prospective holdout;
+7. failed prospective holdout blocks complete uncertainty propagation;
+8. every stage carries a nonempty salvage record;
+9. explicit non-claim boundary is retained.
+
+The exhaustive local enumeration contains exactly **81 prerequisite-status combinations**: the exact sum of `3^k` across the nine non-root stages, where `k` is each stage's prerequisite count. This is a discrete structural count, not a statistical sample size.
 
 There are no stochastic inputs, package dependencies, mesh settings, or Monte Carlo seeds. Python standard library only. Equality checks are exact.
 
 ## Calculation / dimensional / limiting-case audit
 
-The decision-driving quantitative claims are structural counts only: 9 gates and the number of local prerequisite truth-table cases enumerated by the validator. They are exact discrete counts, not measurements and not uncertain physical quantities.
+The decision-driving quantitative claims are structural only: 10 explicit stages and 81 local prerequisite truth-table cases. They are exact discrete counts, not measurements and not uncertain physical quantities.
 
 Known limiting cases:
 
-- no dependencies -> root gate is runnable subject to its own evidence/QC;
-- all dependencies PASS -> dependent gate is runnable;
-- any one dependency FAIL -> dependent gate is blocked;
-- any one dependency INCOMPLETE -> dependent gate is blocked;
-- failure on an unrelated branch does not block a gate whose own dependencies still pass.
+- no dependencies -> root stage is runnable subject to its own evidence/QC;
+- all dependencies PASS -> dependent stage is runnable;
+- any one dependency FAIL -> dependent stage is blocked;
+- any one dependency INCOMPLETE -> dependent stage is blocked;
+- failure on an unrelated branch does not block a stage whose own dependencies still pass.
 
 These cases are independently exercised by explicit adversarial assertions in the validator rather than inferred from the documentation prose.
 
