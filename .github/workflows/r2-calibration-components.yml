@@ -1,0 +1,27 @@
+name: r2-calibration-components
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_calibration_components_v3_19.py'
+      - 'models/r2_calibration_components_synthetic_v3_19.py'
+      - 'models/r2_covariance_power_v3_18.py'
+      - 'models/fixtures/r2_covariance_fixture_v3_18.csv'
+      - '.github/workflows/r2-calibration-components.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12','3.13','3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_calibration_components_v3_19.py models/r2_calibration_components_synthetic_v3_19.py
+      - name: Deterministic synthetic recovery and adversarial checks
+        run: python models/r2_calibration_components_synthetic_v3_19.py
