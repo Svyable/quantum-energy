@@ -1,0 +1,60 @@
+name: analysis-registry
+
+on:
+  pull_request:
+    paths:
+      - 'machine/analysis-registry.json'
+      - 'machine/project-index.json'
+      - 'tools/validate_analysis_registry.py'
+      - 'models/r2_calibration_component_estimator_v3_19.py'
+      - 'models/r2_calibration_component_test_v3_19.py'
+      - 'models/fixtures/r2_calibration_repeats_template_v3_19.csv'
+      - 'technical/r2-calibration-components-v3.19.md'
+      - 'research/evidence/r2-calibration-components-v3.19.md'
+      - 'research/sessions/2026-08-26-r2-calibration-components-v3.19.md'
+      - '.github/workflows/r2-calibration-components.yml'
+      - '.github/workflows/analysis-registry.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Primary registry validation
+        run: python tools/validate_analysis_registry.py
+      - name: Independent authority/file-set check
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            models/r2_calibration_component_estimator_v3_19.py \
+            models/r2_calibration_component_test_v3_19.py \
+            models/fixtures/r2_calibration_repeats_template_v3_19.csv \
+            technical/r2-calibration-components-v3.19.md \
+            research/evidence/r2-calibration-components-v3.19.md \
+            research/sessions/2026-08-26-r2-calibration-components-v3.19.md \
+            .github/workflows/r2-calibration-components.yml; do
+            test -f "$f"
+          done
+          test ! -e models/r2_calibration_components_v3_19.py
+          test ! -e models/r2_calibration_components_synthetic_v3_19.py
+          test ! -e technical/r2-calibration-component-estimator-v3.19.md
+          python - <<'PY'
+          import json
+          d=json.load(open('machine/analysis-registry.json'))
+          a=d['analyses'][0]
+          assert a['source_pull_request'] == 6
+          assert a['merge_commit'] == '4d315b65b8cb131b3a62eb352cb0cee6ff77ebcf'
+          assert len(a['canonical_files']) == 7
+          s=a['superseded_review_candidates'][0]
+          assert s['pull_request'] == 7
+          assert s['status_as_of_2026_08_27'] == 'OPEN_NONMERGEABLE'
+          print('PASS: independent authority/file-set check')
+          PY
