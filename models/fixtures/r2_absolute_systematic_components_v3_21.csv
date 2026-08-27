@@ -1,0 +1,4 @@
+component_id,source_category,uncertainty_value,uncertainty_kind,coverage_factor,correction_ln_amplitude,provenance_class,provenance,version_date,validity_status,note
+responsivity_scale,absolute responsivity scale,0.004,expanded_normal,2,0.003,synthetic_assumption,v3.21 synthetic stress fixture,2026-08-26,CURRENT,synthetic
+linearity_stretch,detector linearity,0.0015,rectangular_half_width,,0.0005,synthetic_assumption,v3.21 synthetic stress fixture,2026-08-26,CURRENT,synthetic
+spectral_shape,spectral mismatch shape,0.004,triangular_half_width,,0.001,synthetic_assumption,v3.21 synthetic stress fixture,2026-08-26,CURRENT,synthetic
