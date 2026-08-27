@@ -1,0 +1,4 @@
+leg,carrier_id,substrate_blind_id,orientation_match,crack_chip_check,encapsulation_integrity,contact_pad_visibility,datum_seating,foreign_particle_check,configuration_revision_match,package_integrity_record,as_received_photo_record,carrier_shift_damage_check,status,deviation_note
+A1,,,,,,,,,,,,,INCOMPLETE,
+B,,,,,,,,,,,,,INCOMPLETE,
+A2,,,,,,,,,,,,,INCOMPLETE,
