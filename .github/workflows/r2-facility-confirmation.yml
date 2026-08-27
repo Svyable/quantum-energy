@@ -1,0 +1,40 @@
+name: r2-facility-confirmation
+
+on:
+  pull_request:
+    paths:
+      - 'technical/data/r2_facility_confirmation_questionnaire_v3_29.json'
+      - 'technical/data/r2_facility_confirmation_response_template_v3_29.csv'
+      - 'technical/data/r2_facility_capability_contract_v3_27.json'
+      - 'tools/validate_r2_facility_confirmation_v3_29.py'
+      - '.github/workflows/r2-facility-confirmation.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate frozen questionnaire and template
+        run: python tools/validate_r2_facility_confirmation_v3_29.py
+      - name: Independent row-count and neutrality check
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p = Path('technical/data/r2_facility_confirmation_response_template_v3_29.csv')
+          rows = list(csv.DictReader(p.open(newline='', encoding='utf-8')))
+          assert len(rows) == 22, len(rows)
+          assert sum(r['capability_id'] == 'GLOBAL' for r in rows) == 8
+          assert sum(r['capability_id'] != 'GLOBAL' for r in rows) == 14
+          assert all(r['response'] == 'UNKNOWN' for r in rows)
+          assert len({r['question_id'] for r in rows}) == 22
+          print('independent template check: PASS')
+          PY
