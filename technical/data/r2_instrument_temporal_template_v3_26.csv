@@ -1,0 +1,2 @@
+replicate_id,elapsed_s,commanded_V,measured_V,timestamp_u_s,reference_step_u_V,range_id,filter_id,aperture_s,autorange_enabled,qc_status
+R1,0.000,0.100000,0.000000,0.0005,0.0000005,100mV,fixed-1kHz,0.001,false,PASS
