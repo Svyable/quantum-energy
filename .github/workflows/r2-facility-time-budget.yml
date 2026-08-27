@@ -1,0 +1,70 @@
+name: r2-facility-time-budget
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_facility_time_planner_v3_32.py'
+      - 'models/fixtures/r2_facility_time_scenarios_v3_32.csv'
+      - 'technical/data/r2_facility_time_input_template_v3_32.csv'
+      - 'technical/r2-facility-time-budget-v3.32.md'
+      - '.github/workflows/r2-facility-time-budget.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Primary self-test
+        run: python models/r2_facility_time_planner_v3_32.py --self-test
+      - name: Regenerate frozen outputs
+        run: |
+          python models/r2_facility_time_planner_v3_32.py \
+            --input technical/data/r2_facility_time_input_template_v3_32.csv \
+            --output /tmp/v3_32.csv
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          def rows(p):
+              with Path(p).open(newline='', encoding='utf-8') as f:
+                  return list(csv.DictReader(f))
+          a = rows('/tmp/v3_32.csv')
+          b = rows('models/fixtures/r2_facility_time_scenarios_v3_32.csv')
+          assert [r['scenario'] for r in a] == [r['scenario'] for r in b]
+          for ra, rb in zip(a, b):
+              for key in rb:
+                  if key == 'scenario':
+                      continue
+                  assert abs(float(ra[key]) - float(rb[key])) <= 1e-12, (key, ra[key], rb[key])
+          PY
+      - name: Independent closed-form recomputation
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          inp = Path('technical/data/r2_facility_time_input_template_v3_32.csv')
+          frozen = Path('models/fixtures/r2_facility_time_scenarios_v3_32.csv')
+          with inp.open(newline='', encoding='utf-8') as f:
+              inputs = {r['scenario']: r for r in csv.DictReader(f)}
+          with frozen.open(newline='', encoding='utf-8') as f:
+              outputs = {r['scenario']: r for r in csv.DictReader(f)}
+          assert 30*4*17 == 2040
+          assert 30*4*4 == 480
+          assert 4*17 == 68
+          assert 2*6*10 == 120
+          for name, r in inputs.items():
+              x = {k: float(v) for k, v in r.items() if k not in ('scenario','provenance')}
+              cal = 2040*x['calibration_grid_point_s'] + 480*x['calibration_aux_point_s'] + 30*x['calibration_session_overhead_s']
+              inst = 6*(x['instrument_samples_per_replicate']*x['instrument_sample_s'] + x['instrument_replicate_overhead_s'])
+              opt = 12*(10*x['optical_sample_s'] + x['optical_replicate_overhead_s'])
+              voc = x['monotonic_points']*x['voc_point_read_s'] + x['randomized_points']*(x['voc_point_read_s'] + x['randomized_settling_dwell_s'])
+              spec = x['spectral_setup_s'] + x['spectral_intensity_points']*x['spectral_point_s']
+              total_h = (cal + inst + opt + voc + spec + x['linearity_total_s'] + x['packet_admin_s'])/3600
+              assert abs(total_h - float(outputs[name]['total_h'])) <= 1e-12
+          PY
