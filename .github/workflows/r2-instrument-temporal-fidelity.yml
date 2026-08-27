@@ -1,0 +1,40 @@
+name: r2-instrument-temporal-fidelity
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_instrument_temporal_fidelity_v3_26.py'
+      - 'models/r2_instrument_temporal_fidelity_test_v3_26.py'
+      - 'models/fixtures/r2_instrument_temporal_sensitivity_v3_26.csv'
+      - 'technical/data/r2_instrument_temporal_template_v3_26.csv'
+      - '.github/workflows/r2-instrument-temporal-fidelity.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12','3.13','3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_instrument_temporal_fidelity_v3_26.py models/r2_instrument_temporal_fidelity_test_v3_26.py
+      - name: Adversarial and limiting-case checks
+        run: python models/r2_instrument_temporal_fidelity_test_v3_26.py
+      - name: Independently reproduce sensitivity CSV
+        run: |
+          python - <<'PY'
+          import csv,math
+          path='models/fixtures/r2_instrument_temporal_sensitivity_v3_26.csv'
+          with open(path,newline='',encoding='utf-8') as h: rows=list(csv.DictReader(h))
+          for r in rows:
+              A=float(r['step_amplitude_V']); lim=float(r['instrument_limit_V']); tau=float(r['time_constant_s']); d=float(r['timestamp_delay_s'])
+              expected=d+tau*math.log(A/lim)
+              got=float(r['analytic_min_dwell_s'])
+              if not math.isclose(got,expected,rel_tol=0,abs_tol=1e-12): raise AssertionError((got,expected,r))
+          print('PASS sensitivity table')
+          PY
