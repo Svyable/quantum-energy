@@ -1,0 +1,48 @@
+{
+  "schema_version": "quantum-energy-analysis-registry-v1",
+  "canonical_branch": "main",
+  "generated_date": "2026-08-27",
+  "purpose": "Machine-readable authority map for analysis implementations when merged code and open review candidates overlap.",
+  "rules": [
+    "main is authoritative for reviewed analysis implementations",
+    "an open pull request is never silently promoted over a merged implementation",
+    "superseded review candidates remain visible provenance and are not deleted from history",
+    "scientific conclusions remain bounded by the evidence level of the underlying data"
+  ],
+  "analyses": [
+    {
+      "analysis_id": "r2_calibration_covariance_v3_19",
+      "status": "CANONICAL_MERGED",
+      "source_pull_request": 6,
+      "merge_commit": "4d315b65b8cb131b3a62eb352cb0cee6ff77ebcf",
+      "canonical_files": [
+        "models/r2_calibration_component_estimator_v3_19.py",
+        "models/r2_calibration_component_test_v3_19.py",
+        "models/fixtures/r2_calibration_repeats_template_v3_19.csv",
+        "technical/r2-calibration-components-v3.19.md",
+        "research/evidence/r2-calibration-components-v3.19.md",
+        "research/sessions/2026-08-26-r2-calibration-components-v3.19.md",
+        ".github/workflows/r2-calibration-components.yml"
+      ],
+      "claim_boundary": "Synthetic/software-verified calibration covariance estimator; no real facility covariance has been established.",
+      "unresolved_model_risks": [
+        "point residual correlation after low-order removal",
+        "session-dependent stretch or shape",
+        "nonstationarity after detector/source/geometry/software changes",
+        "need for prospective held-out real calibration validation"
+      ],
+      "superseded_review_candidates": [
+        {
+          "pull_request": 7,
+          "status_as_of_2026_08_27": "OPEN_NONMERGEABLE",
+          "reason": "Overlapping v3.19 estimator proposed before PR #6 was selected and merged; it uses a different covariance-deconvolution/adequacy path and must not be treated as canonical unless a future reviewed reconciliation explicitly replaces main.",
+          "distinct_paths_not_canonical": [
+            "models/r2_calibration_components_v3_19.py",
+            "models/r2_calibration_components_synthetic_v3_19.py",
+            "technical/r2-calibration-component-estimator-v3.19.md"
+          ]
+        }
+      ]
+    }
+  ]
+}
