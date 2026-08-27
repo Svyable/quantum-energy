@@ -1,0 +1,57 @@
+name: r2-spectral-shape-gate
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_spectral_shape_gate_v3_23.py'
+      - 'models/r2_spectral_shape_gate_test_v3_23.py'
+      - 'models/r2_spectral_shape_fixture_generator_v3_23.py'
+      - 'models/fixtures/r2_spectral_*_v3_23.csv'
+      - '.github/workflows/r2-spectral-shape-gate.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_spectral_shape_gate_v3_23.py models/r2_spectral_shape_gate_test_v3_23.py models/r2_spectral_shape_fixture_generator_v3_23.py
+      - name: Generate deterministic synthetic fixtures
+        run: |
+          rm -rf /tmp/v323-fixtures
+          python models/r2_spectral_shape_fixture_generator_v3_23.py /tmp/v323-fixtures
+          test -s /tmp/v323-fixtures/r2_spectral_sweep_fixture_v3_23.csv
+          test -s /tmp/v323-fixtures/r2_spectral_responsivity_fixture_v3_23.csv
+          test -s /tmp/v323-fixtures/r2_spectral_components_fixture_v3_23.csv
+      - name: Adversarial and nonlinear checks
+        run: python models/r2_spectral_shape_gate_test_v3_23.py
+      - name: Reproduce frozen expected metrics
+        run: |
+          python models/r2_spectral_shape_gate_v3_23.py \
+            /tmp/v323-fixtures/r2_spectral_sweep_fixture_v3_23.csv \
+            /tmp/v323-fixtures/r2_spectral_responsivity_fixture_v3_23.csv \
+            /tmp/v323-fixtures/r2_spectral_components_fixture_v3_23.csv \
+            --reference-spectrum-id SP14 --monte-carlo --output-json /tmp/v323.json
+          python - <<'PY'
+          import csv,json,math
+          d=json.load(open('/tmp/v323.json'))
+          e={r['metric']:float(r['value']) for r in csv.DictReader(open('models/fixtures/r2_spectral_expected_v3_23.csv'))}
+          got={
+            'max_abs_smm_minus_1':d['gates']['spectral_mismatch_deviation']['value'],
+            'synthetic_curvature_bias':d['metrics']['synthetic_curvature_bias'],
+            'spectral_curvature_u_1sigma':d['metrics']['spectral_curvature_u_1sigma'],
+            'mc_curvature_u_1sigma':d['monte_carlo']['curvature_u_1sigma'],
+            'mc_relative_difference':d['monte_carlo']['relative_difference_vs_first_order'],
+          }
+          for k,v in e.items():
+              if not math.isclose(got[k],v,rel_tol=1e-10,abs_tol=1e-12): raise AssertionError((k,got[k],v))
+          assert d['overall_status']=='PASS'
+          print('PASS frozen v3.23 metrics')
+          PY
