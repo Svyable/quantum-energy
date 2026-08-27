@@ -1,0 +1,102 @@
+{
+  "schema_version": "3.35",
+  "status": "ENGINEERING_SPECIFICATION",
+  "claim_boundary": "This is a fabrication/handling specification, not experimental evidence of transfer stability or device performance.",
+  "source_geometry": {
+    "substrate_width_mm": 25.0,
+    "substrate_height_mm": 25.0,
+    "substrate_thickness_mm": 1.1,
+    "measured_aperture_mm": 3.10,
+    "top_electrode_window_mm": 3.80,
+    "minimum_residual_margin_mm": 0.10,
+    "contact_pad_min_width_mm": 2.5,
+    "contact_pad_min_height_mm": 3.0,
+    "optical_exclusion_zone_diameter_mm": 8.0,
+    "encapsulation_lid_planning_mm": 18.0,
+    "provenance": "technical/current-specification.md main branch, read 2026-08-27"
+  },
+  "fixture": {
+    "design_intent": "Repeatable non-contact edge registration and protected shipment/remounting of one 25 mm square R2 substrate without clamping the active/encapsulated central region.",
+    "carrier_outer_width_mm": 40.0,
+    "carrier_outer_height_mm": 40.0,
+    "carrier_nominal_thickness_mm": 4.0,
+    "substrate_pocket_width_mm": 25.30,
+    "substrate_pocket_height_mm": 25.30,
+    "substrate_pocket_depth_mm": 1.35,
+    "pocket_planar_clearance_per_side_mm": 0.15,
+    "pocket_depth_clearance_mm": 0.25,
+    "central_keepout_width_mm": 20.0,
+    "central_keepout_height_mm": 20.0,
+    "edge_support_band_nominal_mm": 2.5,
+    "registration_datum": "Two perpendicular hard datums at substrate edges plus one compliant opposite-corner retainer; no force applied over the central keepout.",
+    "retainer_preload_N": 0.5,
+    "retainer_preload_tolerance_N": 0.2,
+    "retainer_preload_class": "engineering assumption pending physical qualification",
+    "carrier_material_requirement": "dimensionally stable, electrically insulating, low-shedding material compatible with facility EHS and device encapsulation; material not yet frozen",
+    "fastener_requirement": "tool-accessible, captive where practical, no loose hardware above active face",
+    "contact_access": "At least one full edge of the carrier remains open or relieved to permit access to exposed contact pads without removing substrate from carrier.",
+    "optical_access": "Carrier must not intrude into the 8 mm diameter optical exclusion/collection zone around the selected pixel.",
+    "labeling": "Carrier ID, substrate blind ID, orientation arrow, datum A/B marks, and configuration revision must remain visible after packing."
+  },
+  "shipping_insert": {
+    "design_intent": "Immobilize the loaded carrier inside a secondary box while avoiding direct load on substrate or encapsulation lid.",
+    "minimum_clearance_above_device_mm": 5.0,
+    "minimum_clearance_above_device_class": "engineering assumption",
+    "carrier_retention": "Restrain carrier perimeter on four sides; no foam/tape/adhesive may contact substrate, encapsulation lid, active-area face, or electrical contacts.",
+    "orientation_control": "Record as-packed and as-received orientation photos; orientation change alone is not an exclusion criterion.",
+    "tamper_evidence": "Record seal ID or equivalent package-integrity identifier when available; absence is provenance INCOMPLETE, not automatic scientific FAIL."
+  },
+  "inspection": {
+    "required_before_each_measurement_leg": [
+      "carrier_id_match",
+      "substrate_blind_id_match",
+      "orientation_match",
+      "visible_crack_or_chip_check",
+      "encapsulation_integrity_check",
+      "contact_pad_visibility_check",
+      "datum_seating_check",
+      "foreign_particle_check",
+      "configuration_revision_match"
+    ],
+    "required_after_shipment": [
+      "package_integrity_record",
+      "as_received_photo_record",
+      "carrier_shift_or_damage_check"
+    ],
+    "status_semantics": {
+      "PASS": "All required checks satisfied under frozen configuration.",
+      "FAIL": "Contradictory identity, visible damage affecting measurement, fixture interference, or unsafe/nonconforming state.",
+      "INCOMPLETE": "Required provenance/check record missing; do not silently convert to PASS."
+    }
+  },
+  "dimensional_checks": {
+    "pocket_clearance_equation": "(pocket_width - substrate_width)/2",
+    "pocket_clearance_expected_mm": 0.15,
+    "edge_support_equation": "(substrate_width - keepout_width)/2",
+    "edge_support_expected_mm": 2.5,
+    "contact_vs_keepout_note": "The keepout is a conservative central no-clamp/no-contact region; actual contact-pad relief must be verified against the traveler before fabrication.",
+    "tolerance_policy": "Fixture machining/printing tolerance must be specified by fabricator; any tolerance stack that can reduce planar pocket clearance below 0.05 mm or edge support below 2.0 mm requires redesign/review."
+  },
+  "qualification_plan": {
+    "minimum_remount_cycles_per_dummy": 10,
+    "minimum_dummy_count": 3,
+    "counts_class": "engineering screening assumptions, not statistical power claims",
+    "dummy_first": true,
+    "required_metrics": [
+      "substrate insertion/removal without visible edge damage",
+      "repeatable datum seating",
+      "no intrusion into optical keepout",
+      "no loss of contact-pad accessibility",
+      "retainer preload within specified range"
+    ],
+    "device_use_gate": "Do not use the fixture on qualified R2 primaries until dummy-cycle screening passes and human review accepts material/contact compatibility."
+  },
+  "safety_environment": {
+    "rules": [
+      "Do not use adhesives or foams in direct contact with device or encapsulation unless compatibility is separately qualified.",
+      "Avoid particle-shedding or conductive debris near contacts.",
+      "Do not apply retainer force over the central keepout or encapsulation lid.",
+      "Facility EHS, shipping, electrical, optical, and chemical-handling requirements remain controlling."
+    ]
+  }
+}
