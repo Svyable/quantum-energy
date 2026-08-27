@@ -5,12 +5,7 @@
   "source_contract": "technical/data/r2_facility_capability_contract_v3_27.json",
   "claim_boundary": {
     "classification": "engineering_execution_policy",
-    "does_not_establish": [
-      "R2 device performance",
-      "electron-phonon coupling mechanism",
-      "open-quantum transport mechanism",
-      "commercial photovoltaic performance"
-    ]
+    "does_not_establish": ["R2 device performance","electron-phonon coupling mechanism","open-quantum transport mechanism","commercial photovoltaic performance"]
   },
   "status_semantics": {
     "PASS": "Gate evidence is complete and frozen criteria pass.",
@@ -32,27 +27,16 @@
     {"id":"optical_dut_settling","depends_on":["instrument_temporal_fidelity"],"salvage_on_fail":["settling_transient_raw","history/settling characterization","negative settling result"]},
     {"id":"spectral_shape_gate","depends_on":["packet_preflight"],"salvage_on_fail":["source_spectrum_data","responsivity inputs","spectral-mismatch diagnosis"]},
     {"id":"reference_repeatability_training","depends_on":["packet_preflight"],"salvage_on_fail":["reference_repeatability_raw","training diagnostics","model inadequacy evidence"]},
+    {"id":"reference_repeatability_freeze","depends_on":["reference_repeatability_training"],"salvage_on_fail":["training dataset","candidate freeze record","explicit reason freeze could not be accepted"]},
     {"id":"reference_repeatability_holdout","depends_on":["reference_repeatability_training","reference_repeatability_freeze"],"salvage_on_fail":["untouched holdout measurements","failed prospective-validation result"]},
     {"id":"voc_intensity_monotonic","depends_on":["instrument_temporal_fidelity","optical_dut_settling","spectral_shape_gate"],"salvage_on_fail":["voc_intensity_raw","measurement-system diagnosis","no mechanism promotion"]},
     {"id":"voc_intensity_randomized_order","depends_on":["voc_intensity_monotonic"],"salvage_on_fail":["randomized_order_raw","time/history-confound diagnosis","no mechanism promotion"]},
     {"id":"combined_uncertainty_propagation","depends_on":["reference_repeatability_holdout","spectral_shape_gate","voc_intensity_randomized_order"],"salvage_on_fail":["partial uncertainty components labeled INCOMPLETE","explicit missing-component register"]}
   ],
   "independent_branch_examples": [
-    {
-      "condition": "optical_dut_settling FAIL while packet_preflight PASS",
-      "allowed_to_continue": ["spectral_shape_gate","reference_repeatability_training"],
-      "blocked": ["voc_intensity_monotonic","voc_intensity_randomized_order","combined_uncertainty_propagation"]
-    },
-    {
-      "condition": "spectral_shape_gate FAIL while packet_preflight PASS",
-      "allowed_to_continue": ["instrument_temporal_fidelity","reference_repeatability_training"],
-      "blocked": ["voc_intensity_monotonic","voc_intensity_randomized_order","combined_uncertainty_propagation"]
-    },
-    {
-      "condition": "reference_repeatability_holdout FAIL",
-      "allowed_to_continue": ["already-qualified acquisition branches for diagnostic purposes"],
-      "blocked": ["combined_uncertainty_propagation as a complete qualification result"]
-    }
+    {"condition":"optical_dut_settling FAIL while packet_preflight PASS","allowed_to_continue":["spectral_shape_gate","reference_repeatability_training"],"blocked":["voc_intensity_monotonic","voc_intensity_randomized_order","combined_uncertainty_propagation"]},
+    {"condition":"spectral_shape_gate FAIL while packet_preflight PASS","allowed_to_continue":["instrument_temporal_fidelity","reference_repeatability_training"],"blocked":["voc_intensity_monotonic","voc_intensity_randomized_order","combined_uncertainty_propagation"]},
+    {"condition":"reference_repeatability_holdout FAIL","allowed_to_continue":["already-qualified acquisition branches for diagnostic purposes"],"blocked":["combined_uncertainty_propagation as a complete qualification result"]}
   ],
   "statistical_hierarchy": ["lot","substrate","device_or_pixel","session","sweep_or_step_replicate","measurement"],
   "safety_boundary": "Stop/continue logic never overrides facility optical, electrical, thermal, source-duty, interlock, or instrument-rating requirements."
