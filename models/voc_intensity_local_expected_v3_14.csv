@@ -1,0 +1,17 @@
+metric,value,class
+primary_window_min_sun,0.05,external-data analysis setting
+primary_window_max_sun,2.0,external-data analysis setting
+primary_window_points,16,external-data count
+local7_mae,0.003943964,external-data estimator result
+local7_rmse,0.006821964,external-data estimator result
+local7_max_abs,0.023389517,external-data estimator result
+local7_pearson_r,0.998660094,external-data estimator result
+local9_mae,0.006794139,external-data sensitivity result
+local9_rmse,0.008889905,external-data sensitivity result
+noise_sigma_mV,0.5,synthetic planning assumption
+noise_repetitions,5000,synthetic planning assumption
+noise_seed,20260826,synthetic planning assumption
+noise_local7_median_mae,0.0157,synthetic planning result approximate
+noise_local7_p95_mae,0.0263,synthetic planning result approximate
+noise_local9_median_mae,0.0122,synthetic planning result approximate
+noise_local9_p95_mae,0.0204,synthetic planning result approximate
