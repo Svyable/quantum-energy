@@ -1,0 +1,42 @@
+name: r2-transfer-fixture
+
+on:
+  pull_request:
+    paths:
+      - 'technical/data/r2_transfer_fixture_protocol_v3_35.json'
+      - 'technical/data/r2_transfer_fixture_inspection_v3_35.csv'
+      - 'models/r2_transfer_fixture_v3_35.py'
+      - 'technical/r2-transfer-fixture-v3.35.md'
+      - '.github/workflows/r2-transfer-fixture.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run primary validator
+        run: python models/r2_transfer_fixture_v3_35.py
+      - name: Independent geometry check
+        run: |
+          python - <<'PY'
+          import json,csv
+          d=json.load(open('technical/data/r2_transfer_fixture_protocol_v3_35.json'))
+          s=d['source_geometry']; f=d['fixture']
+          c=(25.30-25.00)/2
+          b=(25.00-20.00)/2
+          assert abs(c-0.15)<1e-12
+          assert abs(b-2.5)<1e-12
+          assert abs((f['substrate_pocket_width_mm']-s['substrate_width_mm'])/2-c)<1e-12
+          assert abs((s['substrate_width_mm']-f['central_keepout_width_mm'])/2-b)<1e-12
+          rows=list(csv.DictReader(open('technical/data/r2_transfer_fixture_inspection_v3_35.csv')))
+          assert len(rows)==3 and {r['leg'] for r in rows}=={'A1','B','A2'}
+          assert all(r['status']=='INCOMPLETE' for r in rows)
+          print('PASS independent fixture geometry/template checks')
+          PY
