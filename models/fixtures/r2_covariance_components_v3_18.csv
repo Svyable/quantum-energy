@@ -1,0 +1,35 @@
+sweep_id,sequence_index,variable,component_id,loading_1sigma,unit,note
+SYN,1,ln_calibrated_suns,quadratic_shape,0.004999999999999998,1,synthetic 0.5% max quadratic shape mode
+SYN,1,voc_V,voc_point_1,0.0005,V,synthetic independent Voc noise
+SYN,2,ln_calibrated_suns,quadratic_shape,0.0038281249999999978,1,synthetic 0.5% max quadratic shape mode
+SYN,2,voc_V,voc_point_2,0.0005,V,synthetic independent Voc noise
+SYN,3,ln_calibrated_suns,quadratic_shape,0.002812499999999999,1,synthetic 0.5% max quadratic shape mode
+SYN,3,voc_V,voc_point_3,0.0005,V,synthetic independent Voc noise
+SYN,4,ln_calibrated_suns,quadratic_shape,0.0019531249999999991,1,synthetic 0.5% max quadratic shape mode
+SYN,4,voc_V,voc_point_4,0.0005,V,synthetic independent Voc noise
+SYN,5,ln_calibrated_suns,quadratic_shape,0.0012499999999999996,1,synthetic 0.5% max quadratic shape mode
+SYN,5,voc_V,voc_point_5,0.0005,V,synthetic independent Voc noise
+SYN,6,ln_calibrated_suns,quadratic_shape,0.0007031249999999994,1,synthetic 0.5% max quadratic shape mode
+SYN,6,voc_V,voc_point_6,0.0005,V,synthetic independent Voc noise
+SYN,7,ln_calibrated_suns,quadratic_shape,0.00031249999999999957,1,synthetic 0.5% max quadratic shape mode
+SYN,7,voc_V,voc_point_7,0.0005,V,synthetic independent Voc noise
+SYN,8,ln_calibrated_suns,quadratic_shape,7.812499999999989e-05,1,synthetic 0.5% max quadratic shape mode
+SYN,8,voc_V,voc_point_8,0.0005,V,synthetic independent Voc noise
+SYN,9,ln_calibrated_suns,quadratic_shape,7.24638692303412e-35,1,synthetic 0.5% max quadratic shape mode
+SYN,9,voc_V,voc_point_9,0.0005,V,synthetic independent Voc noise
+SYN,10,ln_calibrated_suns,quadratic_shape,7.812500000000011e-05,1,synthetic 0.5% max quadratic shape mode
+SYN,10,voc_V,voc_point_10,0.0005,V,synthetic independent Voc noise
+SYN,11,ln_calibrated_suns,quadratic_shape,0.0003125000000000001,1,synthetic 0.5% max quadratic shape mode
+SYN,11,voc_V,voc_point_11,0.0005,V,synthetic independent Voc noise
+SYN,12,ln_calibrated_suns,quadratic_shape,0.0007031250000000004,1,synthetic 0.5% max quadratic shape mode
+SYN,12,voc_V,voc_point_12,0.0005,V,synthetic independent Voc noise
+SYN,13,ln_calibrated_suns,quadratic_shape,0.00125,1,synthetic 0.5% max quadratic shape mode
+SYN,13,voc_V,voc_point_13,0.0005,V,synthetic independent Voc noise
+SYN,14,ln_calibrated_suns,quadratic_shape,0.001953125,1,synthetic 0.5% max quadratic shape mode
+SYN,14,voc_V,voc_point_14,0.0005,V,synthetic independent Voc noise
+SYN,15,ln_calibrated_suns,quadratic_shape,0.0028125000000000008,1,synthetic 0.5% max quadratic shape mode
+SYN,15,voc_V,voc_point_15,0.0005,V,synthetic independent Voc noise
+SYN,16,ln_calibrated_suns,quadratic_shape,0.0038281250000000004,1,synthetic 0.5% max quadratic shape mode
+SYN,16,voc_V,voc_point_16,0.0005,V,synthetic independent Voc noise
+SYN,17,ln_calibrated_suns,quadratic_shape,0.005,1,synthetic 0.5% max quadratic shape mode
+SYN,17,voc_V,voc_point_17,0.0005,V,synthetic independent Voc noise
