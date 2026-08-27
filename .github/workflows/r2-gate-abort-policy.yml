@@ -32,11 +32,13 @@ jobs:
           p = json.loads((root/'technical/data/r2_gate_abort_policy_v3_33.json').read_text())
           s = json.loads((root/'technical/data/r2_facility_capability_contract_v3_27.json').read_text())
           pm = {g['id']: set(g['depends_on']) for g in p['gates']}
-          assert len(p['gates']) == 9
+          assert len(p['gates']) == 10
           for gid, deps in s['gate_dependencies'].items():
               assert pm[gid] == set(deps), (gid, pm[gid], deps)
           assert pm['packet_preflight'] == set()
-          # Independent root reachability: every policy gate must trace to packet_preflight
+          assert pm['reference_repeatability_freeze'] == {'reference_repeatability_training'}
+          assert 'reference_repeatability_freeze' in s['execution_order']
+          # Independent root reachability: every policy stage must trace to packet_preflight.
           for gid in pm:
               seen = set()
               stack = [gid]
@@ -44,9 +46,12 @@ jobs:
               while stack:
                   cur = stack.pop()
                   for d in pm[cur]:
-                      if d == 'packet_preflight': reached = True
-                      if d not in seen and d in pm:
-                          seen.add(d); stack.append(d)
+                      assert d in pm, (gid, d)
+                      if d == 'packet_preflight':
+                          reached = True
+                      if d not in seen:
+                          seen.add(d)
+                          stack.append(d)
               assert reached, gid
           print('independent dependency check PASS')
           PY
