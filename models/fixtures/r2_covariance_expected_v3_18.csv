@@ -1,0 +1,6 @@
+metric,value
+curvature,0.10000000000000048
+curvature_u_1sigma,0.023326323846175903
+planning_power_effect_0p10,0.9900183826409455
+quadratic_shape_sd_contribution,0.0064387051945403425
+axis_jacobian_sum,-4.3021142204224816e-10

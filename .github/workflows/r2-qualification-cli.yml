@@ -1,0 +1,31 @@
+name: r2-qualification-cli
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_qualification_cli_v3_17.py'
+      - 'models/r2_qualification_fault_injection_v3_17.py'
+      - 'models/fixtures/r2_voc_intensity_qualification_v3_17_*'
+      - '.github/workflows/r2-qualification-cli.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12','3.13','3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: |
+          python -m py_compile models/r2_qualification_cli_v3_17.py models/r2_qualification_fault_injection_v3_17.py
+      - name: Frozen clean certificate
+        run: |
+          python models/r2_qualification_cli_v3_17.py models/fixtures/r2_voc_intensity_qualification_v3_17_pass.csv --output-json /tmp/certificate.json
+          diff -u models/fixtures/r2_voc_intensity_qualification_v3_17_expected.json /tmp/certificate.json
+      - name: Adversarial injected faults and analytic cross-check
+        run: python models/r2_qualification_fault_injection_v3_17.py

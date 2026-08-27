@@ -1,0 +1,66 @@
+name: r2-covariance-power
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_covariance_power_v3_18.py'
+      - 'models/r2_covariance_fault_injection_v3_18.py'
+      - 'models/fixtures/r2_covariance_*_v3_18.*'
+      - 'models/fixtures/r2_voc_intensity_qualification_v3_17_pass.csv'
+      - '.github/workflows/r2-covariance-power.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: |
+          python -m py_compile models/r2_covariance_power_v3_18.py models/r2_covariance_fault_injection_v3_18.py
+      - name: Independent synthetic covariance checks
+        run: python models/r2_covariance_fault_injection_v3_18.py
+      - name: Reproduce frozen combined fixture
+        run: |
+          python models/r2_covariance_power_v3_18.py \
+            models/fixtures/r2_covariance_fixture_v3_18.csv \
+            --components models/fixtures/r2_covariance_components_v3_18.csv \
+            --output-json /tmp/v318.json
+          python - <<'PY'
+          import csv,json,math
+          d=json.load(open('/tmp/v318.json'))
+          exp={r['metric']:float(r['value']) for r in csv.DictReader(open('models/fixtures/r2_covariance_expected_v3_18.csv'))}
+          s=d['sweeps'][0]
+          got={
+            'curvature':s['curvature'],
+            'curvature_u_1sigma':s['curvature_u_1sigma'],
+            'planning_power_effect_0p10':s['planning_power_effect_0p10'],
+            'quadratic_shape_sd_contribution':next(c['sd_contribution_abs'] for c in s['components'] if c['component_id']=='quadratic_shape'),
+            'axis_jacobian_sum':s['axis_jacobian_sum'],
+          }
+          for k,v in exp.items():
+              if not math.isclose(got[k],v,rel_tol=1e-11,abs_tol=1e-11):
+                  raise AssertionError((k,got[k],v))
+          print('PASS frozen fixture')
+          PY
+      - name: Integrate with v3.17 clean facility fixture
+        run: |
+          python models/r2_covariance_power_v3_18.py \
+            models/fixtures/r2_voc_intensity_qualification_v3_17_pass.csv \
+            --output-json /tmp/v317cov.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/v317cov.json'))
+          assert d['schema_version']=='r2-covariance-power-v3.18'
+          assert len(d['sweeps'])==2
+          assert d['power_model_inputs']['no_sqrtN_credit_for_sweep_repeats'] is True
+          assert d['power_model_inputs']['worst_sweep_curvature_u_1sigma'] < 0.02
+          assert d['power_model_inputs']['worst_sweep_power_effect_0p10'] > 0.99
+          print('PASS v3.17 integration')
+          PY
