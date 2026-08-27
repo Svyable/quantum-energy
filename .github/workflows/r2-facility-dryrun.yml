@@ -1,0 +1,46 @@
+name: r2-facility-dryrun
+
+on:
+  pull_request:
+    paths:
+      - 'technical/data/r2_facility_capability_contract_v3_27.json'
+      - 'technical/data/r2_facility_dryrun_contract_v3_30.json'
+      - 'technical/data/r2_facility_dryrun_manifest_template_v3_30.csv'
+      - 'tools/validate_r2_facility_dryrun_v3_30.py'
+      - '.github/workflows/r2-facility-dryrun.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run structural and adversarial self-test
+        run: python tools/validate_r2_facility_dryrun_v3_30.py --self-test
+      - name: Independently verify blank manifest role set
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root = Path('.')
+          contract = json.loads((root/'technical/data/r2_facility_capability_contract_v3_27.json').read_text())
+          with (root/'technical/data/r2_facility_dryrun_manifest_template_v3_30.csv').open(newline='') as f:
+              rows = list(csv.DictReader(f))
+          roles = [r['role'] for r in rows]
+          assert len(rows) == 15, len(rows)
+          assert len(set(roles)) == 15, roles
+          assert set(roles) == set(contract['required_packet_roles'])
+          assert all(r['evidence_state'] == 'MISSING' for r in rows)
+          cap_roles = set()
+          for cap in contract['required_capabilities']:
+              cap_roles.update(cap['evidence_roles'])
+          assert len(cap_roles) == 13, len(cap_roles)
+          assert set(roles) - cap_roles == {'analysis_freeze_record', 'packet_manifest'}
+          print('independent role-set check passed: 13 capability + 2 administrative = 15')
+          PY

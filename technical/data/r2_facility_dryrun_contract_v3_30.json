@@ -1,0 +1,58 @@
+{
+  "schema_version": "3.30",
+  "project": "Svyable/quantum-energy",
+  "purpose": "Synthetic structural dry-run contract for verifying that a cooperating facility can package the v3.27 R2 evidence roles without weakening provenance or claim boundaries.",
+  "inherits_from": "technical/data/r2_facility_capability_contract_v3_27.json",
+  "packet_kind": "DRY_RUN_SYNTHETIC",
+  "claim_boundary": {
+    "classification": "synthetic_software_verification",
+    "structural_pass_does_not_establish": [
+      "real facility capability",
+      "measurement validity",
+      "R2 device performance",
+      "electron-phonon coupling mechanism",
+      "open-quantum transport mechanism",
+      "commercial photovoltaic performance"
+    ]
+  },
+  "manifest_columns": [
+    "role",
+    "relative_path",
+    "sha256",
+    "byte_count",
+    "evidence_state",
+    "provenance_note"
+  ],
+  "allowed_evidence_states": [
+    "SYNTHETIC_PLACEHOLDER",
+    "REAL_EVIDENCE",
+    "MISSING"
+  ],
+  "dryrun_status_semantics": {
+    "STRUCTURAL_PASS": "All v3.27 packet roles are represented exactly once, paths are safe, bytes and SHA-256 match, and every dry-run object is explicitly synthetic or real. This is not a scientific PASS.",
+    "FAIL": "The packet is present but violates integrity, uniqueness, path-safety, or claim-boundary rules.",
+    "INCOMPLETE": "One or more v3.27 required packet roles or required provenance fields are missing. Missing evidence may not be represented as zero uncertainty or scientific PASS."
+  },
+  "required_adversarial_checks": [
+    "missing_required_role_returns_INCOMPLETE",
+    "byte_tamper_returns_FAIL",
+    "duplicate_role_returns_FAIL",
+    "path_traversal_returns_FAIL",
+    "synthetic_packet_never_returns_scientific_PASS"
+  ],
+  "integrity": {
+    "hash_algorithm": "SHA-256",
+    "safe_relative_paths_only": true,
+    "exactly_one_manifest_row_per_v3_27_role": true,
+    "raw_processed_separation_preserved": true,
+    "excluded_rows_retained_with_reason": true
+  },
+  "statistical_hierarchy_inherited": [
+    "lot",
+    "substrate",
+    "device_or_pixel",
+    "session",
+    "sweep_or_step_replicate",
+    "measurement"
+  ]
+}
