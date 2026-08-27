@@ -1,0 +1,26 @@
+name: r2-voc-intensity-power
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_voc_intensity_power_v3_15.py'
+      - 'models/r2_voc_intensity_power_v3_15.csv'
+      - 'technical/r2-voc-intensity-power-v3.15.md'
+      - '.github/workflows/r2-voc-intensity-power.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run deterministic power study
+        run: |
+          python models/r2_voc_intensity_power_v3_15.py /tmp/r2_power.csv
+          diff -u models/r2_voc_intensity_power_v3_15.csv /tmp/r2_power.csv
