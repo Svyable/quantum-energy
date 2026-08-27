@@ -1,0 +1,38 @@
+# Quantum Energy Venture Lab
+
+> Open, evidence-first research and engineering on programmable open-quantum transport, environment-assisted excitation transport, organic photovoltaics, exciton/polariton systems, electron-phonon coupling, metrology, manufacturing controls, and reproducible scientific software. This repository is speculative where labeled, strict about uncertainty and conventional explanations, and does not claim a validated commercial quantum-energy breakthrough.
+
+Use the evidence class attached to a claim. Do not treat synthetic/model outputs as measurements. Prefer `main` for the reviewed canonical record and inspect open pull requests only when the user needs work that has not yet merged.
+
+## Start here
+
+- [README](https://github.com/Svyable/quantum-energy/blob/main/README.md): Mission, scientific boundaries, and project orientation.
+- [AGENTS.md](https://github.com/Svyable/quantum-energy/blob/main/AGENTS.md): Instructions for coding and research agents working in this repository.
+- [Open science charter](https://github.com/Svyable/quantum-energy/blob/main/OPEN_SCIENCE.md): Evidence classes, publication levels, null-result policy, and correction rules.
+- [Calculation verification](https://github.com/Svyable/quantum-energy/blob/main/research/CALCULATION_VERIFICATION.md): Mandatory quantitative verification and uncertainty protocol.
+- [Contribution guide](https://github.com/Svyable/quantum-energy/blob/main/CONTRIBUTING.md): Claim wording, evidence, data, code, and review expectations.
+
+## Research state
+
+- [Session history](https://github.com/Svyable/quantum-energy/blob/main/research/session-history.md): Chronological research and engineering progression.
+- [Evidence map](https://github.com/Svyable/quantum-energy/blob/main/research/evidence-map.md): Literature, standards, experiments, assumptions, and source mapping.
+- [Current technical specification](https://github.com/Svyable/quantum-energy/blob/main/technical/current-specification.md): Current device, measurement, and engineering specification.
+- [Automation loop](https://github.com/Svyable/quantum-energy/blob/main/automation/hourly-loop.md): Rules for bounded automated research increments and GitHub persistence.
+
+## Machine-readable metadata
+
+- [CodeMeta](https://github.com/Svyable/quantum-energy/blob/main/codemeta.json): JSON-LD research-software metadata for indexing and reuse.
+- [Citation metadata](https://github.com/Svyable/quantum-energy/blob/main/CITATION.cff): Machine-readable citation information.
+- [Project index](https://github.com/Svyable/quantum-energy/blob/main/machine/project-index.json): Search terms, canonical paths, claim boundaries, and agent entrypoints.
+
+## Technical and reproducibility work
+
+- [Models](https://github.com/Svyable/quantum-energy/tree/main/models): Executable calculations, synthetic fixtures, benchmarks, and uncertainty models.
+- [Technical specifications](https://github.com/Svyable/quantum-energy/tree/main/technical): Measurement protocols, CAD briefs, data schemas, and experimental specifications.
+- [Scientific evidence](https://github.com/Svyable/quantum-energy/tree/main/research/evidence): Source-specific evidence notes and claim boundaries.
+- [Corrections](https://github.com/Svyable/quantum-energy/tree/main/research/corrections): Visible scientific and numerical correction history.
+
+## Optional
+
+- [Venture and deployment analysis](https://github.com/Svyable/quantum-energy/tree/main/venture): Commercialization, deployment, cost, and decision-gate analysis; treat business numbers as assumptions unless explicitly sourced.
+- [Open pull requests](https://github.com/Svyable/quantum-energy/pulls): Unmerged research increments; these are review candidates, not canonical merged findings.

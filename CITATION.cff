@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: >-
+  If you use material, code, data, or methods from this repository, cite the
+  repository and the specific commit, release, dataset, or source note you used.
+title: Quantum Energy Venture Lab
+type: software
+authors:
+  - name: Quantum Energy Venture Lab contributors
+repository-code: https://github.com/Svyable/quantum-energy
+url: https://github.com/Svyable/quantum-energy
+abstract: >-
+  Open, evidence-first research and engineering repository for programmable
+  open-quantum transport, environment-assisted excitation transport, organic
+  photovoltaics, exciton and polariton systems, electron-phonon coupling,
+  scientific metrology, manufacturing controls, and reproducible computation.
+  The repository explicitly separates established evidence, assumptions,
+  hypotheses, synthetic/model outputs, experiments, and invention concepts.
+keywords:
+  - open quantum systems
+  - quantum transport
+  - environment-assisted transport
+  - exciton transport
+  - polaritons
+  - organic photovoltaics
+  - electron-phonon coupling
+  - metrology
+  - reproducible research
+  - open science

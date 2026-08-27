@@ -1,0 +1,100 @@
+{
+  "schema_version": "quantum-energy-project-index-v1",
+  "project": {
+    "name": "Quantum Energy Venture Lab",
+    "repository": "https://github.com/Svyable/quantum-energy",
+    "canonical_branch": "main",
+    "public": true,
+    "status": "active open research",
+    "summary": "Evidence-first research and engineering on programmable open-quantum transport and adjacent energy/materials systems, with explicit uncertainty, conventional controls, reproducible code, and public correction history."
+  },
+  "claim_boundary": {
+    "established": [
+      "Open quantum systems can exhibit environment-assisted transport in appropriate regimes.",
+      "Exciton, charge-transfer, cavity, morphology, electrostatic, contact, thermal, and measurement effects can all influence energy/materials devices and must be discriminated experimentally.",
+      "The repository contains open calculations, synthetic benchmarks, metrology protocols, evidence notes, and engineering specifications."
+    ],
+    "not_established": [
+      "A commercial quantum-energy breakthrough.",
+      "A universal room-temperature quantum computer.",
+      "A unique quantum explanation for every observed transport or photovoltaic effect.",
+      "Commercially superior power conversion or lifetime from the current research program."
+    ],
+    "required_claim_classes": [
+      "established evidence",
+      "engineering assumption",
+      "falsifiable hypothesis",
+      "synthetic/model result",
+      "experimental result",
+      "novel invention concept"
+    ]
+  },
+  "agent_entrypoints": [
+    {"path": "README.md", "role": "human and agent project overview"},
+    {"path": "AGENTS.md", "role": "agent working instructions and scientific integrity rules"},
+    {"path": "llms.txt", "role": "curated LLM navigation index"},
+    {"path": "OPEN_SCIENCE.md", "role": "publication charter and evidence levels"},
+    {"path": "research/CALCULATION_VERIFICATION.md", "role": "calculation, uncertainty, statistics, and correction protocol"},
+    {"path": "research/session-history.md", "role": "chronological research record"},
+    {"path": "research/evidence-map.md", "role": "evidence and source map"},
+    {"path": "technical/current-specification.md", "role": "current engineering specification"},
+    {"path": "CITATION.cff", "role": "citation metadata"},
+    {"path": "codemeta.json", "role": "JSON-LD research software metadata"}
+  ],
+  "research_domains": [
+    "open quantum systems",
+    "environment-assisted quantum transport",
+    "quantum transport",
+    "exciton transport",
+    "exciton polaritons",
+    "organic photovoltaics",
+    "charge transfer",
+    "electron-phonon coupling",
+    "spectroscopy",
+    "photovoltaic metrology",
+    "uncertainty quantification",
+    "materials science",
+    "reproducible scientific computing"
+  ],
+  "search_terms": [
+    "programmable open quantum materials",
+    "environment engineered quantum transport",
+    "environment assisted quantum transport",
+    "ENAQT",
+    "exciton transport noise dephasing",
+    "exciton polariton energy transport",
+    "organic photovoltaic electron phonon coupling",
+    "OPV nonradiative voltage loss EQE EL",
+    "temperature dependent charge transfer spectroscopy",
+    "weak electroluminescence metrology",
+    "FTPS sensitive EQE organic photovoltaics",
+    "quantum transport open science",
+    "reproducible quantum energy research"
+  ],
+  "canonical_directories": {
+    "models": "Executable calculations, fixtures, numerical checks, and synthetic benchmarks.",
+    "research/evidence": "Source-specific evidence notes and claim boundaries.",
+    "research/corrections": "Visible corrections and superseded claims.",
+    "research/sessions": "Bounded research session records.",
+    "technical": "Experimental protocols, CAD briefs, data schemas, and specifications.",
+    "venture": "Deployment, cost, business-model, and decision-gate analysis.",
+    "automation": "Automated research workflow and persistence rules."
+  },
+  "contribution": {
+    "welcome": [
+      "independent reproductions",
+      "corrections",
+      "negative and null results",
+      "conventional alternative explanations",
+      "raw data and calibration records",
+      "manufacturing and safety improvements",
+      "mechanism-discriminating experiments",
+      "prior art and literature corrections"
+    ],
+    "instructions": "CONTRIBUTING.md"
+  },
+  "licensing": {
+    "status": "unresolved",
+    "note": "The repository is public, but explicit licenses for software, data/documentation, and hardware/CAD have not yet been selected. Do not infer reuse rights from public visibility alone."
+  }
+}
