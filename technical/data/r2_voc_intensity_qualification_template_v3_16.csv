@@ -1,0 +1,2 @@
+lot_id,substrate_id,pixel_id,session_id,sweep_id,sweep_direction,sequence_index,target_suns,reference_detector_id,reference_signal_raw,reference_signal_unit,reference_dark_raw,calibrated_suns,calibration_relative_u_1sigma,calibration_correlation_group,dut_temperature_K,dut_temperature_u_K,voc_V,voc_u_V,anchor_flag,prepost_anchor_pair_id,qc_status,deviation_note
+LOT-TBD,S01,A,SES01,SW01,ascending,1,0.05,REF-TBD,,,,,,absolute_scale,300.0,,0.0000,,false,,PENDING,
