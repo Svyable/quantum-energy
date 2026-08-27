@@ -1,0 +1,117 @@
+{
+  "schema_version": "3.29",
+  "project": "Svyable/quantum-energy",
+  "derived_from": "technical/data/r2_facility_capability_contract_v3_27.json",
+  "purpose": "Frozen direct-confirmation questionnaire for candidate facilities. Requirements must not be weakened after responses are received.",
+  "claim_boundary": {
+    "classification": "engineering_contract",
+    "does_not_establish": [
+      "facility partnership",
+      "R2 device performance",
+      "electron-phonon coupling mechanism",
+      "open-quantum transport mechanism",
+      "commercial photovoltaic performance"
+    ]
+  },
+  "response_vocabulary": ["YES", "NO", "CONDITIONAL", "UNKNOWN"],
+  "evidence_rule": "YES or CONDITIONAL requires dated supporting evidence or a named accountable facility contact. UNKNOWN remains unresolved; silence is never converted to NO or YES.",
+  "configuration_fields_to_confirm": [
+    "facility_id",
+    "source_id",
+    "reference_detector_id",
+    "smu_or_digitizer_id",
+    "range_id",
+    "filter_id",
+    "aperture_s",
+    "software_version",
+    "analysis_commit_sha",
+    "source_geometry_id",
+    "dut_fixture_id"
+  ],
+  "global_questions": [
+    {"id":"G01","question":"Can the facility return raw or minimally processed machine-readable data for every requested acquisition, with raw and processed files separated?","required":true},
+    {"id":"G02","question":"Can the facility preserve immutable source files and provide SHA-256 hashes plus a manifest for returned evidence?","required":true},
+    {"id":"G03","question":"Can excluded or invalid rows remain in the returned data with explicit QC/exclusion reason codes rather than being silently removed?","required":true},
+    {"id":"G04","question":"Can the exact instrument/source/detector/software configuration identifiers remain frozen across prerequisite and decision-driving measurements, or can every change be explicitly bridged and documented?","required":true},
+    {"id":"G05","question":"Can the facility preserve the hierarchy lot -> substrate -> device/pixel -> session -> sweep or step replicate -> measurement in its exports?","required":true},
+    {"id":"G06","question":"Can the facility execute the frozen acquisition order and prospective holdout without using holdout observations to tune the analysis/model/QC criteria?","required":true},
+    {"id":"G07","question":"Can the facility provide applicable uncertainty/provenance documentation for calibration, responsivity, timing, and linearity terms rather than treating unreported terms as zero?","required":true},
+    {"id":"G08","question":"Can all requested work be performed within the facility's optical, electrical, thermal, source-duty, interlock, sample-acceptance, shipping, and EHS constraints without bypassing safety limits?","required":true}
+  ],
+  "capability_questions": [
+    {
+      "capability_id":"reference_detector_traceability",
+      "questions":[
+        {"id":"C01A","question":"Can you provide a calibrated broadband reference detector applicable to the intended R2 source/geometry/range?"},
+        {"id":"C01B","question":"Will the calibration certificate/report and applicability/version metadata be returned with the dataset?"}
+      ],
+      "required_evidence_roles":["reference_certificate_source","reference_certificate_metadata"]
+    },
+    {
+      "capability_id":"spectral_characterization",
+      "questions":[
+        {"id":"C02A","question":"Can wavelength-resolved source spectra be acquired at every frozen R2 intensity point from 0.05 to 2 suns under the same source/attenuation geometry used for Voc acquisition?"},
+        {"id":"C02B","question":"Can reference-detector and DUT spectral responsivity/EQE data be returned on declared wavelength grids with calibration provenance and no hidden interpolation?"}
+      ],
+      "required_evidence_roles":["source_spectrum_data","source_spectrum_metadata","dut_responsivity_data","reference_responsivity_data"]
+    },
+    {
+      "capability_id":"linearity_characterization",
+      "questions":[
+        {"id":"C03A","question":"Can detector/source linearity be characterized over the complete acquisition range used for R2?"},
+        {"id":"C03B","question":"Can the raw linearity data, configuration identifiers, correction policy, and uncertainty/provenance be returned?"}
+      ],
+      "required_evidence_roles":["detector_linearity_data","detector_linearity_metadata"]
+    },
+    {
+      "capability_id":"repeatability_campaign",
+      "questions":[
+        {"id":"C04A","question":"Can repeated reference-detector sweeps be acquired with explicit day/session/sweep/intensity hierarchy and frozen configuration?"},
+        {"id":"C04B","question":"Can a prospective training/freeze/holdout split be honored such that holdout sessions are not used for model or QC tuning?"}
+      ],
+      "required_evidence_roles":["reference_repeatability_raw"]
+    },
+    {
+      "capability_id":"electrical_step_characterization",
+      "questions":[
+        {"id":"C05A","question":"Can at least six repeated characterized electrical reference-step transients be injected through the exact intended SMU/digitizer/cabling/software path?"},
+        {"id":"C05B","question":"Can range/filter/aperture be fixed, autorange disabled, timestamps retained, and reference-step/timestamp uncertainty documented?"}
+      ],
+      "required_evidence_roles":["instrument_temporal_raw"]
+    },
+    {
+      "capability_id":"optical_step_characterization",
+      "questions":[
+        {"id":"C06A","question":"Can repeated 0.05 <-> 2 sun optical intensity-step transients be acquired on the same qualified R2 pixel under the intended measurement configuration?"},
+        {"id":"C06B","question":"Can the observation window extend beyond the intended dwell and retain all late-time samples needed to test unresolved slow tails?"}
+      ],
+      "required_evidence_roles":["settling_transient_raw"]
+    },
+    {
+      "capability_id":"voc_intensity_acquisition",
+      "questions":[
+        {"id":"C07A","question":"Can the frozen 17-point 0.05-2 sun Voc-intensity grid be measured in both standard monotonic and supplied randomized-order schedules on the same qualified pixel?"},
+        {"id":"C07B","question":"Can actual elapsed time, target intensity, Voc, temperature/configuration identifiers, QC state, and acquisition order be returned for every observation?"}
+      ],
+      "required_evidence_roles":["voc_intensity_raw","randomized_order_raw"]
+    }
+  ],
+  "commercial_and_access_fields": [
+    "contact_name_or_role",
+    "response_date",
+    "sample_acceptance_constraints",
+    "estimated_scheduling_window_if_known",
+    "pricing_or_quote_reference_if_provided",
+    "shipping_constraints",
+    "data_rights_or_public_release_constraints",
+    "required_agreements_or_terms",
+    "notes"
+  ],
+  "decision_semantics": {
+    "CONFIRMED": "All required global questions and all questions for the capability are YES, with required evidence commitments identified.",
+    "CONDITIONAL": "At least one required item is CONDITIONAL and no required item is NO or UNKNOWN; all conditions are explicit and testable before execution.",
+    "UNAVAILABLE": "At least one required item is NO.",
+    "NEEDS_CONFIRMATION": "At least one required item is UNKNOWN or unanswered and no required item is NO."
+  },
+  "anti_bias_rule": "Use the identical questionnaire for every candidate. Do not remove, soften, reorder, or reinterpret a requirement because a preferred candidate cannot meet it. Any later contract revision must be versioned and applied prospectively to all candidates."
+}
