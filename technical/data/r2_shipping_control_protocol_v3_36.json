@@ -1,0 +1,109 @@
+{
+  "schema_version": "3.36",
+  "status": "ENGINEERING_AND_SYNTHETIC_PLANNING_SPECIFICATION",
+  "claim_boundary": "This protocol is designed to discriminate shipping/handling state change from ordinary elapsed-time change. It is not experimental evidence that R2 survives shipping and is not evidence for any quantum mechanism.",
+  "principal_hypothesis": "After qualification, round-trip transport in the frozen carrier does not produce a practically material change in the selected R2 voltage-loss observable relative to contemporaneous home controls.",
+  "conventional_explanation": "A cross-facility difference can be caused by shipping, handling, remounting, storage, encapsulation change, contact change, or elapsed ageing rather than facility metrology or device physics.",
+  "discriminator": "Randomize qualified independent substrates to TRAVEL and HOME arms, measure both arms at facility A before and after the same elapsed interval, and estimate a difference-in-changes shipping effect.",
+  "observable": {
+    "primary_name": "delta_vnr_mV",
+    "unit": "mV",
+    "measurement_requirement": "Use the same qualified facility-A configuration, analysis commit, injection point, temperature point, calibration lineage, and QC rules for PRE and POST measurements.",
+    "sign_convention": "Positive change means larger nonradiative voltage loss after the interval.",
+    "secondary_diagnostics": [
+      "voc_1sun_V",
+      "eqe_el_primary_point",
+      "dark_background_record",
+      "visual_encapsulation_contact_inspection",
+      "carrier_and_package_integrity_record"
+    ]
+  },
+  "design": {
+    "experimental_unit": "independent R2 substrate",
+    "arms": ["TRAVEL", "HOME"],
+    "randomization": "Randomize qualified substrates to TRAVEL or HOME after qualification and before PRE outcome review beyond QC eligibility.",
+    "travel_arm": "Pack in the frozen v3.35 carrier/insert, execute the intended A-to-B-to-A handling/shipping route or representative dry run, then remeasure at facility A.",
+    "home_arm": "Remain at facility A under logged storage conditions for the same elapsed interval and undergo the same PRE/POST measurement/remount sequence without shipment.",
+    "minimum_independent_substrates_per_arm_nominal": 6,
+    "minimum_count_class": "synthetic planning result under the frozen normal-approximation assumptions below; not a universal sample-size requirement",
+    "blinding": "Use blind substrate IDs in the analysis table. Arm identity may be operationally unavoidable during packing but should be hidden from the analyst until QC exclusions are frozen.",
+    "hierarchy": "lot -> substrate -> device/pixel -> session -> measurement; substrate is the independent unit for the arm comparison"
+  },
+  "estimator": {
+    "per_substrate_change": "d_i = delta_vnr_POST,i - delta_vnr_PRE,i",
+    "shipping_effect": "Delta_ship = mean(d_i for TRAVEL) - mean(d_i for HOME)",
+    "standard_error": "SE = sqrt(s_TRAVEL^2/n_TRAVEL + s_HOME^2/n_HOME)",
+    "units": "d_i, Delta_ship, s, and SE are all mV",
+    "decision_screen": "Report estimate, SE, and 95% normal-approximation interval as an engineering screen only. Do not describe it as publication-grade equivalence evidence at small N.",
+    "practical_effect_scale_mV": 5.0,
+    "practical_effect_scale_class": "engineering planning scale inherited from the program's 5 mV R2 transfer/fabrication precision target; not a standards-derived limit"
+  },
+  "synthetic_power_plan": {
+    "distribution": "independent Normal substrate-level PRE-to-POST changes with common SD sigma_change_mV within each arm",
+    "null_effect_mV": 0.0,
+    "planning_effect_mV": 5.0,
+    "planning_effect_class": "synthetic decision-planning assumption",
+    "nominal_sigma_change_mV": 3.0,
+    "sigma_change_class": "synthetic planning assumption, not measured R2 variability",
+    "alpha_two_sided": 0.05,
+    "target_power": 0.80,
+    "normal_approximation_equation": "power = 1 - Phi(z_(1-alpha/2) - |delta|/[sigma*sqrt(2/n)]) + Phi(-z_(1-alpha/2) - |delta|/[sigma*sqrt(2/n)])",
+    "nominal_minimum_n_per_arm": 6,
+    "nominal_power": 0.8229821534848882,
+    "sensitivity_sigma_mV_to_min_n_per_arm": {
+      "2.0": 3,
+      "3.0": 6,
+      "4.0": 11,
+      "5.0": 16
+    },
+    "useful_negative_result": "Three substrates per arm has only about 0.5324 synthetic power for a 5 mV effect when sigma_change=3 mV, so a tiny shipping screen can easily miss a practically material effect under the nominal model.",
+    "stochastic_seed": null,
+    "software_requirement": "Standard-library Python; deterministic closed-form calculation, no Monte Carlo."
+  },
+  "qc_and_exclusions": {
+    "freeze_before_unblinding": true,
+    "allowed_exclusions": [
+      "predefined device acquisition failure",
+      "identity/provenance mismatch",
+      "unsafe or visibly damaged state that makes measurement invalid",
+      "missing required PRE or POST primary outcome",
+      "frozen configuration mismatch"
+    ],
+    "not_allowed_as_exclusion": [
+      "large unfavorable PRE-to-POST change",
+      "shipping excursion by itself",
+      "facility disagreement",
+      "result worsening the shipping estimate"
+    ],
+    "status_semantics": {
+      "PASS_SCREEN": "Required data are complete and the engineering screen does not show a material shipping effect; this is not proof of equivalence.",
+      "FAIL_SCREEN": "Observed shipping-control result is materially adverse under the frozen screen or a required safety/handling gate fails.",
+      "INCOMPLETE": "Required data, provenance, or configuration evidence is missing."
+    }
+  },
+  "limiting_cases": [
+    "If every TRAVEL and HOME substrate changes by the same amount, Delta_ship = 0 regardless of that common ageing drift.",
+    "If every TRAVEL substrate changes by +5 mV and every HOME substrate changes by 0 mV, Delta_ship = +5 mV.",
+    "If arm labels are swapped, Delta_ship changes sign but not magnitude.",
+    "Repeated pixels/sessions on one substrate can improve measurement precision but do not increase n_TRAVEL or n_HOME."
+  ],
+  "safety_environment": {
+    "rules": [
+      "Use the reviewed v3.35 carrier/insert and facility-approved packaging before qualified primaries travel.",
+      "Do not use randomization to override shipping, EHS, electrical, optical, or handling constraints.",
+      "Log storage and shipping deviations; do not discard adverse excursions merely because they complicate interpretation.",
+      "Preserve damaged or failed samples and their records when safe to do so."
+    ]
+  },
+  "provenance": {
+    "date": "2026-08-27",
+    "internal_sources": [
+      "technical/current-specification.md on main",
+      "technical/data/r2_cross_facility_transfer_protocol_v3_34.json on main",
+      "technical/data/r2_transfer_fixture_protocol_v3_35.json on main",
+      "research/CALCULATION_VERIFICATION.md on main"
+    ],
+    "external_sources": [],
+    "note": "No new external empirical capability or performance claim is introduced. Numerical variability and power inputs are synthetic planning assumptions."
+  }
+}
