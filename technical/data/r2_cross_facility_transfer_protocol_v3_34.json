@@ -1,0 +1,39 @@
+{
+  "schema_version": "3.34",
+  "title": "R2 cross-facility ABA transfer screening protocol",
+  "claim_class": "engineering_protocol",
+  "measurand": "DeltaVnr_mV",
+  "design": {
+    "sequence": ["A1", "B", "A2"],
+    "same_device_required": true,
+    "minimum_complete_primary_devices": 3,
+    "time_order_required": "t_A1 < t_B < t_A2",
+    "blind_device_ids": true,
+    "configuration_freeze_required": true,
+    "raw_data_preservation_required": true
+  },
+  "estimator": {
+    "weight": "w=(t_B-t_A1)/(t_A2-t_A1)",
+    "home_reference": "A_interp=(1-w)*A1+w*A2",
+    "facility_residual": "r=B-A_interp",
+    "aggregate_bias": "mean(r)",
+    "aggregate_rms": "sqrt(mean(r^2))"
+  },
+  "engineering_gates": {
+    "absolute_mean_bias_mV_max": 5.0,
+    "rms_residual_mV_max": 5.0,
+    "gate_origin": "project engineering assumption aligned to the existing R2 ~5 mV transfer/repeatability scale; not a standards-derived equivalence margin",
+    "interpretation": "screening gate only; not a publication-grade statistical equivalence test"
+  },
+  "statuses": {
+    "PASS": "complete ABA packet with >=3 qualified primary devices and both aggregate gates satisfied",
+    "FAIL": "complete packet but one or more aggregate gates fail, time ordering is invalid, device identity conflicts, or frozen configuration is violated",
+    "INCOMPLETE": "required A1/B/A2 record, provenance, timing, configuration, or primary-device count is missing"
+  },
+  "claim_boundaries": [
+    "PASS does not establish a quantum mechanism, EPC mechanism, commercial PV performance, or universal facility equivalence.",
+    "Repeated A1/B/A2 sessions on one device are correlated observations and do not create independent device count.",
+    "Linear home-facility drift can be removed by interpolation; nonlinear or shipping-induced state changes remain live conventional explanations.",
+    "A failed transfer remains a negative result and must not be tuned away by changing the gate after seeing B data."
+  ]
+}
