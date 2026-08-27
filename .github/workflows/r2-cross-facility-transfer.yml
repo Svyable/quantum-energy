@@ -1,0 +1,52 @@
+name: r2-cross-facility-transfer
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_cross_facility_transfer_v3_34.py'
+      - 'technical/data/r2_cross_facility_transfer_protocol_v3_34.json'
+      - 'technical/data/r2_cross_facility_transfer_template_v3_34.csv'
+      - 'technical/r2-cross-facility-transfer-v3.34.md'
+      - '.github/workflows/r2-cross-facility-transfer.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Primary deterministic self-test
+        run: python models/r2_cross_facility_transfer_v3_34.py --self-test
+      - name: Independent protocol and template checks
+        run: |
+          python - <<'PY'
+          import csv, json, math
+          from pathlib import Path
+          p=json.loads(Path('technical/data/r2_cross_facility_transfer_protocol_v3_34.json').read_text())
+          assert p['design']['sequence']==['A1','B','A2']
+          assert p['design']['minimum_complete_primary_devices']==3
+          assert p['engineering_gates']['absolute_mean_bias_mV_max']==5.0
+          assert p['engineering_gates']['rms_residual_mV_max']==5.0
+          rows=list(csv.DictReader(Path('technical/data/r2_cross_facility_transfer_template_v3_34.csv').open()))
+          assert len(rows)==9
+          assert sorted(set(r['device_id'] for r in rows))==['R2-P1','R2-P2','R2-P3']
+          for d in ('R2-P1','R2-P2','R2-P3'):
+              legs=[r['leg'] for r in rows if r['device_id']==d]
+              assert legs==['A1','B','A2']
+          # Independent midpoint and RMS arithmetic; does not import primary module.
+          residuals=[]
+          for base in (100.0,102.0,98.0):
+              a1=base; a2=base+2.0; b=base+4.0
+              r=b-(a1+a2)/2.0
+              residuals.append(r)
+          mean=sum(residuals)/len(residuals)
+          rms=math.sqrt(sum(r*r for r in residuals)/len(residuals))
+          assert abs(mean-3.0)<1e-12 and abs(rms-3.0)<1e-12
+          print('independent v3.34 protocol check PASS')
+          PY
