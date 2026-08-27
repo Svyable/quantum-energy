@@ -1,0 +1,10 @@
+case,metric,value,class,unit
+nominal,true_contrast,0.09999999999999998,synthetic,dimensionless
+common_scale_+2pct,contrast,0.09999999999999998,synthetic,dimensionless
+common_scale_+2pct,bias,0.0,synthetic,dimensionless
+log_axis_gain_+0p5pct,contrast,0.09950248756218916,synthetic,dimensionless
+log_axis_gain_+0p5pct,bias,-0.0004975124378108209,synthetic,dimensionless
+quadratic_log_residual_0p5pct,contrast,0.09356282034769792,synthetic,dimensionless
+quadratic_log_residual_0p5pct,bias,-0.006437179652302061,synthetic,dimensionless
+temperature_+0p5K_normalization_only,relative_n_bias,-0.0016638935108153063,analytic,fraction
+temperature_+0p5K_normalization_only,contrast_bias,-0.00016638935108153065,analytic,dimensionless

@@ -1,0 +1,25 @@
+name: voc-intensity-local-benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'models/voc_intensity_realdata_benchmark.py'
+      - 'models/voc_intensity_local_benchmark.py'
+      - 'models/voc_intensity_local_expected_v3_14.csv'
+      - '.github/workflows/voc-intensity-local.yml'
+      - 'technical/voc-intensity-local-ideality-benchmark-v3.14.md'
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile benchmark
+        run: python -m py_compile models/voc_intensity_local_benchmark.py
+      - name: Run real-data local-ideality benchmark
+        run: python models/voc_intensity_local_benchmark.py
