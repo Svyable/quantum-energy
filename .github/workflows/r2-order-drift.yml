@@ -1,0 +1,54 @@
+name: r2-order-drift
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_order_drift_v3_24.py'
+      - 'models/r2_order_drift_test_v3_24.py'
+      - 'models/fixtures/r2_order_*_v3_24.csv'
+      - 'technical/r2-order-drift-discriminator-v3.24.md'
+      - '.github/workflows/r2-order-drift.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_order_drift_v3_24.py models/r2_order_drift_test_v3_24.py
+      - name: Deterministic self-test
+        run: python models/r2_order_drift_v3_24.py --self-test
+      - name: Independent analytic and stochastic checks
+        run: python models/r2_order_drift_test_v3_24.py
+      - name: Regenerate frozen schedule
+        run: |
+          python models/r2_order_drift_v3_24.py --schedule-csv /tmp/schedule.csv > /tmp/diagnostics.json
+          diff -u models/fixtures/r2_order_schedule_v3_24.csv /tmp/schedule.csv
+      - name: Recompute frozen sensitivity table
+        run: |
+          python - <<'PY'
+          import csv,sys
+          sys.path.insert(0,'models')
+          import r2_order_drift_v3_24 as m
+          rows,phi,base=m.synthetic_rows(noise_sd_V=0.0)
+          got=[]
+          for q in [0,0.00025,0.0005,0.001,0.002]:
+              mono=m.monotonic_bias(phi,base,linear_pp_V=0.002,quad_pp_V=q)
+              rr,pp,bb=m.synthetic_rows(linear_pp_V=0.002,quad_pp_V=q,noise_sd_V=0.0)
+              out=m.analyze(rr); true=m.curvature(pp,pp,bb)
+              got.append((q,mono,out['curvature']-true))
+          exp=list(csv.DictReader(open('models/fixtures/r2_order_sensitivity_v3_24.csv')))
+          assert len(exp)==len(got)
+          for row,(q,mono,corr) in zip(exp,got):
+              assert abs(float(row['quadratic_peak_to_peak_V'])-q)<1e-15
+              assert abs(float(row['monotonic_curvature_bias'])-mono)<1e-12
+              assert abs(float(row['randomized_corrected_bias_noise_free'])-corr)<1e-12
+          print('PASS frozen sensitivity')
+          PY
