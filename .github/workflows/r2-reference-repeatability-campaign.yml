@@ -1,0 +1,84 @@
+name: r2-reference-repeatability-campaign
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_calibration_campaign_design_v3_20.py'
+      - 'models/fixtures/r2_calibration_campaign_precision_v3_20.csv'
+      - 'technical/data/r2_reference_repeatability_template_v3_20.csv'
+      - 'technical/r2-reference-repeatability-campaign-v3.20.md'
+      - '.github/workflows/r2-reference-repeatability-campaign.yml'
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12','3.13','3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m py_compile models/r2_calibration_campaign_design_v3_20.py
+
+  verify-design:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute frozen planning design
+        run: |
+          python models/r2_calibration_campaign_design_v3_20.py \
+            --output-json /tmp/v320.json \
+            --output-precision-csv /tmp/v320_precision.csv \
+            --output-schedule-csv /tmp/v320_schedule.csv
+      - name: Verify hierarchy, randomization and numerical gates
+        run: |
+          python - <<'PY'
+          import csv,json,math,sys
+          sys.path.insert(0,'models')
+          import r2_calibration_campaign_design_v3_20 as d
+          result=json.load(open('/tmp/v320.json'))
+          assert result['decision']['training_sessions']==24
+          assert result['decision']['prospective_holdout_sessions']==6
+          assert result['decision']['total_sessions']==30
+          assert result['decision']['total_sweeps']==120
+          assert result['decision']['total_grid_points']==2040
+          rows=list(csv.DictReader(open('/tmp/v320_schedule.csv')))
+          assert len(rows)==120
+          sessions={r['session_id'] for r in rows}
+          assert len(sessions)==30
+          assert len({r['session_id'] for r in rows if r['partition']=='training'})==24
+          assert len({r['session_id'] for r in rows if r['partition']=='prospective_holdout'})==6
+          for sid in sessions:
+              rr=[r for r in rows if r['session_id']==sid]
+              assert len(rr)==4
+              assert sum(r['sweep_direction']=='ascending' for r in rr)==2
+              assert sum(r['sweep_direction']=='descending' for r in rr)==2
+          frozen={(int(r['n_sessions']),float(r['within_to_between_sd_ratio'])):r for r in csv.DictReader(open('models/fixtures/r2_calibration_campaign_precision_v3_20.csv'))}
+          for key,expected in [((24,0.75),0.27917653657213815),((24,1.0),0.3111472070671643),((30,1.0),0.27456830489748096)]:
+              got=float(frozen[key]['p90_abs_relative_sd_error'])
+              assert math.isclose(got,expected,rel_tol=0,abs_tol=1e-15),(key,got,expected)
+          assert abs(float(frozen[(24,0.75)]['mean_estimated_variance_over_true_variance'])-1)<0.01
+          assert abs(float(frozen[(24,1.0)]['mean_estimated_variance_over_true_variance'])-1)<0.01
+          c1=d.precision_case(24,0.75,reps=40000)
+          c2=d.precision_case(24,1.0,reps=40000)
+          assert abs(c1['p90_abs_relative_sd_error']-float(frozen[(24,0.75)]['p90_abs_relative_sd_error']))<0.01
+          assert abs(c2['p90_abs_relative_sd_error']-float(frozen[(24,1.0)]['p90_abs_relative_sd_error']))<0.01
+          print('PASS prospective campaign design')
+          PY
+      - name: Verify raw schema
+        run: |
+          python - <<'PY'
+          import csv
+          p='technical/data/r2_reference_repeatability_template_v3_20.csv'
+          with open(p,newline='') as h:
+              fields=set(csv.DictReader(h).fieldnames or [])
+          required={'campaign_id','partition','day_block','session_id','sweep_id','sweep_direction','sequence_index','row_type','target_suns','reference_detector_id','reference_signal_raw','reference_signal_unit','reference_dark_raw','calibrated_suns','detector_gain_state','source_spectrum_id','source_spectrum_hash','detector_temperature_K','ambient_temperature_K','elapsed_session_min','geometry_state','operator_or_automation_id','qc_status','exclusion_code','deviation_note'}
+          assert fields==required,(fields^required)
+          print('PASS schema')
+          PY
