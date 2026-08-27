@@ -1,0 +1,44 @@
+name: r2-shipping-control
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_shipping_control_v3_36.py'
+      - 'technical/data/r2_shipping_control_protocol_v3_36.json'
+      - 'technical/data/r2_shipping_control_raw_template_v3_36.csv'
+      - 'technical/r2-shipping-control-v3.36.md'
+      - 'research/evidence/r2-shipping-control-v3.36.md'
+      - 'research/sessions/2026-08-27-r2-shipping-control-v3.36.md'
+      - 'venture/v3.36-shipping-control-decision.md'
+      - '.github/workflows/r2-shipping-control.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run primary and independent checks
+        run: python models/r2_shipping_control_v3_36.py
+      - name: Independent shell structure check
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, json, math
+          from pathlib import Path
+          p = json.loads(Path('technical/data/r2_shipping_control_protocol_v3_36.json').read_text())
+          assert p['design']['arms'] == ['TRAVEL', 'HOME']
+          assert p['design']['minimum_independent_substrates_per_arm_nominal'] == 6
+          rows = list(csv.DictReader(Path('technical/data/r2_shipping_control_raw_template_v3_36.csv').open()))
+          assert len(rows) == 4
+          assert {(r['arm'], r['session_phase']) for r in rows} == {('TRAVEL','PRE'),('TRAVEL','POST'),('HOME','PRE'),('HOME','POST')}
+          se = 3.0 * math.sqrt(2.0 / 6.0)
+          assert abs(se - 1.7320508075688772) < 1e-12
+          print('independent structure/arithmetic check PASS')
+          PY
