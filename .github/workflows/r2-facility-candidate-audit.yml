@@ -1,0 +1,47 @@
+name: r2-facility-candidate-audit
+
+on:
+  pull_request:
+    paths:
+      - 'technical/data/r2_facility_capability_contract_v3_27.json'
+      - 'technical/data/r2_facility_candidate_matrix_v3_28.csv'
+      - 'technical/data/r2_facility_candidate_summary_v3_28.json'
+      - 'tools/score_r2_facility_candidates_v3_28.py'
+      - 'technical/r2-facility-candidate-audit-v3.28.md'
+      - 'research/evidence/r2-facility-candidate-audit-v3.28.md'
+      - '.github/workflows/r2-facility-candidate-audit.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate prospective facility audit
+        run: python tools/score_r2_facility_candidates_v3_28.py
+      - name: Independent CSV count check
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv
+          from collections import Counter, defaultdict
+          p='technical/data/r2_facility_candidate_matrix_v3_28.csv'
+          d=defaultdict(Counter)
+          with open(p, newline='', encoding='utf-8') as f:
+              for r in csv.DictReader(f): d[r['candidate_id']][r['status']] += 1
+          expected={
+              'NLR_PVDPC': (2,5,0),
+              'IPVF': (1,6,0),
+              'FRAUNHOFER_ISE_CALLAB': (2,5,0),
+          }
+          for k,(known,needs,unavail) in expected.items():
+              got=(d[k]['KNOWN_AVAILABLE'],d[k]['NEEDS_CONFIRMATION'],d[k]['UNAVAILABLE'])
+              assert got==(known,needs,unavail),(k,got)
+          print('Independent status counts:', dict(d))
+          PY
