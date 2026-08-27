@@ -1,0 +1,44 @@
+{
+  "schema_version": "3.39",
+  "status": "engineering_protocol_not_experimental_result",
+  "purpose": "Qualify the temporal fidelity of an R2 transfer logger/package on dummy substrates before using logged temperature/RH/acceleration to interpret qualified-device transfers.",
+  "channels": {
+    "temperature": {"unit": "degC", "model": "first_order_step_response"},
+    "relative_humidity": {"unit": "%RH", "model": "first_order_step_response"},
+    "acceleration": {"unit": "g", "model": "known_pulse_peak_response"}
+  },
+  "required_provenance": ["qualification_id","dummy_id","carrier_id","package_id","logger_id","logger_model","logger_calibration_reference","reference_instrument_id","reference_calibration_reference","run_id","timestamp_utc","software_version"],
+  "thermal_rh_fit": {
+    "equation": "y(t)=y_inf+(y0-y_inf)*exp(-(t-t0)/tau)",
+    "symbols": {"y":"logger channel value","y0":"initial equilibrium value","y_inf":"final equilibrium value","tau":"first-order time constant [s]","t":"time [s]","t0":"step time [s]"},
+    "fit_scope": "dummy-package engineering characterization only",
+    "minimum_independent_step_runs_per_direction": 3,
+    "independence_note": "Repeated samples inside a run do not increase independent run count."
+  },
+  "sampling_rule": {
+    "samples_per_time_constant_min": 5,
+    "class": "synthetic_engineering_assumption",
+    "derived_max_gap_equation": "gap_max=tau_min/5",
+    "decision_rule": "Use the smallest qualified temperature/RH time constant across directions, dummy placements, and runs; the transfer-log gap must not exceed one fifth of that value.",
+    "note": "The factor 5 is a provisional engineering sampling-density rule, not a device-safety standard. It must remain labeled as an assumption until justified by application-specific reconstruction/error requirements."
+  },
+  "acceleration_pulse_screen": {
+    "minimum_independent_pulses_per_width": 3,
+    "required_widths_ms": [10, 100, 1000],
+    "peak_capture_ratio_min": 0.9,
+    "class": "synthetic_engineering_assumption",
+    "equation": "R_peak=max(|a_logger|)/max(|a_reference|)",
+    "decision_rule": "All tested pulse-width groups must have conservative lower peak-capture ratio >=0.90; otherwise acceleration evidence is bandwidth-incomplete for impulses at or below the failed width."
+  },
+  "uncertainty": {
+    "temperature_rh_tau": "Report fitted tau with bootstrap or run-to-run interval; systematic reference timing and sensor placement terms separately.",
+    "acceleration": "For each pulse use conservative ratio R_lower=(A_logger-u_logger)/(A_ref+u_ref), bounded below by zero.",
+    "correlation_note": "Shared calibration/timebase terms must not be treated as independent repeats."
+  },
+  "classification": {
+    "QUALIFIED_FOR_DECLARED_BANDWIDTH": "Required provenance, independent runs, fit diagnostics, uncertainty fields and acceleration pulse screens pass.",
+    "INCOMPLETE": "Missing provenance, insufficient independent runs, invalid/nonphysical fit, missing uncertainty, or untested required pulse width.",
+    "FAIL_BANDWIDTH": "A required temperature/RH fit is invalid for the declared model or an acceleration pulse group fails the conservative peak-capture criterion."
+  },
+  "claim_boundary": "Passing this protocol establishes only logger/package temporal-fidelity evidence over the tested dummy configuration and perturbation range. It does not establish device stability, shipping safety, facility equivalence, or any quantum mechanism."
+}
