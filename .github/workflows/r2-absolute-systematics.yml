@@ -1,0 +1,50 @@
+name: r2-absolute-systematics
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_absolute_systematic_budget_v3_21.py'
+      - 'models/r2_absolute_systematic_budget_test_v3_21.py'
+      - 'models/fixtures/r2_absolute_systematic_*_v3_21.csv'
+      - 'models/r2_covariance_power_v3_18.py'
+      - 'models/fixtures/r2_covariance_fixture_v3_18.csv'
+      - '.github/workflows/r2-absolute-systematics.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/r2_absolute_systematic_budget_v3_21.py models/r2_absolute_systematic_budget_test_v3_21.py
+      - name: Frozen synthetic + independent Monte Carlo checks
+        run: python models/r2_absolute_systematic_budget_test_v3_21.py
+      - name: CLI round trip
+        run: |
+          python models/r2_absolute_systematic_budget_v3_21.py \
+            models/fixtures/r2_covariance_fixture_v3_18.csv \
+            models/fixtures/r2_absolute_systematic_components_v3_21.csv \
+            models/fixtures/r2_absolute_systematic_shapes_v3_21.csv \
+            --output-json /tmp/v321.json \
+            --output-sidecar /tmp/v321-sidecar.csv \
+            --output-corrected-csv /tmp/v321-corrected.csv
+          python - <<'PY'
+          import csv,json,math
+          d=json.load(open('/tmp/v321.json'))
+          assert d['schema_version']=='r2-absolute-systematic-budget-v3.21'
+          assert d['status']=='PASS'
+          s=d['sweeps'][0]
+          assert math.isclose(s['abs_systematic_curvature_u_1sigma'],0.0033673385387834737,rel_tol=1e-10,abs_tol=1e-11)
+          rows=list(csv.DictReader(open('/tmp/v321-sidecar.csv')))
+          assert len(rows)==51
+          corrected=list(csv.DictReader(open('/tmp/v321-corrected.csv')))
+          assert len(corrected)==17
+          print('PASS CLI round trip')
+          PY
