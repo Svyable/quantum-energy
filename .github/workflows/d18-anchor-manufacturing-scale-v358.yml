@@ -1,0 +1,25 @@
+name: d18-anchor-manufacturing-scale-v358
+
+on:
+  pull_request:
+    paths:
+      - 'research/benchmarks/d18-anchor-manufacturing-scale-v3.58.json'
+      - 'research/benchmarks/d18-anchor-manufacturing-scale-v3.58.md'
+      - 'models/d18_anchor_manufacturing_scale_v358.py'
+      - '.github/workflows/d18-anchor-manufacturing-scale-v358.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce manufacturing-scale evidence bound
+        run: python models/d18_anchor_manufacturing_scale_v358.py
