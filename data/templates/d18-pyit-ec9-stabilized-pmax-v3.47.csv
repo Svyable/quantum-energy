@@ -1,0 +1,4 @@
+lot_id,arm,device_id,stabilized_pmax_W_m2,u_stabilized_pmax_W_m2,temperature_C,irradiance_W_m2,active_area_cm2,tracking_duration_s,stability_rule_pass,qc_pass,exclusion_reason,raw_trace_ref,analysis_commit
+LOT001,B0,,,,,,,,,,,,
+LOT001,B1,,,,,,,,,,,,
+LOT001,B2,,,,,,,,,,,,
