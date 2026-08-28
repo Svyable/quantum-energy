@@ -1,0 +1,25 @@
+name: d18-b0-transport-loss-companion-v363
+
+on:
+  pull_request:
+    paths:
+      - 'research/protocols/d18-b0-transport-loss-companion-v3.63.json'
+      - 'research/protocols/d18-b0-transport-loss-companion-v3.63.md'
+      - 'models/d18_b0_transport_loss_companion_v363.py'
+      - '.github/workflows/d18-b0-transport-loss-companion-v363.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate B0 transport-loss companion
+        run: python models/d18_b0_transport_loss_companion_v363.py
