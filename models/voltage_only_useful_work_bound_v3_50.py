@@ -48,18 +48,23 @@ def main() -> None:
         b = ratio_gain(delta, voc0)
         assert math.isclose(a, b, rel_tol=0.0, abs_tol=TOL)
 
-    # Boundary case: exactly 0.4 V with +20 mV gives exactly the 5% target.
+    # Boundary case: exactly 0.4 V with +20 mV gives the 5% target within numeric tolerance.
     assert math.isclose(direct_gain(delta, vcrit), target, rel_tol=0.0, abs_tol=TOL)
 
     # Negative/control case frozen in JSON: 0.8 V + 20 mV is only 2.5%.
     neg = expected["negative_fixture"]
     gneg = direct_gain(float(neg["delta_voc_V"]), float(neg["voc0_V"]))
     assert math.isclose(gneg, float(neg["voltage_only_relative_gain"]), rel_tol=0.0, abs_tol=TOL)
-    assert (gneg >= target) is bool(neg["passes_5pct_gate"])
+    assert (gneg >= target) == bool(neg["passes_5pct_gate"])
 
-    # Limiting cases and normalization.
+    # Limiting cases and normalization. Floating representations are compared at the frozen tolerance.
     assert direct_gain(0.0, 0.8) == 0.0
-    assert direct_gain(delta * 100.0, 0.8 * 100.0) == direct_gain(delta, 0.8)
+    assert math.isclose(
+        direct_gain(delta * 100.0, 0.8 * 100.0),
+        direct_gain(delta, 0.8),
+        rel_tol=0.0,
+        abs_tol=TOL,
+    )
 
     # Sensitivity is analytic and monotonic in ΔV.
     last = -math.inf
