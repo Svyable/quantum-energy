@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.49",
+  "claim_class": "independent reproduction / lineage audit",
+  "claim": "The current public author-code revision cannot yet be treated as an exact reproduction of the Nature Photonics paper's first-order Stark rate model because the inspected public helper implements a quadratic polarizability term without the paper's first-order dipole term.",
+  "run_base_main_sha": "9e61f8d761cc30b5ba12eef36c9935c35591c8f5",
+  "primary_source": {
+    "title": "Overcoming the fill-factor limit of organic solar cells",
+    "journal": "Nature Photonics",
+    "doi": "10.1038/s41566-026-01946-8",
+    "version_of_record_date": "2026-06-19",
+    "paper_model_statements": {
+      "first_order_ct_separation_nm": 3.5,
+      "field_V_per_m": 10000000.0,
+      "reported_first_order_shift_eV_approx": 0.035,
+      "reported_second_order_shift_eV_range": [0.0000035, 0.000035],
+      "figure_4g_focus": "first-order Stark effect"
+    }
+  },
+  "public_author_code": {
+    "repository": "HuotianZhang/DriftFusionOPV_FieldDependent",
+    "inspected_commit": "d5e805ec69359f36be6e1da17a401ed8d64721a3",
+    "default_branch_at_inspection": "DriftFusionOPV_FieldDepdent_2.0",
+    "files": {
+      "functions/marcus_equation_stark.m": "5eb9f1fad1737601e23dab39f56494474f9b8053",
+      "functions/kDis_stark.m": "3a1bffbc0b671e36d53cceaccb9f79813befff01",
+      "MarcusTransfer_JV_0620_334.m": "3ba0c6c0dd61d65046522851a913ba56ddb62655"
+    },
+    "license_status": "No repository-level LICENSE file was observed in the inspected recursive tree; upstream code is therefore not copied into this repository.",
+    "observed_helper_model": {
+      "energy_shift": "DeltaE_CT = -0.5 * alpha_CT * F * abs(F) / q",
+      "alpha_scaling": "alpha_CT = alpha_TCNQ * (d_CT / d_TCNQ)^4",
+      "alpha_prime_TCNQ_A3": 85.0,
+      "d_TCNQ_m": 1.5e-10,
+      "kDis_default_temperature_K": 298.0,
+      "example_RCT_nm": 1.5
+    }
+  },
+  "independent_reimplementation": {
+    "constants": {
+      "epsilon0_F_per_m": 8.854e-12,
+      "q_C": 1.6022e-19
+    },
+    "equations": {
+      "paper_first_order_shift_eV": "abs(F_V_per_m) * separation_m",
+      "upstream_quadratic_shift_eV": "0.5 * (4*pi*epsilon0*alpha_prime_A3*1e-30) * (d_CT_m/d_ref_m)^4 * F*abs(F) / q"
+    },
+    "expected_outputs": {
+      "paper_first_order_shift_eV_at_3p5nm_1e7Vpm": 0.035,
+      "upstream_quadratic_shift_eV_at_1p5nm_1e7Vpm": 0.029513559045876218,
+      "upstream_implied_alpha_A3_at_1p5nm": 850000.0,
+      "ratio_upstream_1p5nm_shift_to_paper_second_order_upper": 843.2445441678921,
+      "upstream_quadratic_shift_eV_at_3p5nm_1e7Vpm": 0.8748401885080096,
+      "ratio_upstream_3p5nm_shift_to_paper_first_order": 24.995433957371702
+    },
+    "absolute_tolerance": 1e-12,
+    "runtime": "Python standard library; Python >=3.12",
+    "stochastic_seed": null
+  },
+  "decision": {
+    "status": "LINEAGE_UNRESOLVED",
+    "effect_on_program": "Retain v3.45 as an independent paper-text model counterexample, but do not describe the authors' public code as independently reproduced or as an exact implementation of the paper model until a figure-generating revision is identified.",
+    "falsifier": "A pinned author-provided revision or archived release whose figure-4 rate path contains the stated first-order Stark term and reproduces the paper figure within a predeclared numerical tolerance would retire this lineage concern."
+  }
+}
