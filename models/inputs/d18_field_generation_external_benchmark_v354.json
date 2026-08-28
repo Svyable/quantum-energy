@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.54",
+  "claim_class": "literature-derived real-data/model benchmark",
+  "claim": "A published low-voltage-loss OSC example (PTO2:Y1) shows a measured FF of 0.27 versus a transport-and-bimolecular-recombination-only reconstructed FF of 0.58; the resulting FF retention is about 0.466. This is an external material-system benchmark, not a D18/PY-IT/eC9 threshold or measurement.",
+  "source": {
+    "title": "Overcoming the fill-factor limit of organic solar cells",
+    "authors_first": "Huotian Zhang",
+    "journal": "Nature Photonics",
+    "published_date": "2026-06-19",
+    "doi": "10.1038/s41566-026-01946-8",
+    "url": "https://www.nature.com/articles/s41566-026-01946-8",
+    "source_revision": "version of record 2026-06-19",
+    "source_location": "Main text, FF and VOC section; PTO2:Y1 discussion around Table 1 and field-dependent charge generation section"
+  },
+  "inputs": {
+    "ff_measured": {
+      "value": 0.27,
+      "unit": "1",
+      "uncertainty": null,
+      "reporting_resolution_half_width": 0.005,
+      "provenance_class": "literature-derived",
+      "note": "Published main-text value; no measurement uncertainty attached to this scalar in the inspected passage. ±0.005 is only a rounding-resolution interval implied by two-decimal reporting, not physical uncertainty."
+    },
+    "ff_transport_reconstructed": {
+      "value": 0.58,
+      "unit": "1",
+      "uncertainty": null,
+      "reporting_resolution_half_width": 0.005,
+      "provenance_class": "literature-derived model result",
+      "note": "Authors' reconstructed FF expected if limited only by transport and bimolecular recombination, as described in the inspected main text."
+    },
+    "eta_int_open_circuit": {
+      "value": 0.06,
+      "unit": "1",
+      "uncertainty": null,
+      "provenance_class": "literature-derived fitted/experimental parameter",
+      "note": "Reported for PTO2:Y1 in the field-dependent-generation model discussion; retained as provenance context and not used in the scalar FF-retention calculation."
+    },
+    "beta": {
+      "value": 0.09,
+      "unit": "V^-1",
+      "uncertainty": null,
+      "provenance_class": "literature-derived fitted parameter",
+      "note": "Reported for PTO2:Y1; retained as provenance context and not used in the scalar FF-retention calculation."
+    }
+  },
+  "governing_equations": {
+    "ff_retention": "R_FF = FF_measured / FF_transport_reconstructed",
+    "absolute_ff_deficit": "D_FF = FF_transport_reconstructed - FF_measured",
+    "relative_ff_deficit": "d_FF = 1 - R_FF",
+    "rounding_interval_retention": "R_min=(FF_measured-h)/(FF_transport+h); R_max=(FF_measured+h)/(FF_transport-h), h=0.005"
+  },
+  "expected_outputs": {
+    "ff_retention": 0.46551724137931033,
+    "absolute_ff_deficit": 0.31,
+    "relative_ff_deficit": 0.5344827586206897,
+    "rounding_retention_min": 0.452991452991453,
+    "rounding_retention_max": 0.4782608695652174,
+    "rounding_deficit_min": 0.3,
+    "rounding_deficit_max": 0.32
+  },
+  "numerical_tolerance": 1e-12,
+  "validity_domain": "Arithmetic benchmark only. It quantifies the gap between two values reported by Zhang et al. for PTO2:Y1. It does not independently validate the authors' causal attribution, does not transfer the parameters to D18/PY-IT/eC9, and does not provide a project acceptance threshold.",
+  "falsifier": "Revise or retire this benchmark if the cited source values are corrected, if a source-version mismatch is found, or if the 0.58 quantity is shown not to represent the transport/bimolecular-only reconstructed FF described in the main text."
+}
