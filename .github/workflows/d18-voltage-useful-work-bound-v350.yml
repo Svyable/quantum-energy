@@ -30,10 +30,12 @@ jobs:
           d = json.loads(Path('models/voltage_only_useful_work_bound_v3_50.json').read_text())
           dv = d['primary_source']['source_value']['delta_voc_V']
           target = d['project_decision_rule']['minimum_relative_stabilized_pmax_gain']
-          # Independent inequality form: voltage-only target is possible iff dv >= target*Voc0.
+          tol = 1e-12
+          # Independent inequality form with a tolerance at the exact boundary:
+          # voltage-only target is possible iff dv >= target*Voc0.
           boundary = dv / target
-          assert abs(boundary - 0.4) < 1e-12
-          assert not (dv >= target * 0.8)  # frozen negative fixture
-          assert dv >= target * 0.4       # exact boundary
-          assert abs((0.025 / target) - 0.5) < 1e-12
+          assert abs(boundary - 0.4) < tol
+          assert dv < target * 0.8 - tol  # frozen negative fixture
+          assert abs(dv - target * 0.4) < tol  # exact mathematical boundary
+          assert abs((0.025 / target) - 0.5) < tol
           print({'boundary_V': boundary, 'negative_0p8V_pass': False})
