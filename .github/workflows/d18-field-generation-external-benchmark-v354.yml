@@ -1,0 +1,42 @@
+name: d18-field-generation-external-benchmark-v354
+
+on:
+  pull_request:
+    paths:
+      - 'models/inputs/d18_field_generation_external_benchmark_v354.json'
+      - 'models/d18_field_generation_external_benchmark_v354.py'
+      - 'research/d18-field-generation-external-benchmark-v3.54.md'
+      - '.github/workflows/d18-field-generation-external-benchmark-v354.yml'
+
+jobs:
+  benchmark:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python models/d18_field_generation_external_benchmark_v354.py
+      - name: Independent scalar check
+        run: |
+          python - <<'PY'
+          import json
+          import math
+          p='models/inputs/d18_field_generation_external_benchmark_v354.json'
+          d=json.load(open(p))
+          m=float(d['inputs']['ff_measured']['value'])
+          t=float(d['inputs']['ff_transport_reconstructed']['value'])
+          h=float(d['inputs']['ff_measured']['reporting_resolution_half_width'])
+          tol=float(d['numerical_tolerance'])
+          # Independent algebra: relative deficit=(t-m)/t, rather than 1-m/t.
+          rel=(t-m)/t
+          assert math.isclose(rel, float(d['expected_outputs']['relative_ff_deficit']), rel_tol=tol, abs_tol=tol)
+          # Interval extremum check from monotonicity of m/t.
+          rmax=(m+h)/(t-h)
+          assert rmax < 0.5
+          assert (t-h)-(m+h) > 0.0
+          print('independent check: PASS')
+          PY
