@@ -1,0 +1,95 @@
+{
+  "schema_version": "v3.46",
+  "claim_class": "prospective experiment/protocol",
+  "program": "D18/PY-IT/eC9 useful-work bridge",
+  "base_main_sha": "9e61f8d761cc30b5ba12eef36c9935c35591c8f5",
+  "source_provenance": [
+    {
+      "type": "primary_paper",
+      "citation": "Zhang et al., Overcoming the fill-factor limit of organic solar cells, Nature Photonics (2026)",
+      "doi": "10.1038/s41566-026-01946-8",
+      "version_of_record_date": "2026-06-19",
+      "data_doi": "10.5281/zenodo.20082078",
+      "authors_code": "https://github.com/HuotianZhang/DriftFusionOPV_FieldDependent",
+      "project_use": "method precedent for TDCF and bias-dependent PL as field-dependent free-charge-generation discriminators; not evidence for D18/PY-IT/eC9"
+    }
+  ],
+  "arms": {
+    "B0": "D18:eC9 baseline",
+    "B1": "D18:PY-IT:eC9 = 1:0.1:1",
+    "B2": "D18:PY-IT:eC9 = 1:0.2:1"
+  },
+  "independent_unit": "fabrication lot",
+  "hierarchy": ["lot", "substrate", "device", "session", "measurement"],
+  "minimum_independent_lots_for_useful_work_claim": 3,
+  "primary_measurement": {
+    "method": "TDCF",
+    "required": true,
+    "prebias_V": null,
+    "delay_s": null,
+    "collection_bias_V": null,
+    "excitation_wavelength_nm": null,
+    "fluence": null,
+    "absorbed_photon_normalization_required": true,
+    "freeze_rule": "instrument-safe values and a common prebias grid must be frozen before arm identities are unblinded"
+  },
+  "supporting_measurements": {
+    "bias_dependent_PL": {
+      "required": true,
+      "simultaneous_JV_preferred": true,
+      "acceptor_emission_window_nm": null,
+      "normalization_reference": "short_circuit_or_frozen_reference_bias"
+    },
+    "stabilized_Pmax": {"required": true},
+    "JV": {"required": true},
+    "DeltaVnr_or_EQE_EL": {"required": true},
+    "absorption_or_EQE_for_generation_normalization": {"required": true},
+    "morphology_control": {"required": true},
+    "contact_transport_control": {"required": true}
+  },
+  "estimators": {
+    "tdcf_retention": "r_arm(V)=eta_FC,arm(V)/eta_FC,arm(V_ref)",
+    "field_loss": "L_arm=max_V[1-r_arm(V)] over the preregistered evaluation set",
+    "baseline_relative_penalty": "D_arm=L_arm-L_B0",
+    "symbols": {
+      "eta_FC": "free-charge-generation efficiency from TDCF with absorbed-photon normalization; dimensionless",
+      "V_ref": "frozen reference bias, normally the least field-limited point in the common grid; V",
+      "r": "normalized field-retention ratio; dimensionless",
+      "L": "worst field-dependent generation loss over evaluation grid; dimensionless",
+      "D": "arm field-loss penalty relative to contemporaneous B0 in same independent lot; dimensionless"
+    }
+  },
+  "decision_rule": {
+    "physical_noninferiority_margin": null,
+    "margin_units": "dimensionless absolute retention/loss fraction",
+    "margin_origin_required": ["B0 prospective repeatability", "instrument capability", "prospective power analysis"],
+    "freeze_before_unblinding": true,
+    "fail_closed": "No B1/B2 useful-work PASS is allowed while the field-generation margin is null or was selected after arm unblinding.",
+    "useful_work_gate": "An interface arm that improves DeltaVnr/Voc but has field-generation penalty beyond the frozen margin and no stabilized FF/Pmax improvement is mechanism science, not useful-work validation."
+  },
+  "blinding": {
+    "coded_device_ids_required": true,
+    "analysis_commit_frozen_before_mapping_release": true,
+    "arm_mapping_release_after_primary_outputs_hash_recorded": true
+  },
+  "exclusions": {
+    "predeclared_QC_only": true,
+    "all_functional_devices_reported": true,
+    "hero_device_selection_forbidden": true
+  },
+  "serious_conventional_explanations": [
+    "mobility/recombination/contact differences can lower FF without field-dependent generation",
+    "absorption/morphology/thickness differences can alter apparent generation or PL without an Ex-to-CT field-sensitivity change",
+    "heating, injection history, fluence dependence, or timing differences can bias TDCF/PL comparisons"
+  ],
+  "falsification": "The EPC/interface useful-work interpretation is narrowed if lower DeltaVnr is not accompanied by field-robust charge generation and stabilized electrical output across independent lots.",
+  "synthetic_fixture": {
+    "class": "synthetic arithmetic fixture only",
+    "B0_retention": [1.0, 0.98, 0.94, 0.88],
+    "B2_retention": [1.0, 0.97, 0.90, 0.75],
+    "expected_L_B0": 0.12,
+    "expected_L_B2": 0.25,
+    "expected_D_B2": 0.13,
+    "tolerance": 1e-12
+  }
+}
