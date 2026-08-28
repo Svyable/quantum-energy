@@ -1,0 +1,20 @@
+name: d18-durability-mechanism-retention-v361
+on:
+  pull_request:
+    paths:
+      - 'models/d18_durability_mechanism_retention_v361.py'
+      - 'research/protocols/d18-durability-mechanism-retention-v3.61.json'
+      - 'research/protocols/d18-durability-mechanism-retention-v3.61.md'
+      - '.github/workflows/d18-durability-mechanism-retention-v361.yml'
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python models/d18_durability_mechanism_retention_v361.py

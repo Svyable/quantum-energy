@@ -1,0 +1,100 @@
+{
+  "id": "v3.61-d18-durability-mechanism-retention",
+  "claim_class": "prospective protocol",
+  "claim": "Before a D18/PY-IT/eC9 useful-work claim is promoted beyond initial performance, B0/B1/B2 must be tested under separated intrinsic heat and intrinsic light stress with stabilized-Pmax tracking and paired mechanism observables, preserving fabrication hierarchy and all functional devices.",
+  "changed_evidentiary_state": "Durability moves from an unspecified downstream requirement to a preregistered falsifier with source-grounded stress classes, fixed reporting horizon, machine-readable data contract, and explicit kill/narrow logic.",
+  "canonical_project_gate": {
+    "source": "technical/current-specification.md on main at run base",
+    "stabilized_pmax_relative_improvement": 0.05,
+    "independent_lots_min": 3,
+    "classification": "existing project gate; not introduced by this protocol"
+  },
+  "external_provenance": [
+    {
+      "title": "Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface",
+      "doi": "10.1038/s41467-026-68731-7",
+      "published": "2026-01-26",
+      "version_of_record": "2026-02-26",
+      "facts_used": [
+        "device measurements and thermal ageing were conducted inside a glovebox under inert atmosphere",
+        "the main article methods do not state a thermal-ageing temperature, duration, or durability result used here"
+      ]
+    },
+    {
+      "title": "Consensus statement for stability assessment and reporting for perovskite photovoltaics based on ISOS procedures",
+      "doi": "10.1038/s41560-019-0529-5",
+      "published": "2020-01-22",
+      "facts_used": [
+        "ISOS-I notation separates intrinsic stress in inert atmosphere",
+        "ISOS-D-2I isolates elevated-temperature stress",
+        "ISOS-L-1I isolates light stress at room temperature",
+        "800-1000 W m^-2 illumination is recommended for light-soaking studies",
+        "if T80 is not reached, at least 1000 h ageing with eta_1000 reporting is recommended",
+        "sample and batch statistics and normalization values should be reported",
+        "MPPT is preferred when available and the hardware/algorithm should be documented"
+      ],
+      "scope_note": "Used as an ISOS-derived research-discipline precedent, not IEC certification and not a claim that perovskite-specific degradation physics transfers to OPV."
+    }
+  ],
+  "stress_arms": [
+    {
+      "id": "D2I_65C_DARK",
+      "purpose": "intrinsic thermal discriminator",
+      "light": "dark",
+      "temperature_C": 65,
+      "atmosphere": "inert",
+      "electrical_state": "open_circuit_or_disconnected",
+      "source_basis": "ISOS-D-2I family; 65 C is an explicitly listed D-2 elevated temperature"
+    },
+    {
+      "id": "L1I_1SUN_RT",
+      "purpose": "intrinsic photostability/operational discriminator",
+      "light_irradiance_W_m2_range": [800, 1000],
+      "temperature": "room-temperature condition; record measured device temperature rather than inventing a tighter setpoint",
+      "atmosphere": "inert",
+      "electrical_state": "maximum-power-point tracking when equipment supports it; otherwise stabilized operation near MPP with algorithm/procedure recorded",
+      "source_basis": "ISOS-L-1I family plus consensus reporting guidance"
+    }
+  ],
+  "horizon": {
+    "primary": "T80 if observed; otherwise 1000 h",
+    "eta_1000_definition": "Pmax at 1000 h divided by the same device's accepted t=0 stabilized Pmax",
+    "no_lifetime_extrapolation_without_model": true
+  },
+  "measurement_hierarchy": ["material_lot", "fabrication_lot", "substrate", "device", "stress_session", "measurement"],
+  "required_columns": [
+    "material_lot", "fabrication_lot", "substrate_id", "device_id", "arm", "stress_id", "time_h", "pmax_mW_cm2", "functional", "qc_exclusion_code"
+  ],
+  "required_device_metadata": [
+    "D18_lot", "PY_IT_lot_if_applicable", "eC9_lot", "active_area_cm2", "encapsulation_state", "stress_atmosphere", "temperature_trace_reference", "light_source_reference_if_applicable", "mppt_method_reference_if_applicable"
+  ],
+  "paired_mechanism_observables": {
+    "times": ["pre_stress", "post_stress_or_1000h"],
+    "required": ["DeltaVnr_or_EQE_EL", "field_dependent_generation_TDCF_or_bias_dependent_PL_or_justified_equivalent"],
+    "supporting": ["Voc", "FF", "Jsc", "morphology_or_contact_transport_control"],
+    "rule": "A retained or lost Pmax advantage must not be assigned uniquely to EPC without these controls."
+  },
+  "decision_rules": [
+    "Initial useful-work eligibility still requires >=5% relative stabilized-Pmax improvement with the same sign across >=3 independent lots; this protocol does not relax that gate.",
+    "Durability evidence is not established by a champion device or by J-V scans alone; use stabilized Pmax on all functional devices not excluded by frozen QC.",
+    "If an arm's initial >=5% stabilized-Pmax advantage over B0 is absent at the frozen durability horizon, do not call that arm durable useful-work validation.",
+    "If voltage-loss/EPC observables remain favorable but stabilized Pmax advantage disappears, retain the result as mechanism science and investigate field generation, transport/contact, morphology, and degradation pathways.",
+    "If heat-only and light-only stresses diverge, preserve that divergence rather than averaging them into a single stability score.",
+    "No field lifetime or acceleration factor may be inferred from these accelerated tests without a validated acceleration model."
+  ],
+  "serious_conventional_explanations": [
+    "ordinary morphology/domain coarsening or vertical-composition drift under heat",
+    "contact/electrode/interlayer degradation or series/shunt-resistance change",
+    "photo-oxidation or photochemical change if atmosphere/encapsulation control is imperfect",
+    "field-dependent generation or transport deterioration unrelated to EPC",
+    "batch/lot variability or correlated pixel repeats masquerading as durability differences"
+  ],
+  "falsifier": "A claimed durable interface/EPC useful-work advantage is falsified/narrowed if prospectively tracked stabilized Pmax no longer clears the existing useful-work gate at the durability horizon, especially when conventional degradation controls explain the loss.",
+  "software": {
+    "runtime": "Python >=3.12 standard library",
+    "command": "python models/d18_durability_mechanism_retention_v361.py",
+    "tolerance": 1e-12,
+    "random_seed": null
+  },
+  "synthetic_fixture_policy": "Embedded synthetic rows exercise parser/arithmetic/decision logic only. They are not material constants, expected device behavior, or a physical durability threshold."
+}
