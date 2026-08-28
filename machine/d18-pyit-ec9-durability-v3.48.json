@@ -1,0 +1,56 @@
+{
+  "schema_version": "v3.48",
+  "claim_class": "prospective_protocol_with_synthetic_arithmetic_fixture",
+  "claim": "A D18/PY-IT/eC9 arm cannot support a durable-useful-work claim from initial stabilized Pmax alone; paired normalized retention and absolute Pmax must be followed under a prospectively frozen stress protocol, and a physical noninferiority margin must be frozen before unblinding.",
+  "source_provenance": [
+    {
+      "type": "primary_literature",
+      "citation": "Reese et al., Consensus stability testing protocols for organic photovoltaic materials and devices, Solar Energy Materials and Solar Cells 95 (2011) 1253-1267",
+      "doi": "10.1016/j.solmat.2011.01.036",
+      "role": "OPV stability-test and reporting precedent; not D18/PY-IT/eC9 lifetime evidence"
+    }
+  ],
+  "decision_contract": {
+    "independent_unit": "fabrication_lot",
+    "hierarchy": ["lot", "substrate", "device", "session", "measurement"],
+    "stress_protocol": null,
+    "stress_duration_h": null,
+    "durability_noninferiority_margin": null,
+    "margin_provenance_required": true,
+    "freeze_before_unblinding": true,
+    "required_metrics": ["initial_relative_gain", "endpoint_relative_gain", "normalized_retention", "integrated_normalized_retention"],
+    "pass_state_without_frozen_margin": "INCOMPLETE",
+    "kill_narrow_rule": "If the arm has favorable initial Pmax but loses the paired absolute-Pmax advantage under the frozen stress endpoint, do not call it durable useful-work validation."
+  },
+  "equations": {
+    "initial_or_endpoint_relative_gain": "g(t)=P_arm(t)/P_B0(t)-1",
+    "normalized_retention": "R_x(t)=P_x(t)/P_x(0)",
+    "retention_penalty": "D(t)=R_B0(t)-R_arm(t); positive means worse normalized retention for the arm",
+    "integrated_retention": "A_x=[integral_0^T R_x(t) dt]/T",
+    "integrated_penalty": "D_A=A_B0-A_arm"
+  },
+  "synthetic_fixture": {
+    "classification": "synthetic_arithmetic_only",
+    "time_h": [0.0, 100.0, 200.0],
+    "B0_pmax_arb": [1.00, 0.96, 0.92],
+    "arm_pmax_arb": [1.05, 0.99, 0.90],
+    "expected": {
+      "initial_gain": 0.05,
+      "endpoint_gain": -0.0217391304347826,
+      "endpoint_retention_penalty": 0.0628571428571429,
+      "B0_integrated_retention": 0.96,
+      "arm_integrated_retention": 0.9357142857142857,
+      "integrated_retention_penalty": 0.0242857142857143
+    },
+    "tolerance": 1e-12
+  },
+  "uncertainty_requirements": {
+    "real_data": "Record uncertainty and shared/systematic components for Pmax, irradiance, temperature, active area, tracking and elapsed time. Do not infer field lifetime from accelerated stress without a validated acceleration model.",
+    "margin_rule": "No physical durability margin may be derived from the synthetic fixture. Freeze it from B0 baseline repeatability, instrument capability, literature precedent where applicable, and prospective power analysis."
+  },
+  "falsifiers": [
+    "A favorable initial Pmax arm crosses below paired B0 absolute Pmax during the prospectively frozen stress endpoint.",
+    "A nominal durability advantage disappears after temperature/irradiance/contact/encapsulation or morphology controls.",
+    "The decision changes under the predeclared uncertainty or lot-level sensitivity analysis."
+  ]
+}

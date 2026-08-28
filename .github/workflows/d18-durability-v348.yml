@@ -1,0 +1,38 @@
+name: d18-durability-v348
+
+on:
+  pull_request:
+    paths:
+      - 'machine/d18-pyit-ec9-durability-v3.48.json'
+      - 'models/d18_pyit_ec9_durability_v348.py'
+      - 'technical/d18-pyit-ec9-durability-protocol-v3.48.md'
+      - 'data/templates/d18-pyit-ec9-durability-v3.48.csv'
+      - '.github/workflows/d18-durability-v348.yml'
+
+jobs:
+  self-test:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python models/d18_pyit_ec9_durability_v348.py --self-test
+      - name: independent fixture check
+        run: |
+          python - <<'PY'
+          import json, math
+          p='machine/d18-pyit-ec9-durability-v3.48.json'
+          f=json.load(open(p))['synthetic_fixture']
+          b0=f['B0_pmax_arb']; arm=f['arm_pmax_arb']; tol=f['tolerance']
+          g0=math.exp(math.log(arm[0])-math.log(b0[0]))-1
+          gT=math.exp(math.log(arm[-1])-math.log(b0[-1]))-1
+          assert abs(g0-f['expected']['initial_gain']) <= tol
+          assert abs(gT-f['expected']['endpoint_gain']) <= tol
+          assert g0 > 0 and gT < 0
+          assert json.load(open(p))['decision_contract']['durability_noninferiority_margin'] is None
+          print('PASS_INDEPENDENT_FIXTURE')
+          PY

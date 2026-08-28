@@ -1,0 +1,1 @@
+lot_id,substrate_id,device_id,arm_blind_code,stress_protocol_id,time_h,pmax_W,pmax_standard_uncertainty_W,temperature_C,temperature_uncertainty_C,irradiance_W_m2,irradiance_uncertainty_W_m2,active_area_cm2,contact_state_id,encapsulation_id,tracking_rule_id,qc_status,exclusion_reason,raw_trace_uri,notes
