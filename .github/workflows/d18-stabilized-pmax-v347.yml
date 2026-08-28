@@ -1,0 +1,40 @@
+name: d18-stabilized-pmax-v347
+
+on:
+  pull_request:
+    paths:
+      - 'models/d18_pyit_ec9_stabilized_pmax_v347.py'
+      - 'machine/d18-pyit-ec9-stabilized-pmax-v3.47.json'
+      - 'technical/d18-pyit-ec9-stabilized-pmax-protocol-v3.47.md'
+      - '.github/workflows/d18-stabilized-pmax-v347.yml'
+  workflow_dispatch:
+
+jobs:
+  self-test:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run synthetic/negative/limiting tests
+        run: python3 models/d18_pyit_ec9_stabilized_pmax_v347.py --self-test
+      - name: Independent manifest arithmetic check
+        run: |
+          python3 - <<'PY'
+          import json, math
+          p='machine/d18-pyit-ec9-stabilized-pmax-v3.47.json'
+          d=json.load(open(p))
+          f=d['synthetic_fixture']; b=f['B0']; a=f['ARM']; ub=f['u_B0']; ua=f['u_ARM']
+          gains=[math.exp(math.log(x)-math.log(y))-1 for x,y in zip(a,b)]
+          lower=[(x-u)/(y+v)-1 for x,u,y,v in zip(a,ua,b,ub)]
+          assert abs(sum(gains)/len(gains)-f['expected_mean_gain']) <= d['numerical_tolerance']
+          assert abs(sum(lower)/len(lower)-f['expected_mean_lower_gain']) <= d['numerical_tolerance']
+          assert len(gains) >= d['canonical_existing_gate']['minimum_independent_lots']
+          assert all(x > 0 for x in gains)
+          assert sum(lower)/len(lower) >= d['canonical_existing_gate']['minimum_mean_relative_stabilized_pmax_gain']
+          print('PASS_INDEPENDENT_MANIFEST_CHECK')
+          PY
