@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.51",
+  "claim_class": "derived evidence-bound / useful negative result",
+  "claim": "The published optimized D18:PY-IT:eC9 champion J-V result cannot satisfy this repository's stabilized-Pmax useful-work gate because the primary source reports a scanned J-V measurement, not a stabilized maximum-power-point trace.",
+  "source": {
+    "title": "Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface",
+    "doi": "10.1038/s41467-026-68731-7",
+    "publication_year": 2026,
+    "primary_source_url": "https://www.nature.com/articles/s41467-026-68731-7",
+    "data_doi_reported_by_paper": "10.6084/m9.figshare.29390669",
+    "facts_used": [
+      "Figure 5f is described as the J-V curve of the optimal D18-PYIT-eC9 1-0.2-1 device.",
+      "The Methods describe J-V acquisition with a Keysight B2901A under AM1.5G and about 5 ms delay time per voltage step.",
+      "The main text reports about 20 meV higher Voc, over 18% efficiency, and no sacrifice in Jsc and FF."
+    ]
+  },
+  "project_gate": {
+    "source": "technical/current-specification.md on run-base main 9e61f8d761cc30b5ba12eef36c9935c35591c8f5",
+    "requires_stabilized_pmax": true,
+    "minimum_relative_gain": 0.05,
+    "minimum_independent_lots": 3,
+    "same_sign_across_lots": true
+  },
+  "decision_logic": {
+    "stabilized_mpp_trace_reported_in_primary_main_text": false,
+    "can_literature_champion_satisfy_project_stabilized_work_gate": false,
+    "classification": "MECHANISM_OR_CHAMPION_SCAN_EVIDENCE_ONLY"
+  },
+  "important_boundaries": [
+    "This does not claim the published device lacks real efficiency improvement.",
+    "This does not infer stabilized Pmax from scanned PCE.",
+    "This does not establish lot-level reproducibility.",
+    "The reported approximately 5 ms step delay is a measurement-setting fact, not a stability time constant.",
+    "Absence of a stabilized MPP trace in the inspected primary main text is not proof that no such measurement exists anywhere; supplementary or author-held data could change this classification."
+  ],
+  "falsifier": "Provide primary-source or author-released stabilized MPP time-series data for the paired D18:eC9 and D18:PY-IT:eC9 devices with sufficient provenance to evaluate the repository gate.",
+  "numeric_tolerance": 1e-12,
+  "runtime": "Python standard library; tested target versions 3.12, 3.13, 3.14"
+}
