@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.62",
+  "claim_class": "established external experimental evidence plus project arithmetic benchmark",
+  "claim": "High CT-dissociation efficiency is not sufficient for high collected photocurrent/IQE; transport/collection can remain the dominant penalty even when TDCF-derived dissociation is nearly unchanged.",
+  "source": {
+    "citation": "Wang et al., Rethinking Charge Transport and Recombination in Donor-Diluted Organic Solar Cells, Advanced Materials (2026)",
+    "doi": "10.1002/adma.202523681",
+    "primary_article_url": "https://advanced.onlinelibrary.wiley.com/doi/10.1002/adma.202523681",
+    "dataset_doi": "10.5281/zenodo.20525023",
+    "dataset_version": "v1.0",
+    "dataset_published": "2026-06-03",
+    "dataset_license_note": "Zenodo record is public and exposes figure CSV files; this repository stores only independently transcribed Table 1 summary values and provenance, not upstream data files.",
+    "article_values_location": "Main-text Table 1, Section 2.3 Internal Quantum Efficiency",
+    "independence_note": "Article states solar-cell parameters were extracted from 20 independently fabricated cells; Table 1 values are paper-level process-efficiency summaries and are not reinterpreted as 20 independent values."
+  },
+  "inputs": {
+    "2pct_pm6_820nm": {
+      "pm6_weight_fraction": 0.02,
+      "exciton_harvesting_efficiency": 0.38,
+      "ct_dissociation_efficiency": 0.96,
+      "iqe": 0.18,
+      "provenance": "literature-derived experimental summary, Table 1"
+    },
+    "45pct_pm6_820nm": {
+      "pm6_weight_fraction": 0.45,
+      "exciton_harvesting_efficiency": 0.96,
+      "ct_dissociation_efficiency": 0.95,
+      "iqe": 0.85,
+      "provenance": "literature-derived experimental summary, Table 1"
+    }
+  },
+  "equation": {
+    "iqe_factorization": "IQE = eta_exc * eta_diss * eta_col",
+    "derived_collection": "eta_col = IQE / (eta_exc * eta_diss)",
+    "symbols": {
+      "IQE": "internal quantum efficiency, dimensionless",
+      "eta_exc": "exciton harvesting efficiency, dimensionless",
+      "eta_diss": "CT-exciton dissociation efficiency at short circuit from TDCF fit, dimensionless",
+      "eta_col": "competition between recombination and charge collection, dimensionless"
+    }
+  },
+  "predeclared_checks": {
+    "float_vs_exact_absolute_tolerance": 1e-12,
+    "domain": "0 < eta_exc, eta_diss, IQE <= 1; derived eta_col must be in (0,1] for these fixtures",
+    "limiting_case": "If IQE = eta_exc * eta_diss then eta_col = 1",
+    "negative_control": "Near-equal eta_diss alone must not be classified as sufficient evidence of near-equal collection or useful work."
+  },
+  "uncertainty": {
+    "formal_measurement_uncertainty": null,
+    "reason": "No formal uncertainty for these Table 1 summary values is supplied in the main-text table; none is invented.",
+    "reporting_resolution_sensitivity": "For a non-statistical transcription sensitivity only, perturb each two-decimal efficiency by +/-0.005 within physical bounds."
+  },
+  "validity_domain": "PM6:Y12 donor-dilution system at the source conditions; this benchmark is a conventional-mechanism counterexample and is not a quantitative D18/PY-IT/eC9 threshold or prediction.",
+  "falsifier": "This benchmark would be invalidated if the source Table 1 values or factorization were corrected, or if independent re-analysis of the source data showed that the quoted dissociation and IQE values are not comparable at short-circuit conditions.",
+  "decision_delta": "For D18/PY-IT/eC9, passing a field-generation/TDCF gate cannot by itself support a useful-work claim. Transport/collection and stabilized FF/Pmax must remain co-primary discriminators."
+}
