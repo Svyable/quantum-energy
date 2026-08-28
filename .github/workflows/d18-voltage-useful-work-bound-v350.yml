@@ -1,0 +1,41 @@
+name: d18-voltage-useful-work-bound-v350
+
+on:
+  pull_request:
+    paths:
+      - 'models/voltage_only_useful_work_bound_v3_50.json'
+      - 'models/voltage_only_useful_work_bound_v3_50.py'
+      - 'research/evidence/d18-ternary-voltage-useful-work-bound-v3.50.md'
+      - '.github/workflows/d18-voltage-useful-work-bound-v350.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run standard-library replication packet
+        run: python models/voltage_only_useful_work_bound_v3_50.py
+      - name: Independent CI arithmetic check
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          d = json.loads(Path('models/voltage_only_useful_work_bound_v3_50.json').read_text())
+          dv = d['primary_source']['source_value']['delta_voc_V']
+          target = d['project_decision_rule']['minimum_relative_stabilized_pmax_gain']
+          tol = 1e-12
+          # Independent inequality form with a tolerance at the exact boundary:
+          # voltage-only target is possible iff dv >= target*Voc0.
+          boundary = dv / target
+          assert abs(boundary - 0.4) < tol
+          assert dv < target * 0.8 - tol  # frozen negative fixture
+          assert abs(dv - target * 0.4) < tol  # exact mathematical boundary
+          assert abs((0.025 / target) - 0.5) < tol
+          print({'boundary_V': boundary, 'negative_0p8V_pass': False})
