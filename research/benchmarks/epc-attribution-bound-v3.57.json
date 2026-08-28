@@ -1,0 +1,42 @@
+{
+  "version": "3.57",
+  "claim_class": "literature-derived quantitative bound",
+  "claim": "The anchor paper's own approximate decomposition does not support treating EPC alone as accounting for the full reported qDeltaVnr reduction in either representative PA or SMA comparison.",
+  "primary_source": {
+    "citation": "Luo et al., Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface, Nature Communications 17 (2026)",
+    "doi": "10.1038/s41467-026-68731-7",
+    "publication_date": "2026-01-26",
+    "version_of_record_date": "2026-02-26",
+    "source_locations": ["main-text Results around Fig. 5d-e", "main-text Discussion around Fig. 6"],
+    "retrieval_date": "2026-08-28"
+  },
+  "inputs": {
+    "PA_D18_PYIT": {
+      "reported_total_qDeltaVnr_reduction_meV": 55,
+      "reported_EPC_only_qDeltaVnr_reduction_meV": 35,
+      "provenance": "paper prose; both values explicitly approximate (~)",
+      "value_class": "literature-derived approximate summary"
+    },
+    "SMA_D18_eC9": {
+      "reported_total_qDeltaVnr_reduction_meV": 38,
+      "reported_EPC_only_qDeltaVnr_reduction_meV": 20,
+      "provenance": "paper prose; both values explicitly approximate (~)",
+      "value_class": "literature-derived approximate summary"
+    }
+  },
+  "equations": {
+    "fraction": "f_EPC = DeltaVnr_EPC_only / DeltaVnr_total",
+    "nominal_gap": "g = DeltaVnr_total - DeltaVnr_EPC_only",
+    "adversarial_equal_opposite_perturbation": "epsilon_star = g/2, where total->total-epsilon and EPC->EPC+epsilon"
+  },
+  "units": "meV for voltage-loss energy qDeltaVnr; fractions dimensionless",
+  "numerical_tolerance": 1e-12,
+  "uncertainty_statement": "The paper marks these values as approximate and does not provide uncertainty for these prose summaries. No physical uncertainty is invented. epsilon_star is an adversarial sensitivity distance, not a confidence interval or measurement uncertainty.",
+  "expected_outputs": {
+    "PA_D18_PYIT": {"f_EPC": 0.6363636363636364, "gap_meV": 20, "epsilon_star_meV": 10},
+    "SMA_D18_eC9": {"f_EPC": 0.5263157894736842, "gap_meV": 18, "epsilon_star_meV": 9}
+  },
+  "validity_domain": "Arithmetic audit of the paper's reported approximate decomposition only. It is not an independent experimental decomposition, does not assume additivity of coupled mechanisms, and does not establish D18/PY-IT/eC9 ternary causal fractions.",
+  "falsifier": "Primary raw/model outputs showing that the reported EPC-only and total reductions were defined on a different basis that invalidates the ratio comparison, or a corrected version of the paper changing the quoted values/interpretation.",
+  "next_physical_discriminator": "Prospectively measure B0/B1/B2 field-dependent generation, DeltaVnr/Voc, stabilized Pmax, and independent energetic-offset/reorganization/hybridization observables so EPC is not the sole latent explanatory variable."
+}
