@@ -1,0 +1,20 @@
+name: exciton-lifetime-multiobjective-v356
+on:
+  pull_request:
+    paths:
+      - 'models/exciton_lifetime_multiobjective_v356.py'
+      - 'research/benchmarks/exciton-lifetime-multiobjective-v3.56.json'
+      - 'research/benchmarks/exciton-lifetime-multiobjective-v3.56.md'
+      - '.github/workflows/exciton-lifetime-multiobjective-v356.yml'
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python models/exciton_lifetime_multiobjective_v356.py
