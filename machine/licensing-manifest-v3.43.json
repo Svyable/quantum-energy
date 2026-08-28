@@ -1,0 +1,67 @@
+{
+  "schema_version": "v3.43",
+  "status": "PROPOSED_FOR_HUMAN_REVIEW",
+  "effective_date": null,
+  "claim_boundary": "This file is a release-governance proposal, not legal advice and not evidence that any license has already been granted.",
+  "artifact_classes": [
+    {
+      "class": "software",
+      "paths": ["tools/**", "models/**/*.py", ".github/workflows/**"],
+      "recommended_license": "Apache-2.0",
+      "rationale": "Permissive reuse with explicit patent-license terms; chosen as a review recommendation, not yet effective.",
+      "status": "PENDING_HUMAN_APPROVAL"
+    },
+    {
+      "class": "documentation_and_research_text",
+      "paths": ["README.md", "OPEN_SCIENCE.md", "CONTRIBUTING.md", "research/**/*.md", "technical/**/*.md", "venture/**/*.md", "automation/**/*.md", "docs/**"],
+      "recommended_license": "CC-BY-4.0",
+      "rationale": "Broad reuse with attribution; chosen as a review recommendation, not yet effective.",
+      "status": "PENDING_HUMAN_APPROVAL"
+    },
+    {
+      "class": "structured_data",
+      "paths": ["data/**", "machine/**", "models/**/*.csv", "research/**/*.csv"],
+      "recommended_license": "CC-BY-4.0",
+      "rationale": "Simple public reuse and attribution default for project-owned datasets; database-rights and third-party-source exceptions still require review.",
+      "status": "PENDING_HUMAN_APPROVAL"
+    },
+    {
+      "class": "hardware_and_cad",
+      "paths": ["hardware/**", "cad/**", "technical/**/*drawing*", "technical/**/*fabrication*"],
+      "recommended_license": "CERN-OHL-W-2.0",
+      "rationale": "Open-hardware license with weak reciprocity so modified hardware remains shareable while permitting integration into larger systems; chosen as a review recommendation, not yet effective.",
+      "status": "PENDING_HUMAN_APPROVAL"
+    }
+  ],
+  "exceptions": [
+    "Third-party material remains under its original terms and must not be relicensed by this project.",
+    "Vendor datasheets, standards text, papers, screenshots, trademarks, and quoted excerpts are not covered unless rights are explicitly held.",
+    "Patentability, freedom-to-operate, export-control, privacy, and research-participant obligations are outside the scope of this manifest.",
+    "A repository-visible file is not licensed for reuse merely because it is public on GitHub."
+  ],
+  "release_gate": {
+    "license_files_committed": false,
+    "per_file_or_directory_notices_committed": false,
+    "third_party_inventory_reviewed": false,
+    "contributor_rights_process_reviewed": false,
+    "human_approval_recorded": false,
+    "formal_release_allowed": false
+  },
+  "source_provenance": [
+    {
+      "source": "Creative Commons 4.0 official guidance",
+      "checked_date": "2026-08-27",
+      "url": "https://creativecommons.org/version4/"
+    },
+    {
+      "source": "CERN Open Hardware Licence v2 variants",
+      "checked_date": "2026-08-27",
+      "url": "https://ohwr.org/licences/"
+    },
+    {
+      "source": "SPDX License List tooling/reference",
+      "checked_date": "2026-08-27",
+      "url": "https://spdx.org/licenses/"
+    }
+  ]
+}
