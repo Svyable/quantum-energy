@@ -1,0 +1,55 @@
+{
+  "version": "3.47",
+  "claim_class": "prospective experiment/protocol",
+  "scope": "D18/PY-IT/eC9 B0/B1/B2 useful-work gate",
+  "run_base_main_sha": "9e61f8d761cc30b5ba12eef36c9935c35591c8f5",
+  "canonical_existing_gate": {
+    "minimum_independent_lots": 3,
+    "minimum_mean_relative_stabilized_pmax_gain": 0.05,
+    "same_sign_required_across_lots": true,
+    "source": "technical/current-specification.md and venture/business-plan.md on run base"
+  },
+  "experimental_unit": "fabrication_lot",
+  "required_pairing": "candidate arm and B0 fabricated and measured within the same qualified lot",
+  "primary_metric": "lot-level relative stabilized Pmax gain",
+  "equations": {
+    "gain_lot": "g_l = P_arm,l / P_B0,l - 1",
+    "conservative_lower_gain": "g_l,low = (P_arm,l - u_arm,l)/(P_B0,l + u_B0,l) - 1",
+    "mean_gain": "g_bar = mean_l(g_l)",
+    "mean_lower_gain": "g_bar_low = mean_l(g_l,low)"
+  },
+  "pass_rule": [
+    "at least 3 independent qualified lots",
+    "all nominal lot-level gains > 0",
+    "mean nominal lot-level gain >= 0.05",
+    "mean conservative lower-bound gain >= 0.05",
+    "each included Pmax value is stabilized MPP output under prospectively frozen irradiance, temperature, area and tracking criteria",
+    "field-generation discriminator is not failed for the same arm",
+    "no post-unblinding exclusions outside frozen QC"
+  ],
+  "classification_if_voltage_only": "mechanism/voltage-loss science, not useful-work validation",
+  "physical_threshold_note": "No new physical threshold is introduced. The 5%/3-lot target is inherited from canonical main; the lower-bound requirement is an uncertainty-robust interpretation of that same target.",
+  "synthetic_fixture": {
+    "units": "arbitrary power units; ratios are dimensionless",
+    "B0": [1.00, 1.02, 0.98],
+    "ARM": [1.08, 1.09, 1.04],
+    "u_B0": [0.005, 0.005, 0.005],
+    "u_ARM": [0.005, 0.005, 0.005],
+    "expected_mean_gain": 0.06995064692543689,
+    "expected_mean_lower_gain": 0.05964991599306124,
+    "expected_result": "PASS_SYNTHETIC_FIXTURE"
+  },
+  "negative_fixture": {
+    "B0": [1.00, 1.02, 0.98],
+    "ARM": [1.08, 0.99, 1.04],
+    "expected_result": "FAIL_SAME_SIGN"
+  },
+  "numerical_tolerance": 1e-12,
+  "runtime": "Python standard library; tested via repository CI matrix",
+  "strong_conventional_explanations": [
+    "snapshot JV or transient MPP behavior can overstate useful steady electrical work",
+    "temperature, irradiance, active-area, contact or series-resistance differences can create apparent Pmax gains",
+    "morphology/thickness changes can improve Pmax independently of the proposed EPC/interface mechanism"
+  ],
+  "falsifier": "An arm fails useful-work validation if the inherited 5%/3-lot stabilized-Pmax gate is not met robustly, even when DeltaVnr improves."
+}
