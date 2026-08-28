@@ -1,0 +1,2 @@
+lot_id,substrate_id,device_id,arm_code,session_id,measurement_method,prebias_V,reference_bias_V,eta_FC,u_eta_FC,pl_integrated_counts,u_pl_counts,jv_current_density_mA_cm2,temperature_K,u_temperature_K,absorbed_photon_normalized,fluence_value,fluence_unit,delay_s,collection_bias_V,excitation_wavelength_nm,qc_include,qc_rule_id,deviation_id,raw_data_uri,calibration_uri,analysis_commit,operator_blinded,notes
+LOT001,SUB001,DEV001,CODE_A,SES001,TDCF,,,,,,,,,,,,,,,,TRUE,,,,,,,TRUE,
