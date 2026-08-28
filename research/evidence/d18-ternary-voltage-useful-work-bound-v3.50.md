@@ -80,6 +80,8 @@ No new device observations are analyzed, so there is no new independent experime
 
 The first exact-head CI attempt on PR #43 failed on the common-scale limiting-case assertion because the code used exact binary-float equality for two mathematically identical dimensionless ratios (`0.025` versus `0.024999999999999998`). This was a **test implementation error, not a scientific-result discrepancy**. The failing check is preserved in Git history at head `d16c1b6d7655b33426c52984a948b1391c7e5057`; the correction changes only that equality check to the already frozen absolute tolerance `1e-12` and uses value equality rather than identity for the Boolean fixture. No physical threshold, fixture value, or reported bound was changed.
 
+The next exact-head CI attempt at `49ba5928a1a39473509bdfffaf4e394371d8f5c4` passed the production packet but exposed the same binary-float issue in the deliberately independent CI path at the mathematical boundary: `0.020 >= 0.05*0.4` can evaluate false because the product is represented slightly above 0.020. The independent check was corrected to test boundary equality within the same predeclared `1e-12` tolerance. Again, no scientific value or acceptance threshold changed; only the numerically invalid exact-float comparison changed.
+
 ## Falsification and decision consequence
 
 This bound is falsified if the algebraic power identity/decomposition is wrong, if the source's ~20 meV statement is mis-provenanced, or if the canonical project useful-work threshold is not 5%. It does not predict a device result.
