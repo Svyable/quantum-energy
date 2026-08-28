@@ -1,0 +1,25 @@
+name: charge-generation-collection-v362
+
+on:
+  pull_request:
+    paths:
+      - 'research/benchmarks/charge-generation-collection-counterexample-v3.62.json'
+      - 'research/benchmarks/charge-generation-collection-counterexample-v3.62.md'
+      - 'models/charge_generation_collection_counterexample_v362.py'
+      - '.github/workflows/charge-generation-collection-v362.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce charge-generation collection counterexample
+        run: python models/charge_generation_collection_counterexample_v362.py
