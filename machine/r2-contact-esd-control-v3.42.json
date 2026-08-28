@@ -1,0 +1,76 @@
+{
+  "schema_version": "3.42",
+  "title": "R2 transfer contact-state and ESD conventional-confound control",
+  "claim_class": "engineering protocol / falsifiable conventional-confound discriminator",
+  "scope": "R2 transfer, shipping, remount, and cross-facility campaigns",
+  "principal_claim_boundary": "Passing this control can bound one class of transfer-induced contact/electrical-state changes. It is not evidence of quantum mechanism, facility equivalence, device stability, or ESD immunity.",
+  "measurement_hierarchy": ["lot", "substrate", "device_pixel", "session", "measurement"],
+  "independent_unit": "substrate",
+  "required_records": {
+    "matched_dark_iv": ["PRE", "POST"],
+    "handling_log": true,
+    "esd_sentinel_log": true,
+    "instrument_and_fixture_provenance": true,
+    "raw_data_paths": true,
+    "analysis_commit": true
+  },
+  "dark_iv": {
+    "voltage_grid_v": null,
+    "current_compliance_a": null,
+    "settling_time_s": null,
+    "integration_setting": null,
+    "temperature_k": null,
+    "limits_provenance_required_before_pass": true,
+    "rule": "Use the exact same prospectively frozen grid/configuration PRE and POST. Null configuration fields make the record INCOMPLETE; this contract does not invent a safe probe condition."
+  },
+  "paired_metrics": {
+    "delta_current_a": "I_post(V_k) - I_pre(V_k)",
+    "u_delta_current_a": "sqrt(u_pre^2 + u_post^2 - 2*rho*u_pre*u_post)",
+    "rho_unknown_default": -1.0,
+    "rms_current_shift_a": "sqrt(mean(delta_current_a^2))",
+    "max_standardized_shift": "max(abs(delta_current_a)/u_delta_current_a)",
+    "max_standardized_shift_limit": null,
+    "rms_current_shift_limit_a": null
+  },
+  "status_logic": {
+    "INCOMPLETE": "missing PRE/POST pair, mismatched configuration, missing raw/provenance/uncertainty/sentinel record, or acceptance limit absent",
+    "FAIL": "complete record and any prospectively declared contact-state limit exceeded, or sentinel/visual/electrical QC declares a failure",
+    "PASS": "complete record, all prospectively declared limits satisfied, and no sentinel/visual/electrical QC failure",
+    "BLOCKED": "upstream transfer-fixture or metrology gate prevents interpretable execution"
+  },
+  "esd_sentinel": {
+    "required_fields": ["sentinel_id", "technology_or_type", "calibration_or_lot", "placement", "pre_state", "post_state", "interpretation_rule", "raw_record_path"],
+    "acceptance_threshold": null,
+    "rule": "A sentinel response is evidence about the sentinel under its own documented response function; it is not automatically a quantitative estimate of stress at the DUT. Missing response calibration or interpretation rule is INCOMPLETE, not PASS."
+  },
+  "predefined_exclusions": [
+    "rows explicitly rejected by a prospectively frozen instrument-overrange/compliance rule",
+    "device declared nonfunctional before PRE by an already-frozen QC rule"
+  ],
+  "forbidden_exclusions": [
+    "removing a large PRE/POST shift because it is inconvenient",
+    "dropping a transferred substrate after seeing POST data without a frozen QC rule"
+  ],
+  "conventional_explanations_preserved": [
+    "contact pressure or pad registration change",
+    "probe or fixture contamination",
+    "oxide or interfacial change",
+    "ESD/EOS event",
+    "device ageing during elapsed time",
+    "temperature mismatch",
+    "instrument offset or compliance change",
+    "encapsulation or mechanical damage"
+  ],
+  "synthetic_software_fixture": {
+    "classification": "synthetic software test only; not R2 measurement",
+    "voltage_v": [-0.1, 0.0, 0.1],
+    "i_pre_a": [1e-9, 0.0, 4e-9],
+    "i_post_a": [1e-9, 2e-9, 3e-9],
+    "u_pre_a": [5e-10, 5e-10, 5e-10],
+    "u_post_a": [5e-10, 5e-10, 5e-10],
+    "rho": 0.0,
+    "expected_rms_current_shift_a": 1.2909944487358057e-9,
+    "expected_max_standardized_shift": 2.8284271247461903,
+    "numerical_tolerance": 1e-12
+  }
+}
