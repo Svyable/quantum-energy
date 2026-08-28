@@ -1,0 +1,69 @@
+{
+  "id": "v3.56-exciton-lifetime-multiobjective-counterexample",
+  "claim_class": "literature-derived experimental benchmark",
+  "decision_change": "Do not treat longer exciton lifetime as a monotonic standalone optimization target for the D18/PY-IT/eC9 bridge. In the published PM6/L8-BO/Y18-C3 series, the optimized ternary has a shorter reported exciton lifetime than PM6:L8-BO while simultaneously having higher FF and lower voltage loss. Lifetime remains a mechanism-relevant covariate, but field-dependent generation and useful-work metrics remain mandatory.",
+  "source": {
+    "title": "Overcoming the fill-factor limit of organic solar cells",
+    "journal": "Nature Photonics",
+    "doi": "10.1038/s41566-026-01946-8",
+    "version_of_record_date": "2026-06-19",
+    "article_url": "https://www.nature.com/articles/s41566-026-01946-8",
+    "location": "main text Fig. 5 discussion and caption",
+    "source_class": "primary literature",
+    "notes": "The source reports n=8 independent devices per ratio for FF/voltage-loss box plots; exciton lifetime/PLQY used two independent films and six measurements per ratio. The prose values below do not provide standard errors, so this packet does not invent measurement uncertainty."
+  },
+  "inputs": {
+    "PM6_L8BO": {
+      "exciton_lifetime_ps": {"value": 990.0, "class": "literature-derived experimental result", "reported_resolution_ps": 1.0},
+      "FF_fraction": {"value": 0.795, "class": "literature-derived experimental result", "reported_resolution_fraction": 0.001},
+      "voltage_loss_V": {"value": 0.545, "class": "literature-derived experimental result", "reported_resolution_V": 0.001}
+    },
+    "PM6_Y18C3": {
+      "exciton_lifetime_ps": {"value": 690.0, "class": "literature-derived experimental result", "reported_resolution_ps": 1.0},
+      "FF_fraction": {"value": 0.688, "class": "literature-derived experimental result", "reported_resolution_fraction": 0.001},
+      "voltage_loss_V": {"value": 0.502, "class": "literature-derived experimental result", "reported_resolution_V": 0.001}
+    },
+    "PM6_L8BO_Y18C3_0p86_0p14": {
+      "exciton_lifetime_ps": {"value": 870.0, "class": "literature-derived experimental result", "reported_resolution_ps": 1.0},
+      "FF_fraction": {"value": 0.811, "class": "literature-derived experimental result", "reported_resolution_fraction": 0.001},
+      "voltage_loss_V": {"value": 0.516, "class": "literature-derived experimental result", "reported_resolution_V": 0.001},
+      "PCE_fraction": {"value": 0.201, "class": "literature-derived experimental result", "reported_resolution_fraction": 0.001}
+    }
+  },
+  "governing_calculations": {
+    "relative_change": "x_rel = x_arm/x_ref - 1",
+    "absolute_change": "Delta x = x_arm - x_ref",
+    "ordinal_counterexample": "counterexample = (tau_ternary < tau_L8BO) AND (FF_ternary > FF_L8BO) AND (Vloss_ternary < Vloss_L8BO)"
+  },
+  "expected": {
+    "Y18C3_to_ternary": {
+      "exciton_lifetime_relative_change": 0.2608695652173913,
+      "FF_relative_change": 0.17877906976744195,
+      "FF_absolute_change_fraction": 0.123,
+      "voltage_loss_change_V": 0.014
+    },
+    "L8BO_to_ternary": {
+      "exciton_lifetime_relative_change": -0.12121212121212122,
+      "FF_relative_change": 0.020125786163522012,
+      "FF_absolute_change_fraction": 0.016,
+      "voltage_loss_change_V": -0.029,
+      "ordinal_counterexample": true
+    }
+  },
+  "reporting_resolution_sensitivity": {
+    "method": "half of the last reported digit only; this is not physical uncertainty",
+    "counterexample_survives_all_interval_extremes": true,
+    "conditions": [
+      "ternary lifetime upper bound 870.5 ps < L8-BO lifetime lower bound 989.5 ps",
+      "ternary FF lower bound 0.8105 > L8-BO FF upper bound 0.7955",
+      "ternary voltage-loss upper bound 0.5165 V < L8-BO voltage-loss lower bound 0.5445 V"
+    ]
+  },
+  "validity_domain": "Cross-composition empirical benchmark in the reported PM6/L8-BO/Y18-C3 series only. It does not estimate a D18/PY-IT/eC9 lifetime optimum, isolate causality, or replace TDCF/bias-dependent PL/stabilized-Pmax measurements.",
+  "serious_conventional_explanations": [
+    "Composition changes energetic offset and other electronic properties together with exciton lifetime; lifetime is not independently randomized.",
+    "Morphology, transport, contacts, absorption and recombination can covary across blends; the source reports AFM/GIWAXS controls but those do not make lifetime the unique cause."
+  ],
+  "falsifier": "A controlled D18/PY-IT/eC9 intervention that changes exciton lifetime while holding relevant energetic, morphological, transport/contact and optical variables sufficiently fixed, and prospectively shows monotonic FF/field-generation improvement, would narrow or overturn the transfer of this counterexample to the project system.",
+  "next_physical_measurement": "For blinded B0/B1/B2, acquire TCSPC or another justified exciton-lifetime observable alongside TDCF/bias-dependent PL and stabilized MPP; do not use lifetime alone as the acceptance gate."
+}
