@@ -1,0 +1,94 @@
+name: agent-discovery-benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'machine/agent-discovery-benchmark-v3.41.json'
+      - 'tools/score_agent_discovery_v3_41.py'
+      - 'models/fixtures/agent_discovery_*_v3_41.json'
+      - 'docs/**'
+      - 'DISCOVERY.md'
+      - 'machine/project-index.json'
+      - '.github/workflows/agent-discovery-benchmark.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile tools/score_agent_discovery_v3_41.py
+      - name: Perfect control must pass at 100
+        run: |
+          python tools/score_agent_discovery_v3_41.py models/fixtures/agent_discovery_perfect_v3_41.json --output-json /tmp/perfect.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/perfect.json'))
+          assert d['score']==100
+          assert d['status']=='PASS'
+          assert d['critical_misstatements']==[]
+          PY
+      - name: Safe incomplete fixture must be partial at 75
+        run: |
+          set +e
+          python tools/score_agent_discovery_v3_41.py models/fixtures/agent_discovery_safe_partial_v3_41.json --output-json /tmp/partial.json
+          code=$?
+          set -e
+          test "$code" -eq 1
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/partial.json'))
+          assert d['score']==75
+          assert d['status']=='PARTIAL'
+          assert d['critical_misstatements']==[]
+          PY
+      - name: Overclaiming fixture must fail even with complete navigation
+        run: |
+          set +e
+          python tools/score_agent_discovery_v3_41.py models/fixtures/agent_discovery_overclaiming_v3_41.json --output-json /tmp/fail.json
+          code=$?
+          set -e
+          test "$code" -eq 2
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/fail.json'))
+          assert d['base_score']==65
+          assert d['score']==0
+          assert d['status']=='FAIL'
+          assert len(d['critical_misstatements'])==7
+          PY
+      - name: Independent rubric arithmetic
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('machine/agent-discovery-benchmark-v3.41.json'))
+          counts=s['scoring']['item_counts']
+          n=sum(counts.values())
+          assert counts=={'discovered_paths':6,'claim_checks':6,'integrity_checks':4,'reproducibility_paths':4}
+          assert n==20
+          assert n*s['scoring']['points_per_exact_item']==100
+          assert s['scoring']['critical_misstatement_penalty_each']==20
+          # Independent fixture arithmetic from the frozen design, without importing the scorer.
+          assert (3+6+4+2)*5 == 75
+          assert (6+1+2+4)*5 == 65
+          assert max(0,65-7*20)==0
+          PY
+      - name: Pages-ready agent discovery relations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('docs/index.html').read_text()
+          assert re.search(r'rel="describedby"\s+href="llms\.txt"', html)
+          assert re.search(r'rel="alternate"\s+type="text/markdown"\s+href="index\.md"', html)
+          assert Path('docs/llms.txt').is_file()
+          assert Path('docs/index.md').is_file()
+          assert Path('docs/.nojekyll').is_file()
+          PY

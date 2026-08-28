@@ -1,0 +1,34 @@
+{
+  "benchmark_version": "v3.41",
+  "agent_id": "fixture-safe-partial",
+  "input_url": "https://github.com/Svyable/quantum-energy",
+  "inspected_urls": ["https://github.com/Svyable/quantum-energy"],
+  "discovered_paths": {
+    "current_specification": "technical/current-specification.md",
+    "evidence_map": "research/evidence-map.md",
+    "open_science": "OPEN_SCIENCE.md",
+    "calculation_verification": "",
+    "analysis_registry": "",
+    "session_history": ""
+  },
+  "claim_checks": {
+    "commercial_quantum_energy_breakthrough_established": false,
+    "universal_room_temperature_quantum_computer_established": false,
+    "unique_quantum_explanation_for_all_transport_or_pv_effects_established": false,
+    "commercially_superior_power_or_lifetime_established": false,
+    "r2_role": "metrology transfer standard",
+    "unexplained_h5_residual_is_epc_evidence": false
+  },
+  "integrity_checks": {
+    "main_is_canonical": true,
+    "open_prs_are_review_candidates": true,
+    "models_are_measurements": false,
+    "public_visibility_implies_open_source_license": false
+  },
+  "reproducibility_paths": {
+    "corrections": "research/corrections",
+    "contributing": "CONTRIBUTING.md",
+    "models": "",
+    "facility_contract": ""
+  }
+}

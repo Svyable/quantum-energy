@@ -33,6 +33,9 @@
     {"path": "README.md", "role": "human and agent project overview"},
     {"path": "AGENTS.md", "role": "agent working instructions and scientific integrity rules"},
     {"path": "llms.txt", "role": "curated LLM navigation index"},
+    {"path": "machine/agent-discovery-benchmark-v3.41.json", "role": "prospective public-agent navigation and scientific-claim-discipline benchmark"},
+    {"path": "tools/score_agent_discovery_v3_41.py", "role": "deterministic scorer for v3.41 agent-discovery responses"},
+    {"path": "docs/index.md", "role": "Pages-ready Markdown landing surface with explicit non-claims"},
     {"path": "machine/analysis-registry.json", "role": "canonical authority map for analysis implementations and superseded review candidates"},
     {"path": "technical/r2-facility-time-budget-v3.32.md", "role": "parametric facility instrument-time and RFQ planning model; timing scenarios are synthetic assumptions until replaced by facility-provided values"},
     {"path": "models/r2_facility_time_planner_v3_32.py", "role": "executable facility-time planner and structural self-test"},
@@ -82,6 +85,16 @@
     "technical": "Experimental protocols, CAD briefs, data schemas, and specifications.",
     "venture": "Deployment, cost, business-model, and decision-gate analysis.",
     "automation": "Automated research workflow and persistence rules."
+  },
+  "discovery": {
+    "pages_ready_source": "docs",
+    "pages_enabled_at_last_check": false,
+    "target_url": "https://svyable.github.io/quantum-energy/",
+    "web_llms_path": "docs/llms.txt",
+    "benchmark": "machine/agent-discovery-benchmark-v3.41.json",
+    "scorer": "tools/score_agent_discovery_v3_41.py",
+    "status": "software protocol and deterministic fixtures only; no real external-agent discovery result yet",
+    "critical_rule": "A benchmark response with a critical scientific or licensing misstatement fails even if navigation is otherwise complete."
   },
   "contribution": {
     "welcome": [

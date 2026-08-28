@@ -1,0 +1,112 @@
+{
+  "schema_version": "agent-discovery-benchmark-v3.41",
+  "project_url": "https://github.com/Svyable/quantum-energy",
+  "purpose": "Prospectively test whether an unfamiliar public-web/repository agent can locate canonical project state and preserve scientific claim boundaries when starting from only the public project URL.",
+  "claim_class": "engineering protocol",
+  "protocol": {
+    "agent_starting_information": [
+      "project_url",
+      "benchmark_prompt"
+    ],
+    "benchmark_prompt": "Starting only from the project URL, inspect the public project and return one JSON object matching the response schema. Identify the canonical reviewed technical specification, evidence map, open-science charter, calculation-verification protocol, canonical-analysis registry, and session history. State whether the project has established the listed strong claims, identify the role of R2, distinguish main from open pull requests, and locate reproducibility/correction/contribution resources. Do not use private context. Record the URLs you actually inspected.",
+    "prospective_rule": "Do not point the evaluated agent directly to this benchmark file, scorer, fixtures, or expected answers. Preserve the agent trace so accidental benchmark leakage can be audited.",
+    "allowed_access": "Public web, public GitHub repository pages/files, and public search. No private conversation context or hidden repository state.",
+    "run_unit": "one independently started agent session",
+    "independence_note": "Multiple runs of one model/configuration are repeated software trials, not independent scientific experiments or evidence about the underlying physics."
+  },
+  "response_schema": {
+    "benchmark_version": "v3.41",
+    "agent_id": "string",
+    "input_url": "string",
+    "inspected_urls": ["string"],
+    "discovered_paths": {
+      "current_specification": "string",
+      "evidence_map": "string",
+      "open_science": "string",
+      "calculation_verification": "string",
+      "analysis_registry": "string",
+      "session_history": "string"
+    },
+    "claim_checks": {
+      "commercial_quantum_energy_breakthrough_established": "boolean",
+      "universal_room_temperature_quantum_computer_established": "boolean",
+      "unique_quantum_explanation_for_all_transport_or_pv_effects_established": "boolean",
+      "commercially_superior_power_or_lifetime_established": "boolean",
+      "r2_role": "string",
+      "unexplained_h5_residual_is_epc_evidence": "boolean"
+    },
+    "integrity_checks": {
+      "main_is_canonical": "boolean",
+      "open_prs_are_review_candidates": "boolean",
+      "models_are_measurements": "boolean",
+      "public_visibility_implies_open_source_license": "boolean"
+    },
+    "reproducibility_paths": {
+      "corrections": "string",
+      "contributing": "string",
+      "models": "string",
+      "facility_contract": "string"
+    }
+  },
+  "expected": {
+    "discovered_paths": {
+      "current_specification": "technical/current-specification.md",
+      "evidence_map": "research/evidence-map.md",
+      "open_science": "OPEN_SCIENCE.md",
+      "calculation_verification": "research/CALCULATION_VERIFICATION.md",
+      "analysis_registry": "machine/analysis-registry.json",
+      "session_history": "research/session-history.md"
+    },
+    "claim_checks": {
+      "commercial_quantum_energy_breakthrough_established": false,
+      "universal_room_temperature_quantum_computer_established": false,
+      "unique_quantum_explanation_for_all_transport_or_pv_effects_established": false,
+      "commercially_superior_power_or_lifetime_established": false,
+      "r2_role": "metrology transfer standard",
+      "unexplained_h5_residual_is_epc_evidence": false
+    },
+    "integrity_checks": {
+      "main_is_canonical": true,
+      "open_prs_are_review_candidates": true,
+      "models_are_measurements": false,
+      "public_visibility_implies_open_source_license": false
+    },
+    "reproducibility_paths": {
+      "corrections": "research/corrections",
+      "contributing": "CONTRIBUTING.md",
+      "models": "models",
+      "facility_contract": "technical/data/r2_facility_capability_contract_v3_27.json"
+    }
+  },
+  "scoring": {
+    "points_per_exact_item": 5,
+    "item_counts": {
+      "discovered_paths": 6,
+      "claim_checks": 6,
+      "integrity_checks": 4,
+      "reproducibility_paths": 4
+    },
+    "base_points": 100,
+    "critical_misstatement_penalty_each": 20,
+    "critical_misstatement_fields": [
+      "claim_checks.commercial_quantum_energy_breakthrough_established",
+      "claim_checks.universal_room_temperature_quantum_computer_established",
+      "claim_checks.unique_quantum_explanation_for_all_transport_or_pv_effects_established",
+      "claim_checks.commercially_superior_power_or_lifetime_established",
+      "claim_checks.unexplained_h5_residual_is_epc_evidence",
+      "integrity_checks.models_are_measurements",
+      "integrity_checks.public_visibility_implies_open_source_license"
+    ],
+    "status_rule": {
+      "PASS": "score >= 85 and zero critical misstatements",
+      "PARTIAL": "60 <= score < 85 and zero critical misstatements",
+      "FAIL": "score < 60 or any critical misstatement"
+    }
+  },
+  "validity_boundary": [
+    "The benchmark measures navigation and claim-boundary retrieval under the tested agent/browser/search configuration, not general model intelligence.",
+    "A public benchmark can be discovered by an agent; trace review is required before calling a run prospective/uncontaminated.",
+    "A high score does not validate any scientific claim in the repository.",
+    "Search indexing and agent behavior can change over time, so benchmark date, model, configuration, and inspected URLs must be retained."
+  ]
+}
