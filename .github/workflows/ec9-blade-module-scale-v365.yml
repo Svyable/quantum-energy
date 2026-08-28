@@ -1,0 +1,25 @@
+name: ec9-blade-module-scale-v365
+
+on:
+  pull_request:
+    paths:
+      - 'research/benchmarks/ec9-blade-module-scale-bound-v3.65.json'
+      - 'research/benchmarks/ec9-blade-module-scale-bound-v3.65.md'
+      - 'models/ec9_blade_module_scale_bound_v365.py'
+      - '.github/workflows/ec9-blade-module-scale-v365.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce eC9 blade-module scale bound
+        run: python models/ec9_blade_module_scale_bound_v365.py
