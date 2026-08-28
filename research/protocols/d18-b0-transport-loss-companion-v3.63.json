@@ -1,0 +1,109 @@
+{
+  "protocol_id": "d18-b0-transport-loss-companion-v3.63",
+  "claim_class": "prospective experiment/protocol",
+  "claim": "Pair the D18:eC9 B0 field-generation baseline with a Suns-Voc/pseudo-FF transport-loss discriminator so favorable TDCF or bias-dependent-PL behavior cannot be interpreted as sufficient evidence of charge collection or useful electrical work.",
+  "changed_evidentiary_state": "Transport/collection moves from a required but unspecified conventional control to a preregistered, machine-checkable companion measurement. No D18 transport-loss acceptance threshold is created before real B0 data and instrument repeatability exist.",
+  "material_system": "D18:eC9 (B0)",
+  "source_provenance": [
+    {
+      "title": "Applicability of the Suns-Voc Method on Organic Solar Cells",
+      "authors": "Schiefer, Zimmermann, Glunz, Wurfel",
+      "journal": "IEEE Journal of Photovoltaics",
+      "year": 2014,
+      "doi": "10.1109/JPHOTOV.2013.2288527",
+      "source_class": "primary experimental paper",
+      "facts_used": [
+        "Suns-Voc yields pseudo-JV characteristics intended to remove series-resistance effects and reflect generation/recombination",
+        "the method was experimentally applied to P3HT:PCBM organic solar cells",
+        "transient and capacitive effects are validity concerns that must be considered"
+      ]
+    },
+    {
+      "title": "Transport Resistance Dominates the Fill Factor Losses in Record Organic Solar Cells",
+      "authors": "Wang et al.",
+      "journal": "Advanced Energy Materials",
+      "first_published": "2025-03-05",
+      "doi": "10.1002/aenm.202405889",
+      "source_class": "perspective/method synthesis",
+      "facts_used": [
+        "pFF minus measured FF is used as a transport-resistance FF-loss metric",
+        "J(Vimp) can be constructed from light-intensity-dependent Voc and generation-current data",
+        "low-light leakage, external series resistance, interpolation density, and generation-current estimation are explicit method concerns"
+      ],
+      "scope_note": "Used to specify the contemporary analysis workflow; the 2014 experimental paper remains the primary method precedent."
+    }
+  ],
+  "measurement_hierarchy": ["material_lot", "fabrication_lot", "substrate", "device", "session", "measurement"],
+  "pairing_rule": "Use the same device as the B0 TDCF/PL baseline when measurement order and device stability permit; otherwise use a preregistered sibling device on the same substrate and retain the mapping.",
+  "required_summary_columns": [
+    "material_lot",
+    "fabrication_lot",
+    "substrate_id",
+    "device_id",
+    "session_id",
+    "measured_ff_fraction",
+    "pseudo_ff_fraction",
+    "jsc_ma_cm2",
+    "voc_v",
+    "pmax_mw_cm2",
+    "qc_status",
+    "qc_exclusion_code"
+  ],
+  "raw_provenance_required": [
+    "illuminated JV trace used for measured FF/Pmax",
+    "light-intensity-dependent Voc data used for pseudo-JV construction",
+    "generation-current estimate versus light intensity and reverse-bias choice",
+    "illumination calibration/reference",
+    "temperature trace or setpoint record",
+    "external-series-resistance handling",
+    "leakage-current exclusion range",
+    "pseudo-JV interpolation/reconstruction procedure and software version"
+  ],
+  "derived_metrics": {
+    "transport_ff_loss": {
+      "symbol": "DeltaFF_tr",
+      "equation": "DeltaFF_tr = pFF - FF",
+      "units": "absolute fill-factor fraction",
+      "interpretation": "descriptive FF loss associated with transport/series-resistance effects under the method assumptions; not a unique microscopic mechanism"
+    },
+    "ff_retention_relative_to_pseudo": {
+      "symbol": "R_FF",
+      "equation": "R_FF = FF / pFF",
+      "units": "dimensionless",
+      "interpretation": "descriptive fraction of pseudo-FF retained in the measured JV curve"
+    }
+  },
+  "baseline_gate_freeze_rule": {
+    "status": "DEFERRED_PENDING_REAL_B0_DATA",
+    "requirements_before_freeze": [
+      "provenance-complete B0 illuminated-JV and Suns-Voc/pseudo-JV data",
+      "same-session repeatability or a documented session-transfer uncertainty",
+      "lot/substrate/device hierarchy retained",
+      "leakage/transient/capacitive validity checks recorded",
+      "field-generation companion data retained for the same lot/device mapping"
+    ],
+    "forbidden": "Use the 7.8 percentage-point literature example or any cross-material value as a D18/PY-IT/eC9 pass/fail threshold."
+  },
+  "predeclared_checks": {
+    "numerical_tolerance": 1e-12,
+    "domain": "0 < FF <= pFF <= 1 for an accepted summary row, allowing only the numerical tolerance; violations fail closed for transport classification and remain visible as method/QC failures",
+    "limiting_case": "FF = pFF gives DeltaFF_tr = 0 and R_FF = 1",
+    "negative_control": "pFF < FF beyond tolerance is not clamped; it is rejected as a method/data-consistency failure"
+  },
+  "serious_conventional_explanations": [
+    "Suns-Voc/pseudo-JV mismatch caused by capacitive or transient response rather than steady-state transport loss",
+    "low-light leakage/shunt current corrupting Voc versus intensity",
+    "external electrode/contact series resistance contributing to pFF-FF alongside active-layer transport resistance",
+    "generation-current estimation error or intensity-calibration drift",
+    "device drift between field-generation, illuminated-JV, and Suns-Voc measurements"
+  ],
+  "decision_rule": "A B0 or later B1/B2 arm with favorable field-generation metrics but a materially degraded measured FF relative to its pseudo-FF remains transport/collection-limited and cannot be promoted to useful-work validation without stabilized Pmax and conventional-control resolution. The word materially is not assigned a numerical D18 threshold until real B0 repeatability is measured.",
+  "falsifier": "If provenance-complete B0 data show pFF and FF are indistinguishable within empirical method repeatability across independent lots while stabilized Pmax is also robust, a large transport-resistance FF penalty is narrowed for the measured B0 regime; if pFF-FF is reproducibly positive, transport/collection remains a live downstream bottleneck even when field generation is favorable.",
+  "software": {
+    "runtime": "Python >=3.12 standard library",
+    "command": "python models/d18_b0_transport_loss_companion_v363.py",
+    "data_command": "python models/d18_b0_transport_loss_companion_v363.py --csv path/to/b0_transport_summary.csv",
+    "random_seed": null
+  },
+  "physical_result": "NONE_PROSPECTIVE_PROTOCOL_ONLY"
+}
