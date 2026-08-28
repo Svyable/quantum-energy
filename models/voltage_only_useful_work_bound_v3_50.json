@@ -1,0 +1,51 @@
+{
+  "schema_version": "3.50",
+  "claim_class": "derived literature-bound / decision aid",
+  "run_base_main_sha": "9e61f8d761cc30b5ba12eef36c9935c35591c8f5",
+  "primary_source": {
+    "citation": "Luo et al., Nature Communications 17, 2026 (2026)",
+    "doi": "10.1038/s41467-026-68731-7",
+    "published": "2026-01-26",
+    "version_of_record": "2026-02-26",
+    "data_doi": "10.6084/m9.figshare.29390669",
+    "source_statement": "The optimized D18-PYIT-eC9 device is reported to achieve about a 20 meV increase in Voc, over 18% efficiency, and no sacrifice in Jsc and FF.",
+    "source_value": {
+      "delta_voc_V": 0.020,
+      "classification": "literature-derived approximate value",
+      "uncertainty": "paper reports approximately 20 meV; no measurement uncertainty is assigned here"
+    }
+  },
+  "project_decision_rule": {
+    "minimum_relative_stabilized_pmax_gain": 0.05,
+    "classification": "existing project engineering decision threshold",
+    "provenance": "technical/current-specification.md on run-base main"
+  },
+  "model": {
+    "assumption": "Isolate the voltage contribution by holding Jsc and FF fixed. This is a decomposition, not a claim that the paper's Jsc and FF are numerically identical between devices.",
+    "equation": "G_V = delta_Voc / Voc_0",
+    "threshold_equation": "Voc_0,max = delta_Voc / G_target",
+    "units": {
+      "delta_Voc": "V",
+      "Voc_0": "V",
+      "G_V": "dimensionless",
+      "G_target": "dimensionless"
+    }
+  },
+  "expected": {
+    "voc0_max_for_5pct_from_20mV_V": 0.4,
+    "sensitivity": [
+      {"delta_voc_V": 0.015, "voc0_max_V": 0.3},
+      {"delta_voc_V": 0.020, "voc0_max_V": 0.4},
+      {"delta_voc_V": 0.025, "voc0_max_V": 0.5}
+    ],
+    "negative_fixture": {
+      "voc0_V": 0.8,
+      "delta_voc_V": 0.020,
+      "voltage_only_relative_gain": 0.025,
+      "passes_5pct_gate": false,
+      "classification": "synthetic arithmetic fixture"
+    }
+  },
+  "claim_boundary": "The published ~20 mV Voc increase alone does not establish the project's >=5% stabilized-Pmax gate. Total literature Pmax/PCE gain may include Jsc/FF changes and is not bounded by this voltage-only decomposition without exact paired stabilized-power data.",
+  "falsifier": "This bound is falsified if the algebraic power decomposition is wrong, if the project target is not 5%, or if the literature delta-Voc provenance is misquoted; it does not predict D18/PY-IT/eC9 device performance."
+}
