@@ -1,0 +1,22 @@
+name: d18-b0-field-generation-baseline-v359
+
+on:
+  pull_request:
+    paths:
+      - 'research/protocols/d18-b0-field-generation-baseline-v3.59.json'
+      - 'research/protocols/d18-b0-field-generation-baseline-v3.59.md'
+      - 'models/d18_b0_field_generation_baseline_v359.py'
+      - '.github/workflows/d18-b0-field-generation-baseline-v359.yml'
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python models/d18_b0_field_generation_baseline_v359.py

@@ -1,0 +1,99 @@
+{
+  "protocol_id": "d18-b0-field-generation-baseline-v3.59",
+  "claim_class": "prospective experiment/protocol",
+  "decision_change": "B0 field-generation baseline is now preregistered and machine-checkable; no B1/B2 physical acceptance margin is frozen until empirical B0 repeatability and instrument capability are observed.",
+  "material_system": "D18:eC9 (B0)",
+  "scope": {
+    "primary_technique": "TDCF",
+    "orthogonal_technique": "bias-dependent PL",
+    "strong_claim_excluded": true,
+    "no_physical_threshold_from_synthetic_model": true
+  },
+  "hierarchy": [
+    "lot",
+    "substrate",
+    "device",
+    "session",
+    "measurement"
+  ],
+  "bias_coordinate": {
+    "symbol": "u",
+    "definition": "u=(V_OC - V_pre)/V_OC",
+    "units": "dimensionless",
+    "points": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "interpretation": {
+      "0.0": "prebias at measured V_OC",
+      "1.0": "prebias at 0 V"
+    },
+    "assumption_class": "engineering sampling design, not a physical acceptance threshold"
+  },
+  "required_columns": [
+    "lot_id",
+    "substrate_id",
+    "device_id",
+    "session_id",
+    "technique",
+    "u",
+    "signal",
+    "signal_unit",
+    "qc_status"
+  ],
+  "predeclared_qc": {
+    "allowed_qc_status": [
+      "PASS",
+      "EXCLUDE_PREDECLARED"
+    ],
+    "report_all_functional_samples": true,
+    "exclusions_must_have_recorded_reason": true,
+    "hero_device_selection_forbidden": true
+  },
+  "derived_metrics": {
+    "tdcf_retention": {
+      "equation": "R_TDCF = Q(u=0)/Q(u=1)",
+      "units": "dimensionless",
+      "interpretation": "descriptive B0 operating-field free-charge-generation retention over the Voc-to-short-circuit prebias span; not a universal mechanism-pure quantity"
+    },
+    "tdcf_field_gain": {
+      "equation": "G_TDCF = Q(u=1)/Q(u=0)-1",
+      "units": "dimensionless"
+    },
+    "pl_normalized_curve": {
+      "equation": "P_norm(u)=PL(u)/PL(u=0)",
+      "units": "dimensionless",
+      "interpretation": "orthogonal descriptive bias-response curve; not converted to charge-generation yield without an independently justified model"
+    }
+  },
+  "baseline_gate_freeze_rule": {
+    "status": "DEFERRED_PENDING_REAL_B0_DATA",
+    "requirements_before_freeze": [
+      "provenance-complete B0 measurements",
+      "instrument capability/noise characterized in same sessions",
+      "lot/substrate/device hierarchy retained",
+      "empirical repeatability reported",
+      "serious TDCF artifact and PL artifact explanations assessed"
+    ],
+    "forbidden": "derive B1/B2 pass threshold from v3.45/v3.55 synthetic or cross-material model values"
+  },
+  "failure_modes": [
+    "TDCF apparent bias dependence caused by extraction/recombination/capacitive artifacts rather than generation",
+    "PL bias response caused by electroabsorption, heating, injection/contact effects, or recombination changes rather than exciton-to-CT generation"
+  ],
+  "falsifier": "If repeated B0 TDCF is flat within measured baseline repeatability across u while bias-dependent PL shows no reproducible operating-field response, a large B0 field-generation limitation is narrowed for the measured regime; conversely reproducible field dependence motivates a B1/B2 noninferiority gate frozen from these data.",
+  "software": {
+    "runtime": "Python 3 standard library",
+    "tested_matrix": [
+      "3.12",
+      "3.13",
+      "3.14"
+    ],
+    "random_seed": null
+  },
+  "numerical_tolerance": 1e-12,
+  "synthetic_fixture_note": "Synthetic fixtures only test analysis logic and are never material constants or device evidence."
+}
