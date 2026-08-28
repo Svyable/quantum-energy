@@ -1,0 +1,44 @@
+name: r2-contact-esd-control
+
+on:
+  pull_request:
+    paths:
+      - 'machine/r2-contact-esd-control-v3.42.json'
+      - 'technical/data/r2_contact_esd_control_template_v3.42.csv'
+      - 'tools/check_r2_contact_esd_control_v3_42.py'
+      - 'technical/r2-contact-esd-transfer-control-v3.42.md'
+      - '.github/workflows/r2-contact-esd-control.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate schema and synthetic arithmetic
+        run: python tools/check_r2_contact_esd_control_v3_42.py
+      - name: Independent arithmetic check
+        shell: python
+        run: |
+          import json, math
+          from pathlib import Path
+          c = json.loads(Path('machine/r2-contact-esd-control-v3.42.json').read_text())
+          f = c['synthetic_software_fixture']
+          delta = [b-a for a,b in zip(f['i_pre_a'], f['i_post_a'])]
+          rms2 = sum(x*x for x in delta)/len(delta)
+          expected_rms2 = 5e-18/3.0
+          assert abs(rms2-expected_rms2) <= 1e-30, (rms2, expected_rms2)
+          # Independent variance identity for rho=-1: (u_pre + u_post)^2.
+          up, uq = 0.4e-9, 0.7e-9
+          var_difference = up*up + uq*uq + 2*up*uq
+          assert abs(math.sqrt(var_difference)-(up+uq)) <= 1e-24
+          # Fixture dimensionless max standardized shift from hand-derived denominator sqrt(0.5 nA^2).
+          z = 2e-9 / math.sqrt(0.5e-18)
+          assert abs(z-f['expected_max_standardized_shift']) <= 1e-12
+          print('independent arithmetic: PASS')
