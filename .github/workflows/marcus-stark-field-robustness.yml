@@ -1,0 +1,66 @@
+name: marcus-stark-field-robustness
+
+on:
+  pull_request:
+    paths:
+      - 'machine/marcus-stark-field-robustness-v3.45.json'
+      - 'models/marcus_stark_field_robustness_v3_45.py'
+      - 'models/marcus_stark_field_robustness_expected_v3_45.csv'
+      - 'technical/marcus-stark-ff-robustness-v3.45.md'
+      - 'research/evidence/marcus-stark-fill-factor-v3.45.md'
+      - '.github/workflows/marcus-stark-field-robustness.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce frozen v3.45 table and internal checks
+        run: python models/marcus_stark_field_robustness_v3_45.py --check-expected
+      - name: Independent arithmetic and limiting-case check
+        run: |
+          python - <<'PY'
+          import csv, json, math
+          from pathlib import Path
+
+          c = json.loads(Path("machine/marcus-stark-field-robustness-v3.45.json").read_text())
+          kb = 8.617333262145e-5
+          T = c["synthetic_fixture"]["temperature_K"]
+          dg = c["synthetic_fixture"]["delta_g_eV"]
+          delta = c["published_scale_anchor"]["derived_first_order_shift_eV"]
+
+          assert abs(c["published_scale_anchor"]["field_V_per_m"] *
+                     c["published_scale_anchor"]["ct_separation_nm"] * 1e-9 - 0.035) < 1e-15
+
+          def direct(lam, signed_delta):
+              e0 = -((lam + dg)**2) / (4 * lam * kb * T)
+              e1 = -((lam + dg + signed_delta)**2) / (4 * lam * kb * T)
+              return math.exp(e1 - e0)
+
+          expected = {
+              0.05: 0.4009751586604688,
+              0.10: 0.8882848688701886,
+              0.15: 0.7374045663572947,
+          }
+          for lam, target in expected.items():
+              worst = min(direct(lam, delta), direct(lam, -delta))
+              assert abs(worst-target) < 1e-12
+
+          lam = -dg
+          plus = direct(lam, delta)
+          minus = direct(lam, -delta)
+          assert abs(plus-minus) < 1e-12
+
+          rows = list(csv.DictReader(Path("models/marcus_stark_field_robustness_expected_v3_45.csv").open()))
+          assert len(rows) == 15
+          key = [r for r in rows if r["lambda_eV"] == "0.050000" and r["delta_eV"] == "0.035000"][0]
+          assert abs(float(key["R_worst"]) - expected[0.05]) < 1e-12
+          print("independent Marcus-Stark audit: PASS")
+          PY
