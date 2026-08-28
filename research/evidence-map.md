@@ -17,6 +17,7 @@
 13. **Inline optical spectroscopy** has manufacturing precedent in OPV processing and can track thickness/optical properties/morphology-related changes.
 14. **CT-state linewidth can be dominated by temperature-activated/vibrational broadening rather than static disorder.** Tvingstedt et al. (2020) observed CT EL linewidth narrowing on cooling and low-temperature saturation across several OSC systems and argued that single-temperature optical tails need not reveal a static DOS. Göhler et al. (2021) independently used temperature-dependent CT absorption/emission and reciprocity-based temperature validation and found dynamic/vibrational broadening dominated their measured systems. These are material-system precedents, not R2 results.
 15. In the semi-classical Keil/Franck–Condon picture used for planning, `σ_D²(T)=λ ħω coth[ħω/(2kBT)]` and approaches the classical Marcus high-temperature result `2λkBT`. Therefore high-temperature linewidth data alone can have weak leverage for separating static from dynamic contributions.
+16. **Low-voltage-loss OSCs can encounter a field-dependent free-charge-generation fill-factor limit.** Zhang et al. (Nature Photonics, 2026) used TDCF, bias-dependent PL, electroabsorption, Marcus/Stark modelling and device experiments to identify field-sensitive Ex→CT formation as a cause of a Voc–FF trade-off in the systems studied. They estimate an approximately 35 meV first-order Stark shift for ~3.5 nm CT separation at ~`1e7 V/m`. This is material-system precedent, not evidence that D18/PY-IT/eC9 already has the same limitation.
 
 ## Engineering assumptions currently under test
 
@@ -26,6 +27,7 @@
 - Witness UV-vis can become a useful low-cost process proxy rather than merely a thickness measurement.
 - An interface/EPC control law can eventually migrate from laboratory spectroscopy to a scalable manufacturing proxy.
 - For an R2 static-vs-dynamic CT-linewidth audit, low-temperature points near 120/150 K are experimentally feasible without changing the relevant mechanism or creating dominant condensation/injection artifacts. This is **open** and must be qualified before physical mechanism claims.
+- A D18/PY-IT/eC9 interface state that lowers ΔVnr can preserve field-robust charge generation and FF. This is now an explicit **open engineering assumption**, not an automatic consequence of lower EPC/reorganization.
 
 ## Synthetic/model results — not experimental evidence
 
@@ -60,13 +62,19 @@ Ten additional `N=7` seeds retained H1 84.3–86.55%, H2 80.15–83.25%, H3 86.3
 
 **Correction/narrowing:** the existing 240–330 K AT-04 grid remains appropriate for metrology and temperature-dependent voltage-loss work, but it should not be described as sufficient for strong static-vs-dynamic CT-linewidth identification.
 
+### v3.45 Marcus–Stark field-robustness counterexample
+
+Using the published field-dependent Marcus form and a frozen **synthetic** fixture (`T=300 K`, `DeltaG=-100 meV`, `delta=35 meV`), worst-orientation normalized Ex→CT rate retention is ~0.401 at `lambda=50 meV`, ~0.888 at the activationless match `lambda=100 meV`, and ~0.737 at `lambda=150 meV`.
+
+For fixed `DeltaG=-g<0` and `0<delta<2g`, the local model analytically maximizes this conservative robustness metric at `lambda=g=-DeltaG`; reducing lambda toward zero is not monotonically beneficial. This is a model counterexample, not a measured OPV optimum or a device FF prediction.
+
 ## Core falsifiable hypotheses
 
 ### H-QT: open-system transport
 A deliberately engineered finite environmental coupling can improve delivery of excitation to a designated sink relative to both very low and very high dephasing, after absorption and geometry are controlled.
 
 ### H-EPC: modern-OPV bridge
-A controlled change in donor–acceptor interface population changes reorganization/EPC in a preregistered direction, predicts ΔVnr/Voc, preserves charge generation, and yields ≥5% relative stabilized-Pmax improvement across at least three lots.
+A controlled change in donor–acceptor interface population changes reorganization/EPC in a preregistered direction, predicts ΔVnr/Voc, preserves charge generation **and field robustness/FF**, and yields ≥5% relative stabilized-Pmax improvement across at least three lots. A lower ΔVnr that is offset by field-dependent-generation FF loss is mechanism science, not a useful-work pass.
 
 ### H-R2: metrology-transfer reference
 A qualified weak-EL OPV transfer standard can move between sessions/facilities while keeping fabrication/reference drift below the voltage-loss signal the program seeks to measure.
@@ -92,6 +100,7 @@ Inline-compatible witness optical observables predict ΔVnr out of substrate, im
 - We do not claim a five-substrate R2 audit can confirm H1–H4 mechanisms.
 - We do not claim a room-temperature/high-temperature Urbach energy or CT linewidth is a direct measurement of static energetic disorder.
 - We do not claim the v3.4 synthetic `N=7` result proves seven real R2 substrates are sufficient; low-temperature feasibility and empirical linewidth uncertainty must come first.
+- We do not claim the v3.45 synthetic activationless robustness point is the optimum λ for D18/PY-IT/eC9 or any real OPV.
 
 ## Source index
 
@@ -101,6 +110,7 @@ Primary sources used across the program include:
 - TPD spacer transfer precedent: https://pubmed.ncbi.nlm.nih.gov/20735062/
 - LiF interface precedent: https://pmc.ncbi.nlm.nih.gov/articles/PMC5115400/
 - Penetrated-interface/EPC modern OSC anchor: https://www.nature.com/articles/s41467-026-68731-7
+- Voc–FF field-dependent-generation / Marcus–Stark anchor: https://www.nature.com/articles/s41566-026-01946-8
 - Temperature-dependent CT/disorder methods: https://journals.aps.org/prapplied/abstract/10.1103/PhysRevApplied.15.064009
 - Temperature-dependent CT linewidth / static-vs-dynamic disorder: https://pubs.rsc.org/en/content/articlehtml/2020/mh/d0mh00385a
 - Current OPV reproducibility review: https://pubs.rsc.org/en/content/articlelanding/2025/ta/d5ta05788d

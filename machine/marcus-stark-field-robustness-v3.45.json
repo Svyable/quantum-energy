@@ -1,0 +1,121 @@
+{
+  "schema_version": "quantum-energy-marcus-stark-field-robustness-v3.45",
+  "title": "Marcus-Stark field-robustness audit for low-offset OPV interface design",
+  "claim_class": "synthetic/model result",
+  "publication_level": "exploratory",
+  "purpose": "Test whether reducing reorganization energy at fixed Ex-to-CT driving force can increase sensitivity of the Marcus Ex-to-CT rate to field-induced CT-state energy shifts. This is a local normalized-rate robustness audit, not a device FF or Pmax predictor.",
+  "source_provenance": [
+    {
+      "type": "primary literature",
+      "citation": "Zhang et al., Overcoming the fill-factor limit of organic solar cells, Nature Photonics (2026)",
+      "doi": "10.1038/s41566-026-01946-8",
+      "published": "2026-06-19",
+      "used_for": [
+        "field-dependent Ex-to-CT Marcus rate equation",
+        "first-order Stark orientation sign",
+        "approximately 3.5 nm interfacial CT separation",
+        "approximately 1e7 V/m internal field",
+        "approximately 35 meV first-order Stark shift",
+        "bias-dependent PL and TDCF as field-dependence discriminators"
+      ]
+    },
+    {
+      "type": "primary literature",
+      "citation": "Luo et al., Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface, Nature Communications 17, 2026 (2026)",
+      "doi": "10.1038/s41467-026-68731-7",
+      "published": "2026-01-26",
+      "used_for": [
+        "existing commercial-bridge motivation linking penetrated interfaces, weaker EPC, and lower nonradiative voltage loss"
+      ]
+    },
+    {
+      "type": "upstream research software provenance",
+      "repository": "https://github.com/HuotianZhang/DriftFusionOPV_FieldDependent",
+      "commit": "d5e805ec69359f36be6e1da17a401ed8d64721a3",
+      "note": "The current linked repository is public and MATLAB-based. At this commit, functions/marcus_equation_stark.m visibly implements a quadratic polarizability Stark term. The Nature Photonics main text estimates the first-order dipole shift as approximately 35 meV and focuses Fig. 4g on the first-order effect. This project therefore independently implements the published equation/text for the first-order normalized-rate audit and does not claim a full reproduction of the authors' drift-diffusion code. No upstream code is copied."
+    }
+  ],
+  "equations": {
+    "published_marcus_form": "k(F) proportional to exp(-(lambda + DeltaG + delta(F))^2 / (4 lambda kB T))",
+    "normalized_rate_ratio": "R(delta)=k(delta)/k(0)=exp(-(2 A delta + delta^2)/(4 lambda kB T)), A=lambda+DeltaG",
+    "worst_orientation_retention": "R_worst=min(R(+|delta|),R(-|delta|))=exp(-(delta^2+2|A||delta|)/(4 lambda kB T))",
+    "orientation_log_asymmetry": "|ln(R_plus/R_minus)|=|A delta|/(lambda kB T)",
+    "activationless_limit": "If DeltaG=-lambda, then A=0 and R_plus=R_minus=exp(-delta^2/(4 lambda kB T)).",
+    "first_order_stark_energy": "|delta|_eV = |F|_V_per_m * d_m for a one-electron charge separation"
+  },
+  "dimensions": {
+    "lambda": "eV",
+    "DeltaG": "eV",
+    "delta": "eV",
+    "kB_T": "eV",
+    "rate_ratios": "dimensionless",
+    "orientation_log_asymmetry": "dimensionless"
+  },
+  "published_scale_anchor": {
+    "classification": "literature-derived approximate scale, not an R2/B0/B1/B2 measurement",
+    "field_V_per_m": 10000000.0,
+    "ct_separation_nm": 3.5,
+    "derived_first_order_shift_eV": 0.035,
+    "paper_description": "approximately 1 V per 100 nm and approximately 3.5 nm CT separation, yielding approximately 35 meV first-order Stark shift",
+    "second_order_shift_range_meV_reported": [0.0035, 0.035]
+  },
+  "synthetic_fixture": {
+    "classification": "synthetic planning assumptions",
+    "temperature_K": 300.0,
+    "delta_g_eV": -0.1,
+    "lambda_grid_eV": [0.05, 0.1, 0.15, 0.2, 0.25],
+    "optimization_lambda_grid_eV": [0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.25],
+    "delta_sensitivity_eV": [0.01, 0.035, 0.07],
+    "note": "DeltaG=-100 meV and the lambda grid are not claimed measured for D18/PY-IT/eC9. The 10/35/70 meV delta sweep is a sensitivity bracket, not a statistical uncertainty interval."
+  },
+  "analytic_window_result": {
+    "classification": "model result",
+    "condition": "For fixed DeltaG=-g<0 and 0<delta<2g, R_worst is maximized at lambda=g=-DeltaG.",
+    "interpretation": "In this Marcus-Stark local robustness metric, the optimal reorganization energy is a matching window rather than lambda approaching zero. This does not establish that any real device has the same optimum."
+  },
+  "frozen_example_results": {
+    "classification": "synthetic/model result",
+    "temperature_K": 300.0,
+    "delta_g_eV": -0.1,
+    "delta_eV": 0.035,
+    "lambda_0p05_R_worst": 0.4009751586604688,
+    "lambda_0p10_R_worst": 0.8882848688701886,
+    "lambda_0p15_R_worst": 0.7374045663572947,
+    "lambda_0p05_orientation_rate_ratio": 3.872345700234212,
+    "lambda_0p10_orientation_rate_ratio": 1.0,
+    "lambda_0p15_orientation_rate_ratio": 1.5703316134867942
+  },
+  "prospective_program_narrowing": {
+    "hypothesis": "An interface modification that lowers EPC/reorganization and DeltaVnr may still fail useful-work validation if it increases field-dependent Ex-to-CT generation losses or reduces FF.",
+    "required_discriminator_before_strong_useful_work_claim": [
+      "bias-dependent photoluminescence and/or TDCF or an independently justified equivalent field-dependence measurement",
+      "stabilized J-V/Pmax",
+      "charge-generation control",
+      "morphology/contact/transport controls already required by the program"
+    ],
+    "kill_or_narrow_rule": "If an arm lowers DeltaVnr/Voc loss but shows materially worse field-dependent generation and fails to improve stabilized FF/Pmax, retain it as voltage-loss/mechanism science and do not promote it as useful-work or platform validation.",
+    "threshold_policy": "v3.45 does not invent a universal beta, R_worst, PL-quench, TDCF, or FF threshold. Physical thresholds must be prospectively frozen from measurement capability and baseline data."
+  },
+  "validity_limits": [
+    "Classical Marcus rate form only; MLJ, multimode vibronics, disorder, delocalization, back-transfer, exciton diffusion, and full device electrostatics are outside this local audit.",
+    "R_worst is a deliberately conservative local orientation diagnostic, not an orientationally averaged device generation yield.",
+    "Electronic coupling prefactors cancel only in the normalized comparison when the prefactor is held fixed.",
+    "The 35 meV literature scale is approximate and not a measured field shift for the D18/PY-IT/eC9 campaign.",
+    "No causal EPC, quantum advantage, FF improvement, Pmax improvement, or commercial performance is claimed."
+  ],
+  "software_checks": {
+    "standard_library_only": true,
+    "random_seed": null,
+    "absolute_tolerance": 1e-12,
+    "derivative_tolerance_eV_inv": 1e-7,
+    "required": [
+      "direct exponent ratio agrees with closed form",
+      "zero-field ratio equals one",
+      "activationless plus/minus orientation symmetry",
+      "analytic orientation asymmetry identity",
+      "finite-difference derivative agrees with analytic derivative",
+      "published field-distance scale independently reproduces 0.035 eV",
+      "synthetic optimization grid peaks at lambda=-DeltaG"
+    ]
+  }
+}

@@ -66,6 +66,18 @@ Model family comparison is mandatory: classical Marcus, one-mode MLJ, MLJ + stat
 
 Useful-work prediction must survive model uncertainty: reduced EPC/reorganization is not assumed universally beneficial because phonon/vibronic interactions may also assist charge separation.
 
+### v3.45 field-robustness narrowing
+
+A 2026 Nature Photonics study of the organic-solar-cell Voc–FF trade-off adds a second reason not to minimize EPC/reorganization blindly: small energetic offsets can expose field-dependent Ex→CT generation through Stark-shifted CT-state energies. The project therefore treats **field robustness of charge generation** as a required useful-work variable, not as an optional post-hoc explanation.
+
+The v3.45 local Marcus–Stark audit uses
+
+`R(delta)=k(delta)/k(0)=exp[-(2(lambda+DeltaG)delta+delta^2)/(4 lambda kBT)]`
+
+and shows analytically that for fixed `DeltaG=-g<0` and `0<delta<2g`, its conservative worst-orientation retention is maximized at `lambda=g=-DeltaG`, not at `lambda -> 0`. This is a synthetic/model result and does not establish an optimum for any project material.
+
+Before a strong B1/B2 useful-work claim, acquire bias-dependent PL and preferably TDCF, or an independently justified equivalent field-dependent-generation measurement, under prospectively frozen conditions. No universal field-robustness threshold is asserted before baseline/instrument evidence exists.
+
 ## Current commercial DOE
 
 ### Named arms
@@ -74,7 +86,7 @@ Useful-work prediction must survive model uncertainty: reduced EPC/reorganizatio
 - B2: D18:PY-IT:eC9 = 1:0.2:1 published-anchor arm
 
 ### Causal chain
-process/composition → penetrated-interface population → EPC/reorganization → CT kinetics/nonradiative loss → Voc → stabilized Pmax
+process/composition → penetrated-interface population → EPC/reorganization + energetic offset → Ex/CT kinetics + field sensitivity → nonradiative loss/Voc + FF → stabilized Pmax
 
 ### Gates
 - Interface-population metric moves in the intended direction.
@@ -82,8 +94,11 @@ process/composition → penetrated-interface population → EPC/reorganization �
 - Model-predicted and EQE_EL-derived ΔVnr agree within a planning 20 mV window.
 - EPC-mediated predicted Voc contribution ≥10 mV and correct sign.
 - Charge generation ≥95% of baseline planning target.
+- Field-dependent generation is measured prospectively and does not undermine the useful-work interpretation; the physical acceptance rule must be frozen against B0 and measurement capability before unblinding rather than invented from the v3.45 synthetic model.
 - Stabilized Pmax ≥5% relative improvement and same sign across ≥3 independent lots.
 - No unacceptable durability penalty before cavity-overlay spend.
+
+**v3.45 kill/narrow rule:** if an interface arm lowers non-radiative voltage loss but exhibits materially worse field-dependent generation and fails to improve stabilized FF/Pmax, retain the result as voltage-loss/mechanism science and do not promote it as useful-work or platform validation.
 
 ## R2 weak-EL transfer standard
 
