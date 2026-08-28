@@ -1,0 +1,24 @@
+name: field-generation-lineage-v349
+
+on:
+  pull_request:
+    paths:
+      - 'machine/field-generation-code-lineage-v3.49.json'
+      - 'models/field_generation_code_lineage_v349.py'
+      - 'research/evidence-v3.49-field-generation-code-lineage.md'
+      - '.github/workflows/field-generation-lineage-v349.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Independent lineage arithmetic
+        run: python models/field_generation_code_lineage_v349.py --self-test
