@@ -1,0 +1,25 @@
+name: thick-film-transport-scale-v364
+
+on:
+  pull_request:
+    paths:
+      - 'research/benchmarks/thick-film-transport-scale-bound-v3.64.json'
+      - 'research/benchmarks/thick-film-transport-scale-bound-v3.64.md'
+      - 'models/thick_film_transport_scale_bound_v364.py'
+      - '.github/workflows/thick-film-transport-scale-v364.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce thick-film transport scale bound
+        run: python models/thick_film_transport_scale_bound_v364.py
