@@ -1,0 +1,49 @@
+name: d18-field-generation-v346
+
+on:
+  pull_request:
+    paths:
+      - 'machine/d18-pyit-ec9-field-generation-v3.46.json'
+      - 'models/d18_pyit_ec9_field_generation_v346.py'
+      - 'data/templates/d18-pyit-ec9-field-generation-v3.46.csv'
+      - 'technical/d18-pyit-ec9-field-generation-protocol-v3.46.md'
+      - 'research/evidence-v3.46-field-generation.md'
+      - 'research/session-2026-08-27-v3.46.md'
+      - '.github/workflows/d18-field-generation-v346.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Primary self-test
+        run: python models/d18_pyit_ec9_field_generation_v346.py --self-test
+      - name: Independent contract and arithmetic check
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('machine/d18-pyit-ec9-field-generation-v3.46.json').read_text())
+          f = p['synthetic_fixture']
+          b0 = f['B0_retention']; b2 = f['B2_retention']; tol = f['tolerance']
+          # Independent calculation path: L = 1 - min(r), not production max(1-r).
+          l0 = 1.0 - min(b0)
+          l2 = 1.0 - min(b2)
+          d2 = l2 - l0
+          assert abs(l0 - f['expected_L_B0']) <= tol
+          assert abs(l2 - f['expected_L_B2']) <= tol
+          assert abs(d2 - f['expected_D_B2']) <= tol
+          assert p['decision_rule']['physical_noninferiority_margin'] is None
+          assert p['decision_rule']['freeze_before_unblinding'] is True
+          assert p['independent_unit'] == 'fabrication lot'
+          assert p['minimum_independent_lots_for_useful_work_claim'] >= 3
+          assert p['primary_measurement']['method'] == 'TDCF'
+          assert p['primary_measurement']['absorbed_photon_normalization_required'] is True
+          print({'L_B0': l0, 'L_B2': l2, 'D_B2': d2, 'fail_closed_margin': True})
+          PY
