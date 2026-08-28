@@ -1,0 +1,42 @@
+name: r2-transfer-representativeness
+
+on:
+  pull_request:
+    paths:
+      - 'models/r2_transfer_representativeness_v3_40.py'
+      - 'machine/r2_transfer_representativeness_v3_40.json'
+      - 'research/templates/r2_transfer_representativeness_raw_v3_40.csv'
+      - 'technical/r2-transfer-sensor-representativeness-v3.40.md'
+      - '.github/workflows/r2-transfer-representativeness.yml'
+  workflow_dispatch:
+
+jobs:
+  self-test:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run deterministic v3.40 arithmetic tests
+        run: python models/r2_transfer_representativeness_v3_40.py
+      - name: Validate JSON syntax and frozen fixture arithmetic independently
+        shell: python
+        run: |
+          import json, math
+          p = json.load(open('machine/r2_transfer_representativeness_v3_40.json', encoding='utf-8'))
+          assert p['thresholds']['temperature_C_max_conservative_difference'] is None
+          assert p['thresholds']['relative_humidity_percent_max_conservative_difference'] is None
+          f = p['synthetic_software_fixtures']
+          for key, expected in [('temperature_pass', 0.8), ('temperature_fail', 1.1)]:
+              x = f[key]
+              # Independent limiting derivation for rho=-1: Var(X-Y)=(u_ref+u_logger)^2.
+              u = x['u_logger_C'] + x['u_ref_C']
+              calc = x['largest_absolute_difference_C'] + u
+              assert math.isclose(calc, expected, rel_tol=0.0, abs_tol=1e-12)
+              assert math.isclose(calc, x['expected_conservative_error_C'], rel_tol=0.0, abs_tol=1e-12)
+          assert f['temperature_pass']['expected_conservative_error_C'] <= f['temperature_pass']['declared_threshold_C']
+          assert f['temperature_fail']['expected_conservative_error_C'] > f['temperature_fail']['declared_threshold_C']
