@@ -1,0 +1,48 @@
+name: licensing-manifest-v3.43
+
+on:
+  pull_request:
+    paths:
+      - 'machine/licensing-manifest-v3.43.json'
+      - 'tools/validate_licensing_manifest_v3_43.py'
+      - 'technical/open-licensing-release-gate-v3.43.md'
+      - '.github/workflows/licensing-manifest-v3.43.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'machine/licensing-manifest-v3.43.json'
+      - 'tools/validate_licensing_manifest_v3_43.py'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Primary validator
+        run: python tools/validate_licensing_manifest_v3_43.py
+      - name: Independent manifest and release-gate check
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('machine/licensing-manifest-v3.43.json').read_text())
+          expected = {
+              'software': 'Apache-2.0',
+              'documentation_and_research_text': 'CC-BY-4.0',
+              'structured_data': 'CC-BY-4.0',
+              'hardware_and_cad': 'CERN-OHL-W-2.0',
+          }
+          observed = {x['class']: x['recommended_license'] for x in d['artifact_classes']}
+          assert observed == expected, (observed, expected)
+          gates = d['release_gate']
+          assert len(gates) == 6
+          assert all(gates.values()) is False
+          assert d['effective_date'] is None
+          print('independent v3.43 check: PASS')
+          PY
