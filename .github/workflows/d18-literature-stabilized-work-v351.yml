@@ -1,0 +1,36 @@
+name: d18-literature-stabilized-work-v351
+
+on:
+  pull_request:
+    paths:
+      - 'machine/d18-literature-stabilized-work-audit-v3.51.json'
+      - 'models/d18_literature_stabilized_work_audit_v351.py'
+      - 'research/evidence-v3.51-d18-literature-stabilized-work.md'
+      - '.github/workflows/d18-literature-stabilized-work-v351.yml'
+
+jobs:
+  audit:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run deterministic audit
+        run: python models/d18_literature_stabilized_work_audit_v351.py
+      - name: Independent fail-closed contract check
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          d = json.loads(Path('machine/d18-literature-stabilized-work-audit-v3.51.json').read_text())
+          required = {'paired_power_metric', 'stabilized_mpp'}
+          observed = {'paired_power_metric'}
+          assert d['project_gate']['requires_stabilized_pmax'] is True
+          assert d['decision_logic']['stabilized_mpp_trace_reported_in_primary_main_text'] is False
+          assert not required.issubset(observed)
+          assert d['decision_logic']['classification'] == 'MECHANISM_OR_CHAMPION_SCAN_EVIDENCE_ONLY'
+          print('INDEPENDENT_V3.51_CONTRACT_CHECK: PASS')
