@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.60",
+  "claim": {
+    "class": "established_external_evidence_plus_engineering_control",
+    "statement": "A 2026 primary study demonstrates that D18 molar-mass variation is large enough to be a serious manufacturing and causal-attribution confound in scalable blade-coated D18 devices; therefore D18 lot identity and measured molar-mass provenance must be retained when interpreting B0/B1/B2 interface/process effects. This does not establish a D18/PY-IT/eC9 molar-mass acceptance threshold."
+  },
+  "source": {
+    "title": "Tuning Molar Mass of the D18 Polymer via Stille Polymerization: Impact on Morphology and Large-Area Blade-Coated Organic Solar Cells",
+    "authors_first": "Renata S. Cardoso",
+    "journal": "ACS Omega",
+    "year": 2026,
+    "volume": 11,
+    "issue": 10,
+    "pages": "16489-16500",
+    "doi": "10.1021/acsomega.5c12462",
+    "published_online": "2026-03-02",
+    "published_issue": "2026-03-17",
+    "license": "CC BY 4.0",
+    "source_class": "primary_paper",
+    "retrieved_for_increment": "2026-08-28"
+  },
+  "inputs": {
+    "active_area_cm2": {
+      "value": 0.55,
+      "uncertainty": null,
+      "class": "literature_derived",
+      "note": "Blade-coated device active area reported by the primary source."
+    },
+    "independent_devices_per_system": {
+      "value": 8,
+      "uncertainty": null,
+      "class": "literature_derived",
+      "note": "The source states averages and standard deviations were calculated from eight independent devices for each system."
+    },
+    "low_mw_kg_per_mol": {
+      "min": 12.0,
+      "max": 14.0,
+      "uncertainty": null,
+      "class": "literature_derived"
+    },
+    "low_mw_pce_percent": {
+      "upper_bound_exclusive": 2.0,
+      "uncertainty": null,
+      "class": "literature_derived",
+      "note": "Primary source reports PCE < 2%; 2.0% is used only as the exclusive ceiling for a conservative arithmetic bound."
+    },
+    "high_mw_kg_per_mol": {
+      "min": 83.0,
+      "max": 93.0,
+      "uncertainty": null,
+      "class": "literature_derived"
+    },
+    "high_mw_pce_percent": {
+      "min": 7.8,
+      "max": 8.0,
+      "uncertainty": null,
+      "class": "literature_derived"
+    },
+    "commercial_reference_mw_kg_per_mol": {
+      "approx": 92.0,
+      "uncertainty": null,
+      "class": "literature_derived"
+    },
+    "commercial_reference_pce_percent": {
+      "value": 8.9,
+      "uncertainty": null,
+      "class": "literature_derived"
+    }
+  },
+  "derived_quantities": {
+    "conservative_high_to_low_pce_multiplier": {
+      "relation": ">",
+      "value": 3.9,
+      "equation": "high_mw_pce_min / low_mw_pce_exclusive_ceiling"
+    },
+    "high_mw_fraction_of_commercial_reference": {
+      "min": 0.8764044943820225,
+      "max": 0.898876404494382,
+      "equation": "high_mw_pce / commercial_reference_pce"
+    }
+  },
+  "prospective_causal_control": {
+    "required_for_unconfounded_B0_B1_B2_attribution": [
+      "d18_lot_id_recorded",
+      "d18_molar_mass_measurement_or_supplier_batch_characterization_recorded",
+      "same_d18_lot_randomized_across_compared_arms_within_each_fabrication_lot"
+    ],
+    "not_required_by_this_increment": [
+      "a universal D18 molar-mass threshold",
+      "a claim that molar mass is the only manufacturing variable",
+      "a claim that the source material system is D18/PY-IT/eC9"
+    ]
+  },
+  "conventional_explanations": [
+    "The source correlates molar mass with morphology, shunt resistance, charge transport, solvent compatibility, and film integrity; the device-performance change is not a mechanism-pure molar-mass effect.",
+    "The source active layer is D18:Y6:PC70BM rather than D18:eC9 or D18:PY-IT:eC9, so effect magnitude need not transfer to the commercial-bridge chemistry."
+  ],
+  "falsifier_for_program_relevance": "A prospectively randomized multi-lot B0/B1/B2 campaign using lot-resolved D18 molar-mass characterization could show that the interface-arm conclusions are invariant across the verified D18 lot range; that would bound rather than assume this confound in the target chemistry.",
+  "uncertainty_note": "No formal uncertainty for the abstract-level molar-mass/PCE ranges is invented here. The strict >3.9 multiplier follows only from the reported high-Mw minimum 7.8% and low-Mw statement PCE <2%."
+}
