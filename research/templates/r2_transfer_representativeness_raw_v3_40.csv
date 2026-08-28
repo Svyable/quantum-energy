@@ -1,0 +1,3 @@
+run_id,channel,direction,timestamp_utc,elapsed_s,logger_value,logger_uncertainty,reference_value,reference_uncertainty,correlation_rho,pairing_gap_s,v3_39_qualified_gap_s,logger_calibration_id,reference_calibration_id,placement_id,carrier_id,package_id,dummy_id,qc_status,exclusion_reason,deviation_note
+RUN001,temperature_C,UP,,,,,,,,,,,,,,,,INCOMPLETE,,
+RUN001,relative_humidity_percent,UP,,,,,,,,,,,,,,,,INCOMPLETE,,

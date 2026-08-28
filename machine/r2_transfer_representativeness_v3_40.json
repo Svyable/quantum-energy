@@ -1,0 +1,72 @@
+{
+  "schema_version": "3.40",
+  "title": "R2 transfer sensor placement representativeness qualification",
+  "claim_class": "engineering_protocol_with_synthetic_software_fixtures",
+  "status_labels": ["QUALIFIED_FOR_DECLARED_REPRESENTATIVENESS", "INCOMPLETE", "FAIL_REPRESENTATIVENESS"],
+  "purpose": "Bound the difference between transfer-package logger readings and a dimensionally representative dummy-adjacent reference under controlled environmental transients. Passing does not establish shipping safety, device stability, facility equivalence, or mechanism evidence.",
+  "dependencies": {
+    "r2_logger_bandwidth_qualification": "technical/r2-logger-bandwidth-qualification-v3.39.md",
+    "r2_transfer_environment_ledger": "technical/r2-transfer-environment-ledger-v3.38.md"
+  },
+  "required_channels": ["temperature_C", "relative_humidity_percent"],
+  "equations": {
+    "difference": "e_i = y_ref,i - y_logger,i",
+    "difference_uncertainty": "u_e,i = sqrt(u_ref,i^2 + u_logger,i^2 - 2*rho_i*u_ref,i*u_logger,i)",
+    "unknown_correlation_gate": "if rho_i is undeclared, evaluate the gate at rho_i=-1 so u_e,i=u_ref,i+u_logger,i",
+    "conservative_error": "E_channel = max_i(|e_i| + u_e,i)",
+    "gate": "E_channel <= epsilon_channel"
+  },
+  "units": {
+    "temperature_C": "degC",
+    "relative_humidity_percent": "%RH",
+    "time": "s",
+    "rho": "dimensionless"
+  },
+  "qualification_requirements": {
+    "minimum_independent_runs_per_transient_direction": 3,
+    "transient_directions": ["UP", "DOWN"],
+    "pairing_gap_must_not_exceed_v3_39_qualified_gap": true,
+    "all_rows_require_logger_and_reference_uncertainty": true,
+    "all_rows_require_calibration_and_placement_provenance": true,
+    "all_functional_runs_reported_unless_frozen_qc_exclusion": true,
+    "thresholds_must_be_declared_with_provenance_before_test": true
+  },
+  "thresholds": {
+    "temperature_C_max_conservative_difference": null,
+    "relative_humidity_percent_max_conservative_difference": null,
+    "note": "Null by default. No safe exposure or representativeness limit is invented by this protocol. A project/facility may prospectively declare engineering thresholds with provenance; absent thresholds yield INCOMPLETE."
+  },
+  "correlation_sensitivity": [-1.0, 0.0, 1.0],
+  "synthetic_software_fixtures": {
+    "temperature_pass": {
+      "largest_absolute_difference_C": 0.6,
+      "u_logger_C": 0.1,
+      "u_ref_C": 0.1,
+      "rho_for_gate": -1.0,
+      "declared_threshold_C": 1.0,
+      "expected_conservative_error_C": 0.8,
+      "expected_status": "QUALIFIED_FOR_DECLARED_REPRESENTATIVENESS"
+    },
+    "temperature_fail": {
+      "largest_absolute_difference_C": 0.9,
+      "u_logger_C": 0.1,
+      "u_ref_C": 0.1,
+      "rho_for_gate": -1.0,
+      "declared_threshold_C": 1.0,
+      "expected_conservative_error_C": 1.1,
+      "expected_status": "FAIL_REPRESENTATIVENESS"
+    }
+  },
+  "independence": "Samples within a transient are correlated technical observations. Independent-run count is based on separately executed controlled runs; logger samples, repeated timestamps, pixels, and sessions do not create independent substrates.",
+  "conventional_explanations": [
+    "package-to-dummy thermal or humidity gradient",
+    "sensor self-heating or placement contact",
+    "calibration offset or drift",
+    "time-alignment error",
+    "chamber spatial nonuniformity",
+    "airflow shielding by carrier or package",
+    "multi-time-constant package response",
+    "reference sensor perturbing the package"
+  ],
+  "provenance_date": "2026-08-27"
+}
