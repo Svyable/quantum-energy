@@ -1,0 +1,56 @@
+{
+  "id": "v3.55-pto2-y1-field-generation",
+  "claim_class": "literature-derived benchmark",
+  "decision_use": "Scale benchmark for prospective D18/PY-IT/eC9 field-generation measurements; not a D18 threshold or material constant.",
+  "source": {
+    "title": "Overcoming the fill-factor limit of organic solar cells",
+    "journal": "Nature Photonics",
+    "year": 2026,
+    "doi": "10.1038/s41566-026-01946-8",
+    "article_url": "https://www.nature.com/articles/s41566-026-01946-8",
+    "accessed_utc": "2026-08-28",
+    "source_location": "Main-text Eq. 4 and PTO2:Y1 paragraph following Fig. 2f"
+  },
+  "inputs": {
+    "eta_int": {
+      "value": 0.06,
+      "unit": "1",
+      "uncertainty": null,
+      "type": "literature-derived",
+      "note": "Paper reports eta_int=0.06 for PTO2:Y1; no uncertainty is assigned here."
+    },
+    "beta": {
+      "value": 0.09,
+      "unit": "V^-1",
+      "uncertainty": null,
+      "type": "literature-derived",
+      "note": "Paper reports beta=0.09 V^-1 for PTO2:Y1; no uncertainty is assigned here."
+    }
+  },
+  "model": {
+    "equation": "JG(V)/(JAbs*eta_int) = 1 + (1/eta_int - 1)*beta*abs(V-Voc)",
+    "derived_slope_equation": "S = (1/eta_int - 1)*beta",
+    "symbols": {
+      "JG": "free-charge generation current density",
+      "JAbs": "absorbed-photon-equivalent current density",
+      "eta_int": "internal free-charge generation efficiency at open circuit",
+      "beta": "field-dependence coefficient",
+      "V": "pre-bias / device voltage",
+      "Voc": "open-circuit voltage",
+      "S": "normalized generation slope versus |V-Voc|"
+    },
+    "validity": "Benchmark is only the paper's analytical parameterization for the reported PTO2:Y1 example."
+  },
+  "expected": {
+    "slope_per_V": 1.41,
+    "ratio_at_abs_deltaV_0p5V": 1.705,
+    "numerical_tolerance": 1e-12
+  },
+  "reporting_resolution_sensitivity": {
+    "interpretation": "Two-decimal half-unit ranges only; not physical confidence intervals.",
+    "eta_int_range": [0.055, 0.065],
+    "beta_V^-1_range": [0.085, 0.095],
+    "slope_per_V_range": [1.2226923076923077, 1.6322727272727275]
+  },
+  "falsifier": "If the source values/equation are corrected, or a source-specific reconstruction shows this parameterization was misread, supersede this benchmark visibly."
+}
