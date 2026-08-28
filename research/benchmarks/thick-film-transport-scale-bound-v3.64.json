@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.64",
+  "claim_class": "established external experimental evidence plus project engineering bound",
+  "claim": "For thick-film D18-class OSC scale transfer, zero-field mobility alone is not an adequate transport-screening criterion; field dependence, hopping/critical-length behavior, and direct extraction/collection evidence must remain visible before manufacturability or useful-work claims are promoted.",
+  "source": {
+    "citation": "Critical length screening enables 19% efficiency in thick-film organic solar cells, Nature Communications (2025)",
+    "doi": "10.1038/s41467-025-64808-x",
+    "published": "2025-11-07",
+    "source_class": "primary experimental paper",
+    "retrieved_for_increment": "2026-08-28",
+    "facts_used": [
+      "The paper reports that higher zero-field mobility does not necessarily correlate with longer critical length and argues that mobility, field dependence, and hopping frequency jointly control long-distance transport.",
+      "For 300 nm D18:L8-BO devices, adding BTP-eC9 reduced TPC extraction time from 0.93 us to 0.43 us.",
+      "The same comparison reduced defect-state density from 6.17e16 cm^-3 to 4.94e16 cm^-3, changed Jsc light-intensity exponent alpha from 0.97 to 0.99, reduced ideality factor from 1.89 to 1.70, and reduced FTPS Urbach energy from 23.0 meV to 20.8 meV.",
+      "The optimized 300 nm D18:L8-BO:BTP-eC9 device reached 19.0% PCE and the reported ternary critical length was 62.8 nm."
+    ]
+  },
+  "inputs": {
+    "active_layer_thickness_nm": {"value": 300.0, "class": "literature_derived", "uncertainty": null},
+    "tpc_extraction_time_us_control": {"value": 0.93, "class": "literature_derived", "uncertainty": null},
+    "tpc_extraction_time_us_btp_ec9": {"value": 0.43, "class": "literature_derived", "uncertainty": null},
+    "defect_density_cm3_control": {"value": 6.17e16, "class": "literature_derived", "uncertainty": null},
+    "defect_density_cm3_btp_ec9": {"value": 4.94e16, "class": "literature_derived", "uncertainty": null},
+    "jsc_light_intensity_alpha_control": {"value": 0.97, "class": "literature_derived", "uncertainty": null},
+    "jsc_light_intensity_alpha_btp_ec9": {"value": 0.99, "class": "literature_derived", "uncertainty": null},
+    "ideality_factor_control": {"value": 1.89, "class": "literature_derived", "uncertainty": null},
+    "ideality_factor_btp_ec9": {"value": 1.70, "class": "literature_derived", "uncertainty": null},
+    "urbach_meV_control": {"value": 23.0, "class": "literature_derived", "uncertainty": null},
+    "urbach_meV_btp_ec9": {"value": 20.8, "class": "literature_derived", "uncertainty": null},
+    "ternary_critical_length_nm": {"value": 62.8, "class": "literature_derived", "uncertainty": null},
+    "ternary_pce_percent": {"value": 19.0, "class": "literature_derived", "uncertainty": null}
+  },
+  "equations": {
+    "extraction_speedup": "S_t = tau_control / tau_modified",
+    "extraction_time_reduction": "R_t = 1 - tau_modified / tau_control",
+    "defect_density_reduction": "R_Nt = 1 - Nt_modified / Nt_control",
+    "urbach_reduction": "R_EU = 1 - EU_modified / EU_control"
+  },
+  "predeclared_checks": {
+    "absolute_tolerance": 1e-12,
+    "limiting_case": "If modified equals control, ratio=1 and fractional reduction=0.",
+    "negative_control": "If modified extraction time exceeds control, the code must report a slowdown rather than clamp to improvement.",
+    "domain": "All times, densities, and energies used in ratios must be positive."
+  },
+  "uncertainty": {
+    "formal_measurement_uncertainty": null,
+    "reason": "The main-text values used here do not provide formal uncertainties for the selected summary quantities; none is invented.",
+    "reporting_resolution_sensitivity": "Recompute extraction-time speedup over +/-0.005 us around each two-decimal reported TPC time; this is a reporting-resolution sensitivity, not a confidence interval."
+  },
+  "validity_domain": "The quantitative values apply to the source D18:L8-BO/BTP-eC9 thick-film systems and do not establish a numerical threshold for D18:eC9 or D18:PY-IT:eC9.",
+  "decision_delta": "For future >=300 nm or area-scale D18/PY-IT/eC9 process transfer, zero-field mobility alone cannot satisfy the transport/manufacturability control. Require at least one field-sensitive transport/collection metric plus direct FF/stabilized-Pmax evidence under the scaled geometry.",
+  "serious_conventional_explanations": [
+    "BTP-eC9 changes morphology, vertical composition, defect density, energetic disorder, and recombination simultaneously; the extraction improvement is not attributable to critical length alone.",
+    "The source host is D18:L8-BO rather than D18:eC9 or D18:PY-IT:eC9, so effect magnitude and optimum composition need not transfer.",
+    "TPC extraction time is method- and device-capacitance-dependent and is not a unique mobility or microscopic transport constant."
+  ],
+  "falsifier": "The project-level bound would be narrowed if target D18/PY-IT/eC9 scale-transfer data showed that zero-field mobility alone prospectively predicts thick-film FF/stabilized-Pmax and collection across held-out lots/thicknesses as well as field-sensitive transport metrics within predeclared uncertainty."
+}
