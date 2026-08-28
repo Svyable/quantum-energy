@@ -1,0 +1,48 @@
+{
+  "schema_version": "3.44",
+  "status": "synthetic_planning_contract",
+  "claim_scope": "AT-04 equivalent nonradiative-voltage-loss uncertainty budgeting; not measured R2 performance",
+  "date": "2026-08-27",
+  "governing_model": {
+    "equation": "DeltaV_nr = -(k_B*T/q)*ln(EQE_EL)",
+    "symbols": {
+      "DeltaV_nr": "nonradiative voltage loss [V]",
+      "k_B_over_q": "Boltzmann constant divided by elementary charge [V/K]",
+      "T": "DUT temperature [K]",
+      "EQE_EL": "external electroluminescence quantum efficiency [1]"
+    },
+    "k_B_over_q_V_per_K": {
+      "value": 0.00008617333262,
+      "uncertainty": 0.0,
+      "provenance": "SI exact constants via k_B/q numerical ratio",
+      "type": "derived_from_exact_constants"
+    }
+  },
+  "planning_fixture": {
+    "T_K": {"value": 300.0, "u_1sigma": 1.0, "type": "synthetic_planning_assumption"},
+    "EQE_EL": {"value": 1e-6, "relative_u_1sigma": 0.10, "type": "synthetic_planning_assumption"},
+    "additional_equivalent_mV_components": [
+      {"name": "radiometric_scale", "u_1sigma_mV": 4.0, "type": "synthetic_planning_assumption", "correlation_group": "calibration"},
+      {"name": "session_repeatability", "u_1sigma_mV": 3.0, "type": "synthetic_planning_assumption", "correlation_group": "independent"},
+      {"name": "background_subtraction", "u_1sigma_mV": 2.0, "type": "synthetic_planning_assumption", "correlation_group": "independent"}
+    ]
+  },
+  "acceptance": {
+    "combined_standard_uncertainty_mV_max": 10.0,
+    "source": "technical/current-specification.md AT-04 planning target",
+    "interpretation": "internal engineering gate, not a standards-derived limit"
+  },
+  "required_checks": [
+    "units_and_dimensional_analysis",
+    "sign_and_limiting_cases",
+    "analytic_first_order_propagation",
+    "finite_difference_cross_check",
+    "correlation_sensitivity",
+    "component_dominance_report",
+    "no_double_counting_review"
+  ],
+  "correlation_sensitivity": {
+    "radiometric_background_rho": [-0.5, 0.0, 0.5]
+  },
+  "decision_rule": "PASS only if the complete provenance-backed budget is <=10 mV and no required component/correlation review is missing; synthetic fixture output is never an experimental PASS"
+}

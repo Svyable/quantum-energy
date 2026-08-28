@@ -1,0 +1,46 @@
+name: at04-eqeel-uncertainty
+
+on:
+  pull_request:
+    paths:
+      - 'machine/at04-eqeel-uncertainty-budget-v3.44.json'
+      - 'models/at04_eqeel_uncertainty.py'
+      - 'technical/at04-eqeel-uncertainty-budget-v3.44.md'
+      - '.github/workflows/at04-eqeel-uncertainty.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Primary executable verification
+        run: python models/at04_eqeel_uncertainty.py
+      - name: Independent contract/RSS check
+        shell: python
+        run: |
+          import json, math, pathlib
+          p = pathlib.Path('machine/at04-eqeel-uncertainty-budget-v3.44.json')
+          c = json.loads(p.read_text())
+          assert c['status'] == 'synthetic_planning_contract'
+          assert c['acceptance']['combined_standard_uncertainty_mV_max'] == 10.0
+          f = c['planning_fixture']
+          kbq = c['governing_model']['k_B_over_q_V_per_K']['value']
+          T = f['T_K']['value']
+          eqe = f['EQE_EL']['value']
+          rel = f['EQE_EL']['relative_u_1sigma']
+          # Independent algebraic path, no production-script import.
+          eqe_mV = kbq*T*rel*1000.0
+          temp_mV = abs(kbq*math.log(eqe))*f['T_K']['u_1sigma']*1000.0
+          extra = {x['name']: x['u_1sigma_mV'] for x in f['additional_equivalent_mV_components']}
+          rss0 = math.sqrt(eqe_mV**2 + temp_mV**2 + sum(v*v for v in extra.values()))
+          assert math.isclose(rss0, 6.091027601721118, rel_tol=0, abs_tol=1e-12)
+          assert math.isclose(-(kbq*T)*math.log(eqe)*1000.0, 357.1585759879732, rel_tol=0, abs_tol=1e-12)
+          assert c['acceptance']['interpretation'].startswith('internal engineering gate')
+          print({'independent_rss0_mV': rss0, 'classification': 'synthetic_planning_result'})
