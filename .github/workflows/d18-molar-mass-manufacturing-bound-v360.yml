@@ -1,0 +1,25 @@
+name: d18-molar-mass-manufacturing-bound-v360
+
+on:
+  pull_request:
+    paths:
+      - 'research/data/d18-molar-mass-manufacturing-bound-v360.json'
+      - 'models/d18_molar_mass_manufacturing_bound_v360.py'
+      - 'technical/d18-molar-mass-manufacturing-bound-v3.60.md'
+      - '.github/workflows/d18-molar-mass-manufacturing-bound-v360.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce manufacturing-confound bound and controls
+        run: python models/d18_molar_mass_manufacturing_bound_v360.py
