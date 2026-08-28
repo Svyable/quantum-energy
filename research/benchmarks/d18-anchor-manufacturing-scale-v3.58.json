@@ -1,0 +1,38 @@
+{
+  "version": "v3.58",
+  "claim_class": "established-evidence-derived engineering bound",
+  "claim": "The published D18/PY-IT/eC9 anchor device is lab-scale fabrication evidence and does not by itself validate the project's 1 cm^2 to 10 cm^2 manufacturing-transfer stage.",
+  "source": {
+    "title": "Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface",
+    "doi": "10.1038/s41467-026-68731-7",
+    "publication_year": 2026,
+    "source_class": "primary literature",
+    "accessed_utc": "2026-08-28",
+    "methods_facts": {
+      "contact_area_cm2": 0.042,
+      "illuminated_area_cm2": 0.041,
+      "active_layer_method": "spin coating at 2000-2500 rpm for 30 s",
+      "measurement_environment": "glovebox under inert atmosphere",
+      "top_electrode": "Ag evaporated through shadow mask",
+      "ag_deposition_pressure_pa": 0.0003
+    }
+  },
+  "project_reference_areas": {
+    "first_scale_transfer_cm2": 1.0,
+    "later_scale_transfer_cm2": 10.0,
+    "provenance": "research/session-history.md v1.3 scale-transfer program; engineering targets, not literature thresholds"
+  },
+  "expected": {
+    "factor_to_1cm2": 24.390243902439025,
+    "factor_to_10cm2": 243.90243902439025,
+    "contact_to_illuminated_area_excess_fraction": 0.023809523809523808,
+    "classification": "LAB_SCALE_ONLY"
+  },
+  "numerical_tolerance": 1e-12,
+  "uncertainty": {
+    "area_measurement_uncertainty": null,
+    "note": "No physical area uncertainty is reported in the inspected Methods text; none is invented. Calculations use the published nominal areas exactly as reported."
+  },
+  "validity_domain": "Evidence classification for scale/manufacturing transfer only; not a statement about intrinsic efficiency, mechanism, or whether scale-up will fail.",
+  "falsifier": "Public primary-source evidence showing the same D18/PY-IT/eC9 architecture/process and claimed effect on provenance-complete >=1 cm^2 devices would retire or narrow this lab-scale-only classification."
+}
