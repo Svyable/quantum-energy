@@ -1,0 +1,77 @@
+{
+  "schema_version": "quantum-energy-d18-ternary-field-evidence-audit-v3.52",
+  "title": "D18/PY-IT/eC9 anchor-paper field-generation evidence audit",
+  "claim_class": "established-evidence boundary / literature audit",
+  "run_base_main_sha": "9e61f8d761cc30b5ba12eef36c9935c35591c8f5",
+  "audit_date": "2026-08-28",
+  "decision_question": "Does the primary D18/PY-IT/eC9 anchor paper, as inspected in this run, establish field-dependent free-charge-generation robustness on the ternary useful-work arm?",
+  "required_project_evidence": {
+    "field_dependent_generation_on_ternary": true,
+    "accepted_examples": [
+      "TDCF across prospectively frozen prebias/collection conditions",
+      "bias-dependent PL with independently justified mapping to field-dependent generation",
+      "independently justified equivalent field-dependent-generation measurement"
+    ],
+    "source": "technical/current-specification.md v3.45 gate on main"
+  },
+  "primary_source": {
+    "citation": "Luo et al., Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface, Nature Communications 17, 2026 (2026)",
+    "doi": "10.1038/s41467-026-68731-7",
+    "published": "2026-01-26",
+    "version_of_record": "2026-02-26",
+    "data_doi_reported_by_article": "10.6084/m9.figshare.29390669",
+    "license_note": "Article states CC BY-NC-ND 4.0; this repository records provenance and independent audit metadata rather than copying figures or upstream data."
+  },
+  "source_observations": [
+    {
+      "id": "OBS-1",
+      "scope": "binary PA/SMA mechanism systems",
+      "observation": "The charge-generation section reports PP-TAS and PPP-TAS for PA and SMA systems and interprets hole-transfer and bound-CTE separation kinetics.",
+      "article_locations": ["Results: Charge generation dynamics with the effects of P-interface", "Figure 4"],
+      "supports": ["charge-transfer/CTE kinetics in the studied binary-system series"],
+      "does_not_by_itself_support": ["field-dependent free-charge-generation robustness of D18/PY-IT/eC9 ternary device"]
+    },
+    {
+      "id": "OBS-2",
+      "scope": "D18/PY-IT/eC9 ternary device",
+      "observation": "The article reports the optimized 1:0.2:1 pseudo-bulk-heterojunction ternary device with approximately 20 meV higher Voc, over 18% efficiency, and no sacrifice in Jsc or FF, with Figure 5f identified as a J-V curve.",
+      "article_locations": ["Results: Non-radiative energy loss from E- and P-interfaces", "Figure 5f", "Discussion"],
+      "quantitative_inputs": [
+        {
+          "name": "reported_Voc_increase",
+          "value": 20,
+          "unit": "meV-equivalent voltage",
+          "uncertainty": null,
+          "provenance": "primary article text; approximate (~20 meV)",
+          "source_class": "literature-derived approximate",
+          "decision_use": "context only; not used as a physical acceptance threshold"
+        }
+      ],
+      "supports": ["champion J-V / voltage-loss motivation for the ternary commercial bridge"],
+      "does_not_by_itself_support": ["stabilized Pmax", "field-dependent generation robustness"]
+    },
+    {
+      "id": "OBS-3",
+      "scope": "main article text inspected 2026-08-28",
+      "observation": "Search of the inspected article text returned no occurrence of TDCF or bias-dependent PL.",
+      "supports": ["main-article field-generation evidence is not established by those named methods"],
+      "does_not_support": ["a claim that no such evidence exists anywhere in Supplementary Information, the Figshare record, or author-held data"]
+    }
+  ],
+  "audit_status": "INCOMPLETE",
+  "reason": "The inspected primary article establishes binary-system TAS/PPP-TAS charge-generation kinetics and ternary J-V/Voc evidence, but does not establish a field-dependent generation measurement on the ternary useful-work arm. Supplementary/Figshare completeness was not independently proven in this run, so the correct state is INCOMPLETE rather than ABSENT.",
+  "fail_closed_rule": {
+    "expression": "eligible_for_field_robustness_claim = ternary_specific AND field_dependent AND provenance_complete",
+    "ternary_specific": false,
+    "field_dependent": false,
+    "provenance_complete": false,
+    "eligible_for_field_robustness_claim": false
+  },
+  "strongest_conventional_explanations": [
+    "The ternary device may in fact have field-robust generation; the anchor paper's main text may simply not report the required measurement.",
+    "Supplementary Information, the cited Figshare record, or author-held data may contain a qualifying ternary field-dependent measurement not verified in this run.",
+    "Fast PP/PPP-TAS charge-transfer kinetics can coexist with field-dependent free-charge-generation losses under operating bias, so zero/unspecified-field kinetics are not a substitute for the project gate."
+  ],
+  "falsifier": "Reclassify this audit if a primary-source, provenance-complete D18/PY-IT/eC9 ternary dataset is identified that directly measures field-dependent free-charge generation under defined conditions.",
+  "next_physical_measurement": "Blinded B0 baseline followed by B1/B2 TDCF and/or bias-dependent PL under prospectively frozen bias, fluence, timing, temperature, morphology/thickness, and contact controls."
+}
