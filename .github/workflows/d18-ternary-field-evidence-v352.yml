@@ -1,0 +1,50 @@
+name: d18-ternary-field-evidence-v352
+
+on:
+  pull_request:
+    paths:
+      - 'machine/d18-ternary-field-evidence-audit-v3.52.json'
+      - 'models/d18_ternary_field_evidence_audit_v3_52.py'
+      - 'research/evidence/d18-ternary-field-generation-gap-v3.52.md'
+      - '.github/workflows/d18-ternary-field-evidence-v352.yml'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run committed fail-closed audit
+        run: python models/d18_ternary_field_evidence_audit_v3_52.py --check
+      - name: Independent contract check without importing production module
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          c = json.loads(Path('machine/d18-ternary-field-evidence-audit-v3.52.json').read_text())
+          r = c['fail_closed_rule']
+          eligible = all((r['ternary_specific'], r['field_dependent'], r['provenance_complete']))
+          assert eligible is False
+          assert c['audit_status'] == 'INCOMPLETE'
+
+          # Independent source-scope invariant: the binary-system mechanism observation
+          # may not silently become ternary field-dependent evidence.
+          obs1 = c['source_observations'][0]
+          assert obs1['scope'] == 'binary PA/SMA mechanism systems'
+          assert 'field-dependent free-charge-generation robustness of D18/PY-IT/eC9 ternary device' in obs1['does_not_by_itself_support']
+
+          # Approximate literature value remains context-only, with no invented uncertainty.
+          q = c['source_observations'][1]['quantitative_inputs'][0]
+          assert q['value'] == 20
+          assert q['unit'] == 'meV-equivalent voltage'
+          assert q['uncertainty'] is None
+          assert q['source_class'] == 'literature-derived approximate'
+          print('independent v3.52 evidence-boundary audit: PASS')
+          PY
