@@ -19,11 +19,15 @@ Use the evidence class attached to a claim. Do not treat synthetic/model outputs
 - [Current technical specification](https://github.com/Svyable/quantum-energy/blob/main/technical/current-specification.md): Current device, measurement, and engineering specification.
 - [Automation loop](https://github.com/Svyable/quantum-energy/blob/main/automation/hourly-loop.md): Rules for bounded automated research increments and GitHub persistence.
 
-## Machine-readable metadata
+## Machine-readable metadata and agent discovery
 
 - [CodeMeta](https://github.com/Svyable/quantum-energy/blob/main/codemeta.json): JSON-LD research-software metadata for indexing and reuse.
 - [Citation metadata](https://github.com/Svyable/quantum-energy/blob/main/CITATION.cff): Machine-readable citation information.
 - [Project index](https://github.com/Svyable/quantum-energy/blob/main/machine/project-index.json): Search terms, canonical paths, claim boundaries, and agent entrypoints.
+- [Analysis registry](https://github.com/Svyable/quantum-energy/blob/main/machine/analysis-registry.json): Canonical analysis lineage and superseded review candidates.
+- [Prospective agent-discovery benchmark](https://github.com/Svyable/quantum-energy/blob/main/machine/agent-discovery-benchmark-v3.41.json): After merge, frozen public-agent navigation and claim-discipline benchmark. Software protocol only until real prospective agent runs are recorded.
+- [Benchmark scorer](https://github.com/Svyable/quantum-energy/blob/main/tools/score_agent_discovery_v3_41.py): Deterministic scorer after merge.
+- [Pages-ready source](https://github.com/Svyable/quantum-energy/tree/main/docs): Static web discovery source after merge; repository settings must still enable Pages before a live site is claimed.
 
 ## Technical and reproducibility work
 

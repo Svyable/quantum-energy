@@ -1,0 +1,33 @@
+# Quantum Energy Venture Lab
+
+> Web-agent navigation for the public, evidence-first research program at https://github.com/Svyable/quantum-energy. The project studies open quantum systems, ENAQT, exciton/polariton transport, organic photovoltaics, electron-phonon coupling, spectroscopy, metrology, and reproducible engineering. It does not currently claim a validated commercial quantum-energy breakthrough.
+
+Treat `main` as canonical. Models/synthetic fixtures are not measurements. Open pull requests are review candidates.
+
+## Start here
+
+- [Project landing page](index.md): concise human/agent orientation and claim boundary.
+- [Canonical repository](https://github.com/Svyable/quantum-energy): reviewed public working record.
+- [Agent instructions](https://github.com/Svyable/quantum-energy/blob/main/AGENTS.md): working and scientific-integrity rules.
+- [Open science charter](https://github.com/Svyable/quantum-energy/blob/main/OPEN_SCIENCE.md): evidence classes and publication levels.
+- [Current specification](https://github.com/Svyable/quantum-energy/blob/main/technical/current-specification.md): current technical state.
+- [Evidence map](https://github.com/Svyable/quantum-energy/blob/main/research/evidence-map.md): established evidence, assumptions, hypotheses, models, and non-claims.
+- [Calculation verification](https://github.com/Svyable/quantum-energy/blob/main/research/CALCULATION_VERIFICATION.md): quantitative verification protocol.
+
+## Reproducibility
+
+- [Models](https://github.com/Svyable/quantum-energy/tree/main/models): executable calculations and fixtures.
+- [Corrections](https://github.com/Svyable/quantum-energy/tree/main/research/corrections): visible corrections and supersessions.
+- [Analysis authority](https://github.com/Svyable/quantum-energy/blob/main/machine/analysis-registry.json): canonical analysis lineage.
+- [Facility capability contract](https://github.com/Svyable/quantum-energy/blob/main/technical/data/r2_facility_capability_contract_v3_27.json): machine-readable R2 facility evidence contract.
+
+## Agent benchmark
+
+- [Discovery benchmark](https://github.com/Svyable/quantum-energy/blob/main/machine/agent-discovery-benchmark-v3.41.json): prospective navigation/claim-discipline protocol after merge.
+- [Scorer](https://github.com/Svyable/quantum-energy/blob/main/tools/score_agent_discovery_v3_41.py): deterministic benchmark scorer after merge.
+
+## Contribution and citation
+
+- [Contributing](https://github.com/Svyable/quantum-energy/blob/main/CONTRIBUTING.md): welcome reproductions, corrections, null results, and discriminating tests.
+- [Citation metadata](https://github.com/Svyable/quantum-energy/blob/main/CITATION.cff): citation information.
+- [CodeMeta](https://github.com/Svyable/quantum-energy/blob/main/codemeta.json): research-software metadata.
