@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.53",
+  "claim_class": "reproducibility-boundary / useful negative result",
+  "claim": "The inspected public primary-source package for the D18/PY-IT/eC9 anchor is not sufficient to classify the ternary useful-work evidence as independently reproducible from raw machine-readable data: the article states supporting data are in the main text and Supplementary Information, while additional data are available from the corresponding author on request; PMC exposes the Supplementary Information as a 34.3 MB PDF.",
+  "primary_source": {
+    "article_doi": "10.1038/s41467-026-68731-7",
+    "data_doi_reported_by_article": "10.6084/m9.figshare.29390669",
+    "published": "2026-01-26",
+    "version_of_record": "2026-02-26",
+    "pmc": "PMC12946207",
+    "public_package_observed": ["main_article", "supplementary_information_pdf"],
+    "supplementary_information_size_mb_reported_by_pmc": 34.3,
+    "additional_data_access": "corresponding_author_on_request"
+  },
+  "decision_rule": {
+    "required_for_independent_raw_data_reproduction": ["public_raw_or_minimally_processed_data", "device_or_sample_identity", "machine_readable_values", "processing_path"],
+    "observed_publicly_in_this_run": {
+      "main_article": true,
+      "supplementary_information_pdf": true,
+      "public_raw_or_minimally_processed_data": false,
+      "device_or_sample_identity_in_machine_readable_raw_data": false,
+      "processing_path_from_raw_to_decision_metric": false
+    },
+    "status": "NOT_INDEPENDENTLY_REPRODUCIBLE_FROM_PUBLIC_RAW_DATA"
+  },
+  "important_boundary": "This status is about public reproducibility of the inspected package, not truth/falsity of the paper and not evidence that raw data do not exist. Author-supplied or newly deposited raw data can revise the status.",
+  "falsifier": "A public provenance-complete raw/minimally processed dataset with sample/device identities and a deterministic processing path sufficient to reconstruct the ternary field-generation or stabilized-power claim.",
+  "runtime": "Python standard library",
+  "tolerance": null,
+  "stochastic_seed": null
+}

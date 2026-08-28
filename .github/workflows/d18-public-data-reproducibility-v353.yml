@@ -1,0 +1,34 @@
+name: d18-public-data-reproducibility-v353
+
+on:
+  pull_request:
+    paths:
+      - 'machine/d18-public-data-reproducibility-v3.53.json'
+      - 'models/d18_public_data_reproducibility_v353.py'
+      - 'research/evidence/d18-public-data-reproducibility-v3.53.md'
+      - '.github/workflows/d18-public-data-reproducibility-v353.yml'
+
+jobs:
+  audit:
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python models/d18_public_data_reproducibility_v353.py
+      - name: Independent fail-closed check
+        run: |
+          python - <<'PY'
+          import json
+          p='machine/d18-public-data-reproducibility-v3.53.json'
+          d=json.load(open(p))
+          o=d['decision_rule']['observed_publicly_in_this_run']
+          eligible=(o['public_raw_or_minimally_processed_data'] and o['device_or_sample_identity_in_machine_readable_raw_data'] and o['processing_path_from_raw_to_decision_metric'])
+          assert eligible is False
+          assert d['decision_rule']['status']=='NOT_INDEPENDENTLY_REPRODUCIBLE_FROM_PUBLIC_RAW_DATA'
+          print('independent check: PASS')
+          PY
