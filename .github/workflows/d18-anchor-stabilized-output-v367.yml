@@ -1,0 +1,25 @@
+name: d18-anchor-stabilized-output-v367
+
+on:
+  pull_request:
+    paths:
+      - 'research/benchmarks/d18-anchor-stabilized-output-bound-v3.67.json'
+      - 'research/benchmarks/d18-anchor-stabilized-output-bound-v3.67.md'
+      - 'models/d18_anchor_stabilized_output_bound_v367.py'
+      - '.github/workflows/d18-anchor-stabilized-output-v367.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Validate stabilized-output evidence boundary
+        run: python models/d18_anchor_stabilized_output_bound_v367.py
