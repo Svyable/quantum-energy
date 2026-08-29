@@ -45,9 +45,12 @@
     "65_C_aging_relative_gain": 1.0833333333333333,
     "continuous_illumination_ratio": 1.290909090909091,
     "continuous_illumination_relative_gain": 0.2909090909090909,
-    "ratio_of_ratios": 1.6133720930232558
+    "ratio_of_ratios": 1.613849765258216
   },
   "numerical_tolerance": 1e-12,
+  "correction_history": [
+    "Pre-PR independent recomputation corrected an initially transcribed ratio_of_ratios value of 1.6133720930232558 to 1.613849765258216. Source T80 inputs and scientific decision were unchanged."
+  ],
   "validity_domain": "Descriptive comparison of the two reported D18:CS4-based systems under each named stress mode only. Not a D18:PY-IT:eC9 lifetime, field lifetime, acceleration model, or project acceptance threshold.",
   "falsifier": "The benchmark is falsified if the cited primary source does not report the stated T80 values for the stated systems/stress modes, or if independently recomputed ratios disagree beyond the frozen numerical tolerance.",
   "next_physical_discriminator": "Measure blinded B0/B1/B2 target chemistry under separately preregistered thermal and continuous-light durability conditions while tracking stabilized Pmax and mechanism-retention observables."
