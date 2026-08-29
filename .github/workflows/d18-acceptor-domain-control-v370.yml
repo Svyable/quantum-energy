@@ -1,0 +1,46 @@
+name: d18-acceptor-domain-control-v370
+
+on:
+  pull_request:
+    paths:
+      - 'research/protocols/d18-pyit-ec9-acceptor-domain-control-v3.70.json'
+      - 'technical/d18-pyit-ec9-acceptor-domain-control-v3.70.md'
+      - 'models/d18_acceptor_domain_control_v370.py'
+      - '.github/workflows/d18-acceptor-domain-control-v370.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/d18_acceptor_domain_control_v370.py
+      - name: Validate prospective protocol and fail-closed fixtures
+        run: python models/d18_acceptor_domain_control_v370.py
+      - name: Independent arithmetic and no-threshold guard
+        run: |
+          python - <<'PY'
+          import json
+          from fractions import Fraction
+          from pathlib import Path
+
+          p = Path('research/protocols/d18-pyit-ec9-acceptor-domain-control-v3.70.json')
+          d = json.loads(p.read_text())
+          ratio = Fraction(93,100) / Fraction(5,1000)
+          assert ratio == 186
+          assert abs(float(ratio) - d['method_precedent_numbers']['descriptive_iqe_ratio']) < 1e-12
+          t = d['physical_thresholds']
+          assert t['A0_vs_A1_A2_effect_margin'] is None
+          assert t['B0_vs_B1_B2_interface_effect_margin'] is None
+          assert t['F50_noninferiority_margin'] is None
+          assert t['status'] == 'DEFERRED_PENDING_REAL_BASELINE_AND_METHOD_CAPABILITY'
+          assert 'donor-independent acceptor-domain effect' in d['prospective_inference_states']['DONOR_FREE_EFFECT_PRESENT']
+          print('independent v3.70 guard: PASS')
+          PY
