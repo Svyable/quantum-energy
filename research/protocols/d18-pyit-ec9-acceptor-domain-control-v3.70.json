@@ -1,0 +1,129 @@
+{
+  "schema_version": "quantum-energy-d18-pyit-ec9-acceptor-domain-control-v3.70",
+  "title": "Donor-free acceptor-domain control for D18/PY-IT/eC9 causal attribution",
+  "claim_class": "falsifiable hypothesis + prospective experimental protocol",
+  "publication_level": "exploratory",
+  "changed_evidentiary_state": "The commercial bridge now has a prospective control that can distinguish an interface-specific D18/PY-IT/eC9 effect from a donor-independent acceptor-domain packing/delocalization effect. No physical result is claimed until real donor-free and donor-containing measurements are acquired under frozen analysis rules.",
+  "run_base_main_sha": "711aa6e02220fd304be946718bedf708d7bcf387",
+  "primary_evidence": [
+    {
+      "citation": "Hart et al., Molecular factors controlling charge pair generation in organic photovoltaic materials, Nature Materials 25, 1209-1218 (2026)",
+      "doi": "10.1038/s41563-026-02509-6",
+      "published": "2026-02-27",
+      "source_dataset": "10.5281/zenodo.18151704",
+      "source_dataset_version": "v1",
+      "source_dataset_published": "2026-01-05",
+      "used_for": [
+        "experimental precedent for field-dependent IQE/PL/trPL in donor-free NFA devices",
+        "evidence that reorganization energy, electronic coupling, energetic disorder, exciton binding and packing jointly influence charge generation",
+        "evidence that delocalization is important in a richer charge-generation model",
+        "experimental-method precedent that neat-acceptor field response can probe exciton splitting / charge generation"
+      ],
+      "explicit_nontransfer": "The paper does not study eC9/PY-IT mixtures or D18/PY-IT/eC9. Its quantitative field responses are method precedent, not project thresholds."
+    },
+    {
+      "citation": "Luo et al., Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface, Nature Communications 17 (2026)",
+      "doi": "10.1038/s41467-026-68731-7",
+      "published": "2026-01-26",
+      "used_for": [
+        "D18/PY-IT/eC9 commercial-bridge anchor",
+        "penetrated-interface / EPC hypothesis"
+      ]
+    }
+  ],
+  "method_precedent_numbers": {
+    "classification": "literature-derived experimental method precedent only",
+    "material_system": "Y5 single-component acceptor device in Hart et al. 2026",
+    "iqe_short_circuit_fraction": 0.005,
+    "iqe_at_0p15_V_per_nm_fraction": 0.93,
+    "descriptive_iqe_ratio": 186.0,
+    "pl_quench_fold_reported": 30.0,
+    "trpl_lifetime_ns_initial": 1.1,
+    "trpl_lifetime_ns_final_upper_bound": 0.1,
+    "operational_field_context_V_per_nm_upper": 0.02,
+    "note": "These values establish that field-dependent donor-free NFA charge generation can be experimentally large and measurable. They are not acceptance thresholds for eC9 or PY-IT:eC9."
+  },
+  "experimental_groups": [
+    {
+      "id": "A0",
+      "composition": "eC9 donor-free control",
+      "purpose": "baseline acceptor-domain field response"
+    },
+    {
+      "id": "A1",
+      "composition": "PY-IT:eC9 donor-free mixture corresponding to the B1 guest ratio on an acceptor-only basis",
+      "purpose": "test whether PY-IT changes acceptor-domain field response without D18"
+    },
+    {
+      "id": "A2",
+      "composition": "PY-IT:eC9 donor-free mixture corresponding to the B2 guest ratio on an acceptor-only basis",
+      "purpose": "test whether PY-IT changes acceptor-domain field response without D18"
+    },
+    {
+      "id": "B0",
+      "composition": "D18:eC9",
+      "purpose": "canonical donor-containing baseline"
+    },
+    {
+      "id": "B1",
+      "composition": "D18:PY-IT:eC9 = 1:0.1:1",
+      "purpose": "commercial-bridge arm"
+    },
+    {
+      "id": "B2",
+      "composition": "D18:PY-IT:eC9 = 1:0.2:1",
+      "purpose": "published-anchor arm"
+    }
+  ],
+  "measurements": {
+    "donor_free_primary": [
+      "field-dependent steady-state PL",
+      "field-dependent photocurrent IQE or an independently validated charge-generation observable",
+      "time-resolved PL where signal permits",
+      "thickness and active-area provenance",
+      "field/bias calibration with explicit electrostatic assumptions",
+      "UV-vis absorption / optical-density control",
+      "morphology/packing witness measurement such as GIWAXS when available"
+    ],
+    "donor_containing_link": [
+      "existing preregistered TDCF and/or bias-dependent PL",
+      "DeltaVnr/Voc",
+      "Suns-Voc/pseudo-FF or equivalent transport/collection control",
+      "stabilized Pmax"
+    ]
+  },
+  "empirical_metrics": {
+    "normalized_pl_quench": "Q_PL(F)=1-PL(F)/PL(F_ref), with F_ref frozen prospectively",
+    "normalized_cge": "CGE(F) must be derived from IQE/PL/trPL only under an explicitly validated kinetic/optical mapping; otherwise report the raw observables separately",
+    "field_midpoint": "F50 is the interpolated field at which a monotonic normalized response reaches 50% of its observed dynamic range; report only if the curve brackets the midpoint and interpolation uncertainty is bounded",
+    "zero_field_response": "Report the donor-free zero-/low-field charge-generation proxy separately; do not infer interface physics from it"
+  },
+  "physical_thresholds": {
+    "A0_vs_A1_A2_effect_margin": null,
+    "B0_vs_B1_B2_interface_effect_margin": null,
+    "F50_noninferiority_margin": null,
+    "status": "DEFERRED_PENDING_REAL_BASELINE_AND_METHOD_CAPABILITY",
+    "rule": "No synthetic or cross-material numerical value in v3.70 may become a physical acceptance margin. Freeze margins from real A0/B0 repeatability, instrument resolution and prospective power analysis before unblinding A1/A2/B1/B2."
+  },
+  "prospective_inference_states": {
+    "DONOR_FREE_EFFECT_PRESENT": "A1/A2 move a donor-free field-response metric beyond its frozen A0-based margin with reproducible same-sign behavior across independent fabrication lots. This establishes a donor-independent acceptor-domain effect but not its microscopic cause.",
+    "INTERFACE_SPECIFICITY_STRENGTHENED": "A1/A2 remain within frozen donor-free margins while B1/B2 move donor-containing field-generation/voltage-loss observables beyond their frozen B0 margins. This strengthens interface-specific attribution but does not uniquely prove EPC.",
+    "MIXED_BULK_INTERFACE_EFFECT": "Both donor-free and donor-containing systems move materially. Interface-only attribution is rejected; a mixed packing/delocalization/interface model is required.",
+    "NO_RESOLVED_EFFECT": "Neither donor-free nor donor-containing arms move beyond frozen capability-aware margins.",
+    "INCOMPLETE": "Required baselines, hierarchy, field calibration, optical controls or frozen margins are missing."
+  },
+  "statistical_hierarchy": "material lot -> fabrication lot -> substrate -> device -> session -> field point / optical measurement",
+  "independence_rule": "Field points, voltage points, PL spectra, transient repeats and multiple pixels are technical repeats, not independent fabrication lots.",
+  "strongest_conventional_explanations": [
+    "PY-IT changes eC9 packing, crystallinity, energetic disorder or electronic coupling in acceptor-rich domains independently of D18 interface EPC.",
+    "Selective contacts, field calibration, injection/extraction or optical-field differences create apparent donor-free field-response shifts.",
+    "Thickness/absorption changes alter PL/IQE normalization without a change in intrinsic charge-generation kinetics.",
+    "A donor-free device architecture may reorganize the film differently from the donor-containing bulk heterojunction, limiting direct quantitative transfer."
+  ],
+  "falsifier": "A reproducible donor-free A1/A2 shift in the same direction as the B1/B2 field-generation change falsifies a purely D18-interface-specific interpretation unless an independent discriminator shows the donor-free shift is irrelevant to the donor-containing mechanism.",
+  "next_physical_step": "Fabricate and qualify A0/A1/A2 donor-free controls under a selective-contact architecture before B1/B2 mechanism unblinding, then analyze donor-free and donor-containing arms with frozen baseline-derived margins.",
+  "safety_notes": [
+    "Reuse the project's existing solvent, UV/laser, vacuum/electrode, electrical-bias and organic-semiconductor waste controls.",
+    "Do not extend electric field merely to match literature values if breakdown, heating, injection or electrochemistry invalidates the measurement regime."
+  ]
+}
