@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.65",
+  "claim_class": "established external experimental evidence plus project engineering bound",
+  "claim": "BTP-eC9-containing OSC chemistry has published blade-coated module-scale precedent: a PM6:BTP-eC9 process reported 18.1% PCE in blade-coated cells and 15.7% PCE in a 12 cm^2 effective-area module. This supports treating scale-transfer process control, rather than eC9 inclusion alone, as the immediate manufacturing falsifier for the D18/PY-IT/eC9 bridge.",
+  "source": {
+    "citation": "High-efficiency blade-coated organic solar cells enabled via an in situ nitrogen-blowing and heating strategy, Journal of Materials Chemistry C (2025) 13, 16620-16627",
+    "doi": "10.1039/D5TC01245G",
+    "submitted": "2025-03-22",
+    "accepted": "2025-06-03",
+    "first_published": "2025-06-08",
+    "source_class": "primary experimental paper",
+    "retrieved_for_increment": "2026-08-28",
+    "facts_used": [
+      "The authors developed blade coating assisted by in-situ nitrogen blowing and heating to improve film uniformity and morphology under ambient processing.",
+      "The reported blade-coated PM6:BTP-eC9 cell PCE was 18.1%.",
+      "The reported large-area module effective area was 12 cm^2 and its PCE was 15.7%."
+    ],
+    "source_url": "https://doi.org/10.1039/D5TC01245G"
+  },
+  "inputs": {
+    "blade_coated_cell_pce_percent": {
+      "value": 18.1,
+      "unit": "percent",
+      "class": "literature_derived",
+      "uncertainty": null,
+      "provenance": "primary-paper abstract"
+    },
+    "module_pce_percent": {
+      "value": 15.7,
+      "unit": "percent",
+      "class": "literature_derived",
+      "uncertainty": null,
+      "provenance": "primary-paper abstract"
+    },
+    "module_effective_area_cm2": {
+      "value": 12.0,
+      "unit": "cm^2",
+      "class": "literature_derived",
+      "uncertainty": null,
+      "provenance": "primary-paper abstract"
+    }
+  },
+  "equations": {
+    "pce_retention": "R_PCE = PCE_module / PCE_cell",
+    "relative_pce_drop": "D_PCE = 1 - R_PCE"
+  },
+  "predeclared_checks": {
+    "absolute_tolerance": 1e-12,
+    "limiting_case": "If module PCE equals cell PCE, R_PCE=1 and D_PCE=0.",
+    "negative_control": "If module PCE exceeds cell PCE, D_PCE must become negative rather than being clamped to zero.",
+    "domain": "PCE values must be positive and module effective area must be positive."
+  },
+  "uncertainty": {
+    "formal_measurement_uncertainty": null,
+    "reason": "The abstract-level summary values used here do not provide formal uncertainty intervals; none is invented.",
+    "reporting_resolution_sensitivity": "Perturb each one-decimal PCE by +/-0.05 percentage point and recompute the retention ratio. This tests printed-value resolution only and is not a confidence interval."
+  },
+  "validity_domain": "The quantitative benchmark applies to the source PM6:BTP-eC9 blade-coated process and its 12 cm^2 module. It is not a D18:eC9 or D18:PY-IT:eC9 measurement, process recipe, acceptance threshold, or prediction.",
+  "decision_delta": "For the D18/PY-IT/eC9 commercial bridge, eC9 inclusion should not be treated as intrinsically incompatible with scalable blade-coated modules. The next manufacturing claim must instead survive target-chemistry scale transfer with direct uniformity, yield, FF, stabilized-Pmax, and field/collection checks; no numerical PCE-retention threshold is imported from this cross-material paper.",
+  "serious_conventional_explanations": [
+    "The donor is PM6 rather than D18, so drying kinetics, miscibility, aggregation, transport, and thickness tolerance can differ materially in the target chemistry.",
+    "The process uses active aerodynamic and thermal control; the module result may depend on that specific coating hardware and process window rather than on eC9 chemistry itself.",
+    "PCE retention from a best cell to a module conflates coating uniformity, interconnection/geometric losses, contact resistance, and device statistics, so it is not a mechanism-pure scale-loss metric."
+  ],
+  "falsifier": "The project-level narrowing would be overturned if target-chemistry D18:eC9 or D18:PY-IT:eC9 repeatedly failed scalable coating for chemistry-specific reasons after process uniformity, donor lot, thickness, contacts, and collection were controlled, or if eC9-free controls scaled while matched eC9-containing arms did not.",
+  "next_physical_measurement": "Run a blinded >=1 cm^2 target-chemistry coating transfer with same-lot D18 randomization, mapped thickness/uniformity, all-functional-device yield, field-generation and collection diagnostics, FF, and stabilized Pmax before any scale/manufacturability claim."
+}
