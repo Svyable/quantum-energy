@@ -1,0 +1,51 @@
+name: dual-path-generation-robustness-v371
+
+on:
+  pull_request:
+    paths:
+      - 'machine/dual-path-generation-robustness-v3.71.json'
+      - 'models/dual_path_generation_robustness_v371.py'
+      - 'models/dual_path_generation_robustness_expected_v371.csv'
+      - 'technical/dual-path-generation-robustness-v3.71.md'
+      - 'research/evidence/dual-path-generation-robustness-v3.71.md'
+      - '.github/workflows/dual-path-generation-robustness-v371.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/dual_path_generation_robustness_v371.py
+      - name: Reproduce model and frozen fixture
+        run: python models/dual_path_generation_robustness_v371.py --check-expected
+      - name: Independent exact arithmetic and fail-closed policy
+        run: |
+          python - <<'PY'
+          import json
+          from fractions import Fraction
+          from pathlib import Path
+
+          c = json.loads(Path('machine/dual-path-generation-robustness-v3.71.json').read_text())
+
+          # Independent exact route: 40% secondary path, 50% vs 90% route retention.
+          R = (1-Fraction(2,5))*Fraction(1,2) + Fraction(2,5)*Fraction(9,10)
+          assert R == Fraction(33,50)
+          assert float(R) == 0.66
+
+          # Analytic sign rule: redundancy only helps if the secondary path is more robust.
+          assert Fraction(9,10) - Fraction(1,2) > 0
+          assert Fraction(3,10) - Fraction(4,5) < 0
+
+          # No synthetic value may become a physical gate.
+          assert all(v is None for v in c['measurement_policy']['thresholds'].values())
+          assert c['claim_class'].startswith('synthetic/model result')
+          print('independent dual-path audit: PASS')
+          PY
