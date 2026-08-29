@@ -1,0 +1,24 @@
+name: d18-pyit-ec9-stabilized-output-v367
+
+on:
+  pull_request:
+    paths:
+      - 'research/data/d18-pyit-ec9-stabilized-output-bound-v3.67.json'
+      - 'models/d18_pyit_ec9_stabilized_output_bound_v367.py'
+      - 'technical/d18-pyit-ec9-stabilized-output-bound-v3.67.md'
+      - '.github/workflows/d18-pyit-ec9-stabilized-output-v367.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce evidence boundary
+        run: python models/d18_pyit_ec9_stabilized_output_bound_v367.py
