@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "increment": "v3.67",
+  "claim_class": "primary-source evidence boundary plus project decision rule",
+  "claim": "The inspected main-article record for the optimized D18:PY-IT:eC9 1:0.2:1 device supports a scanned J-V/PCE result, but does not establish the repository's stabilized-Pmax useful-work gate. The >18% PCE and ~20 mV Voc gain must therefore remain scanned-device evidence until stabilized output and independent-lot requirements are measured prospectively.",
+  "source": {
+    "title": "Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface",
+    "journal": "Nature Communications",
+    "doi": "10.1038/s41467-026-68731-7",
+    "published": "2026-01-26",
+    "version_of_record": "2026-02-26",
+    "retrieved_for_increment": "2026-08-28",
+    "facts_used": [
+      "The optimized D18-PY-IT-eC9 device uses a 1:0.2:1 ratio in the pseudo-bulk-heterojunction strategy.",
+      "The paper reports an approximately 20 meV Voc increase, over 18% efficiency, and no sacrifice in Jsc and FF for the optimized device.",
+      "Main-article Methods describe J-V measurement with a Keysight B2901A under AM1.5G, 0.041 cm2 illuminated area, and about 5 ms delay per voltage point.",
+      "Search of the inspected main article found no description matching 'maximum power', 'MPPT', 'stabilized', or 'stabilised'."
+    ],
+    "scope_note": "This packet classifies the inspected main-article evidence only. It does not assert that no unpublished, supplementary, or later stabilized measurement exists."
+  },
+  "literature_inputs": {
+    "optimized_ratio_D18_PYIT_eC9": "1:0.2:1",
+    "reported_Voc_increase_meV_approx": 20.0,
+    "reported_PCE_percent_relation": ">18",
+    "reported_Jsc_sacrifice": false,
+    "reported_FF_sacrifice": false,
+    "illuminated_area_cm2": 0.041,
+    "JV_point_delay_ms_approx": 5.0,
+    "stabilized_mpp_trace_in_inspected_main_article": false,
+    "independent_material_lot_count_established_for_optimized_output": 0
+  },
+  "project_gate": {
+    "source": "technical/current-specification.md on run-base main",
+    "stabilized_pmax_relative_improvement_min": 0.05,
+    "independent_lots_min": 3,
+    "field_dependent_generation_required": true,
+    "classification": "pre-existing project gate; not introduced by v3.67"
+  },
+  "unit_conversion": {
+    "equation": "t_delay_s = t_delay_ms / 1000",
+    "expected_delay_s_approx": 0.005,
+    "note": "The 5 ms value is the reported approximate per-point J-V delay, not a stabilization duration and not a device time constant."
+  },
+  "predeclared_checks": {
+    "absolute_tolerance": 1e-12,
+    "independent_numeric_check": "float conversion of 5 ms to seconds versus exact Fraction(5,1000)",
+    "limiting_case": "A hypothetical record with a stabilized-output trace and >=3 independent material lots is classified as stabilized-output evidence present.",
+    "negative_control": "A J-V scan with no stabilized-output trace remains scanned-only regardless of nominal PCE.",
+    "fail_closed": "Missing output evidence cannot be upgraded to stabilized useful work."
+  },
+  "decision": "SCANNED_JV_ONLY_NOT_STABILIZED_PMAX_GATE",
+  "decision_delta": "Do not use the anchor paper's >18% scanned PCE as evidence that H-EPC has passed the repository's useful-work gate. The next target-specific result must measure stabilized Pmax prospectively, alongside the already-merged field-generation and transport/collection controls, with the required independent-lot hierarchy.",
+  "uncertainty": {
+    "formal_measurement_uncertainty": null,
+    "note": "No uncertainty is invented for the approximate ~20 meV, >18% statement, or ~5 ms delay. The decision depends on evidence type, not on rounding those values.",
+    "systematic_terms": [
+      "J-V scan-rate/delay dependence",
+      "capacitance or transient response",
+      "illumination and temperature drift",
+      "device conditioning or degradation during operation"
+    ]
+  },
+  "serious_conventional_explanations": [
+    "A scanned J-V maximum can differ from sustained maximum-power output because of transient, capacitive, hysteretic, thermal, or conditioning effects.",
+    "The reported Voc improvement can coexist with unchanged instantaneous Jsc/FF yet still fail to improve stabilized Pmax after operating-point relaxation or degradation.",
+    "Device-level optimized output does not establish lot-level reproducibility; uncontrolled material/fabrication variation can explain apparent performance differences."
+  ],
+  "falsifier": "Prospectively measured D18:eC9 versus D18:PY-IT:eC9 stabilized-Pmax traces across >=3 independent material lots, with the existing field-generation and transport/contact controls, can retire this evidence gap if the interface arm clears the pre-existing >=5% relative stabilized-Pmax gate with the same sign across lots.",
+  "software": {
+    "runtime": "Python >=3.12 standard library",
+    "command": "python models/d18_anchor_stabilized_output_bound_v367.py",
+    "random_seed": null
+  }
+}
