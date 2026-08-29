@@ -35,7 +35,7 @@ Results:
 
 - 65 °C: `R = 2500/1200 = 2.083333333333...`; `G = 1.083333...`, i.e. +108.33% relative lifetime.
 - Continuous illumination: `R = 710/550 = 1.290909090909...`; `G = 0.290909...`, i.e. +29.09% relative lifetime.
-- Stress-mode ratio-of-ratios: `(2500/1200)/(710/550) = 1.613372093...`.
+- Stress-mode ratio-of-ratios: `(2500/1200)/(710/550) = 1.613849765258...`.
 
 The ratio-of-ratios is descriptive only. It does not quantify an activation energy, acceleration factor, or field lifetime.
 
@@ -51,13 +51,17 @@ Expected output includes:
 
 - `thermal_ratio=2.083333333333`
 - `light_ratio=1.290909090909`
-- `ratio_of_ratios=1.613372093023`
+- `ratio_of_ratios=1.613849765258`
 - `decision=STRESS_MODE_SPECIFIC_DURABILITY_REQUIRED`
 - `checks=PASS`
 
 The primary calculation uses floating-point arithmetic and is independently recomputed with exact `fractions.Fraction` arithmetic at predeclared absolute tolerance `1e-12`. Limiting case: equal T80 values give ratio 1. Negative/adversarial case: a shorter ternary T80 remains below 1. Non-positive T80 inputs fail closed.
 
 Runtime: standard-library Python >=3.12. CI exercises 3.12, 3.13 and 3.14.
+
+## Visible correction history
+
+A pre-PR independent recomputation found that the ratio-of-ratios had initially been transcribed as `1.613372093...`. The correct arithmetic is `1.613849765258...`. The source T80 inputs, individual stress-mode ratios, and scientific decision were unchanged. The incorrect value is retained here in correction history rather than silently erased.
 
 ## Uncertainty and sensitivity
 
