@@ -1,0 +1,109 @@
+{
+  "schema_version": "quantum-energy-dual-path-stress-tomography-v3.72",
+  "claim_class": "prospective protocol plus synthetic method validation",
+  "publication_level": "exploratory",
+  "purpose": "Test whether PY-IT produces stress resilience through a broadly acting morphology/domain effect, a heterojunction-specific effect, or a mixed mechanism by comparing donor-free A0/A2 and heterojunction B0/B2 under two distinct perturbation classes.",
+  "source_provenance": [
+    {
+      "citation": "Song et al., Entangled structure morphology by polymer guest enabling mechanically robust organic solar cells with efficiencies of over 16.5%, Matter 5 (2022)",
+      "doi": "10.1016/j.matt.2022.03.012",
+      "used_for": "direct PM6:BTP-eC9:PY-IT precedent showing PY-IT can suppress BTP-eC9 crystallization/diffusion and improve 85 C dark-N2 thermal robustness; not a D18 threshold"
+    },
+    {
+      "citation": "Reese et al., Consensus stability testing protocols for organic photovoltaic materials and devices, Solar Energy Materials and Solar Cells 95 (2011)",
+      "doi": "10.1016/j.solmat.2011.01.036",
+      "used_for": "ISOS-style separation of shelf/thermal/light stress and reporting principles; protocols are comparison procedures, not product qualification"
+    },
+    {
+      "citation": "ZnO-free organic solar cells with a self-assembled monolayer as an ETL for improved stability, Journal of Materials Chemistry C (2026)",
+      "doi": "10.1039/D5TC03674G",
+      "used_for": "recent OPV light-stress implementation using encapsulated cells, 100 mW cm^-2 illumination, MPP tracking, controlled 50 C"
+    },
+    {
+      "citation": "Hart et al., Molecular factors controlling charge pair generation in organic photovoltaic materials, Nature Materials 25 (2026)",
+      "doi": "10.1038/s41563-026-02509-6",
+      "used_for": "v3.70/v3.71 donor-free delocalization/charge-generation motivation and architecture caution"
+    }
+  ],
+  "arms": {
+    "A0": "eC9 donor-free control",
+    "A2": "PY-IT:eC9 = 0.2:1 donor-free control",
+    "B0": "D18:eC9 baseline",
+    "B2": "D18:PY-IT:eC9 = 1:0.2:1"
+  },
+  "stresses": {
+    "T": {
+      "name": "dark thermal morphology stress",
+      "planning_condition": "85 C, dark, N2, with frozen checkpoints chosen before unblinding",
+      "classification": "literature/ISOS-inspired engineering protocol, not a qualification test",
+      "rationale": "PM6:BTP-eC9:PY-IT has direct published thermal-morphology precedent at 85 C in dark N2"
+    },
+    "L": {
+      "name": "light operational stress",
+      "planning_condition": "encapsulated, 100 mW cm^-2, MPP tracking, controlled 50 C; exact spectral/UV condition and duration must be frozen before unblinding",
+      "classification": "recent OPV implementation precedent; not assumed equivalent to all ISOS-L conditions",
+      "rationale": "separates light/electrical operating stress from dark thermal storage"
+    }
+  },
+  "mandatory_metrics": [
+    "stabilized_Pmax",
+    "Voc",
+    "Jsc",
+    "FF",
+    "field_generation_observable_with_explicit_definition",
+    "absorption_or_EQE_normalization",
+    "thickness",
+    "contact_transport_diagnostic",
+    "morphology_or_packing_witness"
+  ],
+  "analysis": {
+    "per_arm_log_retention": "y_arm,S = ln(M_after/M_before)",
+    "donor_free_PYIT_effect": "Delta_A,S = y_A2,S - y_A0,S",
+    "heterojunction_PYIT_effect": "Delta_B,S = y_B2,S - y_B0,S",
+    "heterojunction_specificity_interaction": "Psi_S = Delta_B,S - Delta_A,S",
+    "ratio_identity": "exp(Psi_S) = (R_B2,S/R_B0,S)/(R_A2,S/R_A0,S)",
+    "stress_selectivity": "Omega = Psi_T - Psi_L",
+    "interpretation_boundary": "These contrasts are difference-in-differences style diagnostics. They are causal only if randomization, common-history, measurement, and confounding assumptions are supported."
+  },
+  "physical_thresholds": {
+    "minimum_resolved_log_retention_effect": null,
+    "minimum_resolved_Psi": null,
+    "minimum_resolved_Omega": null,
+    "minimum_Pmax_retention": null,
+    "status": "DEFERRED_PENDING_BASELINE_REPEATABILITY_AND_POWER"
+  },
+  "fail_closed_requirements": [
+    "A0/A2 donor-free architecture or optical-only stage explicitly qualified",
+    "B0/B2 devices fabricated in blocked randomized order",
+    "same stress history within each stress block",
+    "pre/post stabilized Pmax where electrical interpretation is attempted",
+    "field/intensity/temperature calibration recorded",
+    "absorption/thickness control passes",
+    "contact/transport diagnostic does not explain the effect at comparable magnitude",
+    "at least 3 independent fabrication lots for strong useful-work interpretation",
+    "physical decision margins frozen before A2/B2 unblinding"
+  ],
+  "synthetic_fixture": {
+    "classification": "software-only; not expected device performance",
+    "retentions": {
+      "T": {"A0": 0.78, "A2": 0.88, "B0": 0.72, "B2": 0.86},
+      "L": {"A0": 0.90, "A2": 0.91, "B0": 0.80, "B2": 0.84}
+    },
+    "expected": {
+      "Psi_T": 0.05705318944883772,
+      "exp_Psi_T": 1.0587121212121213,
+      "Psi_L": 0.03774032798284692,
+      "exp_Psi_L": 1.0384615384615383,
+      "Omega": 0.019312861465990802
+    }
+  },
+  "null_explanations": [
+    "PY-IT primarily suppresses BTP-eC9 crystallization/diffusion without creating a distinct generation route",
+    "contact or transport stability explains apparent Pmax retention",
+    "absorption/thickness changes create apparent field-generation retention",
+    "thermal and light stresses are not orthogonal and drive the same morphology change",
+    "donor-free architecture is not quantitatively representative of acceptor-rich domains inside B2",
+    "normalized retention improves but absolute stabilized Pmax is worse"
+  ],
+  "next_physical_gate": "Run baseline-only repeatability on A0 and B0 for both stress workflows, then freeze effect margins/sample count before unblinding A2/B2."
+}

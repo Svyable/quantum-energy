@@ -1,0 +1,46 @@
+name: dual-path-stress-tomography-v372
+
+on:
+  pull_request:
+    paths:
+      - 'machine/dual-path-stress-tomography-v3.72.json'
+      - 'models/dual_path_stress_tomography_v372.py'
+      - 'models/dual_path_stress_tomography_expected_v372.csv'
+      - 'technical/dual-path-stress-tomography-v3.72.md'
+      - 'research/evidence/dual-path-stress-tomography-v3.72.md'
+      - '.github/workflows/dual-path-stress-tomography-v372.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Reproduce v3.72 fixture
+        run: python models/dual_path_stress_tomography_v372.py --check-expected
+      - name: Independent ratio-of-ratios check
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          c=json.loads(Path('machine/dual-path-stress-tomography-v3.72.json').read_text())
+          ret=c['synthetic_fixture']['retentions']
+          psis={}
+          for s in ('T','L'):
+              d=ret[s]
+              raw=(d['B2']/d['B0'])/(d['A2']/d['A0'])
+              psi=math.log(raw)
+              assert abs(raw-c['synthetic_fixture']['expected'][f'exp_Psi_{s}']) < 1e-12
+              assert abs(psi-c['synthetic_fixture']['expected'][f'Psi_{s}']) < 1e-12
+              psis[s]=psi
+          omega=psis['T']-psis['L']
+          assert abs(omega-c['synthetic_fixture']['expected']['Omega']) < 1e-12
+          assert all(v is None for k,v in c['physical_thresholds'].items() if k != 'status')
+          print('independent v3.72 ratio-of-ratios check: PASS')
+          PY
