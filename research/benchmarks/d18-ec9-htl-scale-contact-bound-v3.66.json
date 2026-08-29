@@ -1,0 +1,42 @@
+{
+  "increment": "v3.66",
+  "claim_class": "established cross-material/target-chemistry experimental evidence plus project inference",
+  "decision_claim": "For D18/BTP-eC9, a hole-transport-layer change materially alters the 1 cm^2 scale penalty, so contact/interlayer control is a required conventional falsifier before attributing B0/B1/B2 useful-work changes to interface/EPC physics.",
+  "source": {
+    "title": "Topology-Engineered Coordination Polymers for Enhanced Hole Transport in Organic Solar Cells",
+    "authors_first": "Yanxun Li; Weichao Zhang",
+    "journal": "Angewandte Chemie International Edition",
+    "doi": "10.1002/anie.9811085",
+    "version_of_record_date": "2026-05-26",
+    "pmcid": "PMC13383085",
+    "source_table": "Table 1",
+    "accessed_utc_date": "2026-08-28"
+  },
+  "inputs": {
+    "D18_BTP_eC9_PEDOT_small": {"Voc_V": 0.868, "Jsc_mA_cm2": 26.72, "FF_percent": 75.71, "PCE_percent": 17.55, "area_class": "standard/source small-area"},
+    "D18_BTP_eC9_PEDOT_large": {"Voc_V": 0.860, "Jsc_mA_cm2": 25.77, "FF_percent": 67.92, "PCE_percent": 15.06, "area_cm2": 1.0},
+    "D18_BTP_eC9_betaP_small": {"Voc_V": 0.877, "Jsc_mA_cm2": 27.41, "FF_percent": 77.45, "PCE_percent": 18.62, "area_class": "standard/source small-area"},
+    "D18_BTP_eC9_betaP_large": {"Voc_V": 0.869, "Jsc_mA_cm2": 26.36, "FF_percent": 73.37, "PCE_percent": 16.82, "area_cm2": 1.0}
+  },
+  "input_class": "literature-derived printed table values",
+  "formal_uncertainty": null,
+  "printed_resolution_sensitivity": {"PCE_percent_half_unit": 0.005, "FF_percent_half_unit": 0.005, "Voc_V_half_unit": 0.0005, "Jsc_mA_cm2_half_unit": 0.005},
+  "equations": {
+    "scale_retention": "R_s = PCE_large / PCE_small",
+    "scale_drop": "D_s = 1 - R_s",
+    "HTL_large_area_gain": "G_HTL = PCE_betaP_large / PCE_PEDOT_large - 1",
+    "FF_change_pp": "DeltaFF_pp = FF_betaP_large - FF_PEDOT_large"
+  },
+  "expected": {
+    "PEDOT_scale_retention": 0.8581196581196581,
+    "betaP_scale_retention": 0.9033297529538131,
+    "retention_advantage_absolute": 0.04521009483415506,
+    "large_area_betaP_relative_PCE_gain": 0.11686586985391756,
+    "large_area_FF_gain_percentage_points": 5.45,
+    "large_area_Voc_gain_V": 0.009,
+    "large_area_Jsc_relative_gain": 0.022894838960030972
+  },
+  "numerical_tolerance": 1e-12,
+  "validity_domain": "Descriptive comparison of the source Table 1 D18/BTP-eC9 devices only; not a causal decomposition, not a D18/PY-IT/eC9 acceptance threshold, and not stabilized-Pmax evidence.",
+  "falsifier": "A prospectively randomized B0/B1/B2 campaign using controlled identical contacts/interlayers that shows the same useful-work effect across independent lots while direct contact/transport diagnostics remain unchanged would bound this conventional explanation."
+}
