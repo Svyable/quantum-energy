@@ -1,0 +1,104 @@
+{
+  "schema_version": "dual-path-generation-robustness-v3.71",
+  "claim_class": "synthetic/model result plus prospective hypothesis",
+  "publication_level": "exploratory",
+  "purpose": "Test whether two physically distinct charge-generation routes can improve retention of useful generation under a perturbation that damages one route more strongly than the other. This is a resilience model, not evidence that D18/PY-IT/eC9 already has a large donor-independent current fraction.",
+  "sources": [
+    {
+      "citation": "Hart et al., Molecular factors controlling charge pair generation in organic photovoltaic materials, Nature Materials 25, 1209-1218 (2026)",
+      "doi": "10.1038/s41563-026-02509-6",
+      "published": "2026-02-27",
+      "used_for": [
+        "single-component and heterojunction charge-generation context",
+        "importance of reorganization energy, electronic coupling, disorder, packing, and state delocalization",
+        "caution that single-domain charge generation is unlikely to dominate photocurrent in low-offset heterojunctions"
+      ]
+    },
+    {
+      "citation": "Ivanovic et al., Transiently delocalised hybrid quantum states are gateways for efficient exciton dissociation at organic donor-acceptor interfaces, Nature Communications 16, 11560 (2025)",
+      "doi": "10.1038/s41467-025-67722-4",
+      "published": "2025-12-22",
+      "used_for": [
+        "transient hybrid exciton-CT states can enable charge separation away from a nominal interface in a model heterojunction",
+        "electronic coupling and dielectric screening as independent drivers",
+        "interfacial disorder can suppress the hot pathway"
+      ]
+    },
+    {
+      "citation": "Cui et al., Non-Fullerene Acceptor Photo-Charge Enabled Stretchable Photovoltaic Robustness Under 90% Tensile Strain and 30% Strain Cycles, Advanced Materials 38, e73632 (2026)",
+      "doi": "10.1002/adma.73632",
+      "published": "2026-06-04",
+      "used_for": [
+        "experimental precedent that bulk NFA photogeneration can be used to reduce morphology sensitivity under mechanical deformation",
+        "reported >80% initial-PCE retention at 90% tensile strain and after 1000 cycles at 30% strain in the cited stretchable system"
+      ]
+    }
+  ],
+  "model": {
+    "definitions": {
+      "G_I0": "baseline contribution from an interface-sensitive generation route",
+      "G_B0": "baseline contribution from a more distributed/bulk-like generation route",
+      "f_B": "G_B0 / (G_I0 + G_B0), dimensionless baseline fractional contribution",
+      "r_I": "retention factor of interface route after perturbation, dimensionless",
+      "r_B": "retention factor of bulk/distributed route after perturbation, dimensionless",
+      "R": "total generation retention after perturbation, dimensionless"
+    },
+    "equations": {
+      "baseline_total": "G0 = G_I0 + G_B0",
+      "perturbed_total": "Gs = r_I*G_I0 + r_B*G_B0",
+      "retention": "R = Gs/G0 = (1-f_B)*r_I + f_B*r_B",
+      "sensitivity": "dR/df_B = r_B - r_I",
+      "inverse": "f_B = (R-r_I)/(r_B-r_I), valid only when independently justified r_B>r_I and R is bracketed by r_I and r_B"
+    },
+    "dimensions": {
+      "G_I0": "arbitrary common generation/output units",
+      "G_B0": "same units as G_I0",
+      "f_B": "1",
+      "r_I": "1",
+      "r_B": "1",
+      "R": "1"
+    }
+  },
+  "synthetic_fixture": {
+    "classification": "software-test assumptions only; not physical thresholds or expected D18/PY-IT/eC9 behavior",
+    "r_I": 0.5,
+    "r_B": 0.9,
+    "f_B_grid": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+    "expected_R": [0.5, 0.54, 0.58, 0.62, 0.66, 0.7, 0.74]
+  },
+  "prospective_hypothesis": {
+    "statement": "A process/material state that creates a secondary generation route with a different perturbation sensitivity can improve retention of charge generation/useful work under morphology or interface disruption, even if that route is not the dominant nominal photocurrent pathway.",
+    "target_program_interpretation": "For D18/PY-IT/eC9, any claim of mechanism redundancy requires v3.70-style donor-free controls plus matched stressed/unstressed B0/B1/B2 measurements. A donor-free effect alone is not proof that it contributes materially to heterojunction current.",
+    "falsifiers": [
+      "The putative bulk/distributed route is not measurably more perturbation-robust than the interface-sensitive route.",
+      "Any apparent retention advantage disappears after optical absorption, contact/transport, active-area, or morphology normalization.",
+      "Absolute stabilized Pmax is worse despite better normalized retention.",
+      "Donor-free controls show no corresponding intrinsic generation capability while the heterojunction effect is fully explained by ordinary interface/contact changes."
+    ]
+  },
+  "measurement_policy": {
+    "required_outputs": [
+      "stabilized Pmax before and after perturbation",
+      "field-dependent generation discriminator such as TDCF or bias-dependent PL/IQE",
+      "donor-free A0/A1/A2 control where physically valid",
+      "absorption/thickness normalization",
+      "contact/transport diagnostic",
+      "morphology/packing witness",
+      "full lot/substrate/device/session hierarchy"
+    ],
+    "thresholds": {
+      "physical_bulk_fraction": null,
+      "physical_route_retention_margin": null,
+      "physical_stabilized_Pmax_retention": null
+    },
+    "note": "No physical threshold is frozen from the synthetic model or cross-material literature."
+  },
+  "validity_limits": [
+    "The two-route decomposition is phenomenological and need not map uniquely onto microscopic states.",
+    "Parallel contributions may interact nonlinearly through recombination, transport, state filling, or field redistribution; the linear model is a first falsification baseline only.",
+    "Normalized retention cannot substitute for absolute useful-work performance.",
+    "The stretchable AQx-2F system is not D18/PY-IT/eC9 and its strain robustness cannot be transferred quantitatively.",
+    "Hart et al. explicitly caution that single-domain generation is unlikely to dominate nominal photocurrent in low-offset heterojunctions.",
+    "No quantum advantage or commercial performance claim follows from route redundancy alone."
+  ]
+}
