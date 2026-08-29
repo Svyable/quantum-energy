@@ -1,0 +1,57 @@
+{
+  "increment": "v3.69",
+  "claim_class": "literature-derived experimental benchmark",
+  "claim": "A target-near D18:CS4:BTP-eC9 ternary reports different relative T80 advantages under 65 C aging and continuous illumination, so durability evidence must remain stress-mode-specific and cannot be collapsed into one generic lifetime claim.",
+  "source": {
+    "title": "Central Molecular Stacking Regulator Boosts the Efficiency of Organic Solar Cells",
+    "authors_first": "Saisai Liu",
+    "journal": "Advanced Functional Materials",
+    "doi": "10.1002/adfm.202525577",
+    "publication_date": "2025-11-10",
+    "publisher_version": "Version of Record / publisher article",
+    "retrieved": "2026-08-28",
+    "upstream_code_or_data_copied": false
+  },
+  "systems": {
+    "reference": "D18:CS4",
+    "ternary": "D18:CS4:BTP-eC9"
+  },
+  "inputs": [
+    {
+      "stress_mode": "65_C_aging",
+      "temperature_C": 65,
+      "reference_T80_h": 1200,
+      "ternary_T80_h": 2500,
+      "value_class": "literature-derived experimental result",
+      "uncertainty": null,
+      "uncertainty_note": "No formal uncertainty is supplied in the accessible primary-source abstract; none is invented."
+    },
+    {
+      "stress_mode": "continuous_illumination",
+      "temperature_C": null,
+      "reference_T80_h": 550,
+      "ternary_T80_h": 710,
+      "value_class": "literature-derived experimental result",
+      "uncertainty": null,
+      "uncertainty_note": "No formal uncertainty is supplied in the accessible primary-source abstract; none is invented. Illumination spectrum/intensity/temperature/encapsulation details are not inferred here."
+    }
+  ],
+  "equations": {
+    "lifetime_ratio": "R = T80_ternary / T80_reference",
+    "relative_lifetime_gain": "G = R - 1"
+  },
+  "expected_outputs": {
+    "65_C_aging_ratio": 2.0833333333333335,
+    "65_C_aging_relative_gain": 1.0833333333333333,
+    "continuous_illumination_ratio": 1.290909090909091,
+    "continuous_illumination_relative_gain": 0.2909090909090909,
+    "ratio_of_ratios": 1.613849765258216
+  },
+  "numerical_tolerance": 1e-12,
+  "correction_history": [
+    "Pre-PR independent recomputation corrected an initially transcribed ratio_of_ratios value of 1.6133720930232558 to 1.613849765258216. Source T80 inputs and scientific decision were unchanged."
+  ],
+  "validity_domain": "Descriptive comparison of the two reported D18:CS4-based systems under each named stress mode only. Not a D18:PY-IT:eC9 lifetime, field lifetime, acceleration model, or project acceptance threshold.",
+  "falsifier": "The benchmark is falsified if the cited primary source does not report the stated T80 values for the stated systems/stress modes, or if independently recomputed ratios disagree beyond the frozen numerical tolerance.",
+  "next_physical_discriminator": "Measure blinded B0/B1/B2 target chemistry under separately preregistered thermal and continuous-light durability conditions while tracking stabilized Pmax and mechanism-retention observables."
+}
