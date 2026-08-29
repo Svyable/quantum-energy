@@ -1,0 +1,36 @@
+{
+  "increment": "v3.67",
+  "claim_class": "established-evidence boundary / useful negative result",
+  "claim": "The D18/PY-IT/eC9 primary anchor establishes scanned J-V device performance and mechanism evidence, but the inspected primary article does not establish stabilized maximum-power output; therefore it cannot by itself satisfy the repository useful-work gate requiring stabilized Pmax.",
+  "source": {
+    "title": "Suppressing electron-phonon coupling and energy loss in organic solar cells by modulating donor-acceptor penetrated-interface",
+    "journal": "Nature Communications",
+    "doi": "10.1038/s41467-026-68731-7",
+    "published": "2026-01-26",
+    "version_of_record": "2026-02-26",
+    "data_availability_doi": "10.6084/m9.figshare.29390669",
+    "retrieved": "2026-08-28",
+    "primary_source_class": "literature-derived"
+  },
+  "observations": {
+    "optimized_composition": "D18:PY-IT:eC9 = 1:0.2:1",
+    "reported_voc_increase_eV": 0.020,
+    "reported_efficiency_statement": "over 18%",
+    "reported_jsc_ff_statement": "no sacrifice in JSC and FF",
+    "device_contact_area_cm2": 0.042,
+    "illuminated_area_cm2": 0.041,
+    "jv_delay_ms": 5.0,
+    "jv_delay_s": 0.005,
+    "stabilized_pmax_evidence_in_inspected_main_article": false
+  },
+  "equation": "t_s = t_ms / 1000",
+  "numerical_tolerance": 1e-12,
+  "validity_domain": "Evidence classification of the inspected primary article/main-text Methods and data-availability statement only; absence here does not prove supplementary, unpublished, or later stabilized measurements do not exist.",
+  "falsifier": "A source-verifiable target-chemistry stabilized-Pmax/MPPT measurement with provenance and sufficient device/lot hierarchy would supersede or narrow this boundary.",
+  "conventional_explanations_for_scan_vs_stabilized_difference": [
+    "transient or capacitive scan effects",
+    "operating-point relaxation or degradation",
+    "ordinary device-to-device and lot variation"
+  ],
+  "decision": "Do not count anchor scanned PCE as stabilized useful-work evidence. Require prospective stabilized Pmax on B0/B1/B2 together with field-generation and transport/contact controls."
+}
