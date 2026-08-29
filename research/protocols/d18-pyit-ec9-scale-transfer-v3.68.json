@@ -1,0 +1,97 @@
+{
+  "protocol_id": "d18-pyit-ec9-scale-transfer-v3.68",
+  "version": "3.68",
+  "date": "2026-08-28",
+  "run_base_main_sha": "884330c8f0909ce35763542c4453631e7a6bd2c4",
+  "claim_class": "prospective_experiment_protocol",
+  "changed_evidentiary_state": "Target-chemistry manufacturability is now testable with a preregistered >=1 cm^2 stabilized-useful-work scale-transfer gate instead of being inferred from cross-material scale precedents.",
+  "scope": {
+    "chemistry": "D18:eC9 baseline and blinded D18:PY-IT:eC9 arms",
+    "small_area_reference_cm2": 0.041,
+    "large_area_minimum_cm2": 1.0,
+    "large_area_target_class": ">=1 cm^2",
+    "note": "0.041 cm^2 is literature-derived from the target anchor Methods; 1.0 cm^2 is the existing repository scale-transfer stage, not a newly inferred optimum."
+  },
+  "experimental_hierarchy": [
+    "material_lot",
+    "fabrication_lot",
+    "substrate",
+    "device",
+    "session",
+    "measurement"
+  ],
+  "blinding": {
+    "required": true,
+    "arm_identity_unblinded_before_freeze": false,
+    "same_d18_lot_across_compared_arms_within_fabrication_lot": true,
+    "same_htl_and_electrode_lots_across_compared_arms_within_fabrication_lot": true
+  },
+  "required_measurements": [
+    "stabilized_pmax_density",
+    "illuminated_jv",
+    "tdcf_or_predeclared_field_generation_equivalent",
+    "bias_dependent_pl_or_predeclared_orthogonal_field_generation_control",
+    "pseudo_ff_or_predeclared_transport_collection_equivalent",
+    "active_area",
+    "thickness_map",
+    "uniformity_map",
+    "functional_device_yield",
+    "temperature",
+    "irradiance",
+    "contact_and_htl_provenance"
+  ],
+  "decision_metrics": {
+    "stabilized_useful_work_gain": {
+      "equation": "G_l = Pmax_density_arm_large_l / Pmax_density_B0_large_l - 1",
+      "units": "dimensionless",
+      "existing_project_threshold_relative": 0.05,
+      "minimum_independent_fabrication_lots": 3,
+      "same_sign_across_lots_required": true,
+      "provenance": "existing repository useful-work gate"
+    },
+    "scale_retention": {
+      "equation": "R_scale,l = Pmax_density_large_l / Pmax_density_small_l",
+      "units": "dimensionless",
+      "physical_acceptance_threshold": null,
+      "threshold_status": "DEFERRED_PENDING_REAL_B0_SCALE_DATA"
+    },
+    "field_generation_noninferiority": {
+      "physical_acceptance_margin": null,
+      "threshold_status": "DEFERRED_PENDING_REAL_B0_DATA"
+    },
+    "transport_collection_noninferiority": {
+      "physical_acceptance_margin": null,
+      "threshold_status": "DEFERRED_PENDING_REAL_B0_DATA"
+    },
+    "yield": {
+      "equation": "Y = N_functional / N_fabricated",
+      "units": "dimensionless",
+      "physical_acceptance_threshold": null,
+      "threshold_status": "DEFERRED_PENDING_BASELINE_AND_PROCESS_CAPABILITY"
+    }
+  },
+  "fail_closed_rules": [
+    "Missing stabilized Pmax density => INCOMPLETE.",
+    "Missing active-area provenance => INCOMPLETE.",
+    "Missing >=3 independent fabrication lots => INCOMPLETE for project useful-work promotion.",
+    "Unknown B0 field-generation, collection, or yield margin => INCOMPLETE rather than PASS.",
+    "An arm that improves small-area performance but fails the existing >=5% stabilized-Pmax large-area gate is not a scale-transfer useful-work PASS.",
+    "A favorable large-area result with changed HTL/electrode lots or uncontrolled D18 lot is not attributable to active-layer EPC/interface physics."
+  ],
+  "synthetic_fixture": {
+    "classification": "synthetic_software_fixture_only",
+    "large_area_cm2": 1.0,
+    "b0_large_pmax_density": [10.0, 10.0, 10.0],
+    "candidate_large_pmax_density_pass": [10.6, 10.6, 10.6],
+    "candidate_large_pmax_density_fail": [10.6, 10.4, 9.9],
+    "expected_pass_mean_gain": 0.06,
+    "expected_fail": true,
+    "note": "Values are arbitrary arithmetic fixtures and are not device predictions or material constants."
+  },
+  "numerical_tolerance": 1e-12,
+  "software": {
+    "implementation": "Python standard library",
+    "supported_ci_versions": ["3.12", "3.13", "3.14"]
+  },
+  "falsifier": "A blinded >=1 cm^2 candidate arm that does not retain >=5% relative stabilized-Pmax improvement across >=3 independent fabrication lots, or that loses field-generation/collection robustness, fails scale-transfer useful-work promotion even if small-area voltage-loss metrics improve."
+}
