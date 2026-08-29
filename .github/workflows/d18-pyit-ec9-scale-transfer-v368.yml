@@ -1,0 +1,56 @@
+name: d18-pyit-ec9-scale-transfer-v368
+
+on:
+  pull_request:
+    paths:
+      - 'research/protocols/d18-pyit-ec9-scale-transfer-v3.68.json'
+      - 'research/protocols/d18-pyit-ec9-scale-transfer-v3.68-template.csv'
+      - 'technical/d18-pyit-ec9-scale-transfer-v3.68.md'
+      - 'models/d18_pyit_ec9_scale_transfer_v368.py'
+      - '.github/workflows/d18-pyit-ec9-scale-transfer-v368.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run scale-transfer packet checks
+        run: python models/d18_pyit_ec9_scale_transfer_v368.py
+      - name: Independent contract guard
+        run: |
+          python - <<'PY'
+          import csv, json
+          from fractions import Fraction
+          from pathlib import Path
+
+          contract = json.loads(Path('research/protocols/d18-pyit-ec9-scale-transfer-v3.68.json').read_text())
+          assert contract['scope']['large_area_minimum_cm2'] == 1.0
+          gate = contract['decision_metrics']['stabilized_useful_work_gain']
+          assert gate['existing_project_threshold_relative'] == 0.05
+          assert gate['minimum_independent_fabrication_lots'] == 3
+          assert gate['same_sign_across_lots_required'] is True
+          assert contract['decision_metrics']['scale_retention']['physical_acceptance_threshold'] is None
+          assert contract['decision_metrics']['field_generation_noninferiority']['physical_acceptance_margin'] is None
+          assert contract['decision_metrics']['transport_collection_noninferiority']['physical_acceptance_margin'] is None
+          assert contract['decision_metrics']['yield']['physical_acceptance_threshold'] is None
+
+          exact_gain = Fraction(106, 100) - 1
+          assert exact_gain == Fraction(3, 50)
+          assert float(exact_gain) == 0.06
+
+          header = next(csv.reader(Path('research/protocols/d18-pyit-ec9-scale-transfer-v3.68-template.csv').open()))
+          required = {
+              'material_lot_id', 'fabrication_lot_id', 'substrate_id', 'device_id', 'session_id',
+              'blind_arm_code', 'active_area_cm2', 'stabilized_pmax_density_mw_cm2',
+              'd18_lot_id', 'htl_lot_id', 'electrode_lot_id', 'raw_data_uri', 'analysis_commit_sha'
+          }
+          assert required.issubset(set(header))
+          print('independent_contract_guard=PASS')
+          PY
