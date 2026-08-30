@@ -1,0 +1,56 @@
+{
+  "version": "3.76",
+  "stage": "QG0b",
+  "title": "Material-level topological-exciton transport reproduction readiness audit",
+  "claim_class": "EXTERNAL_COMPUTATIONAL_EVIDENCE_PLUS_PROJECT_ARITHMETIC_AUDIT",
+  "primary_source": {
+    "citation": "Thompson et al., Topologically enhanced exciton transport, Nature Communications 16, 11448 (2025)",
+    "doi": "10.1038/s41467-025-66276-9",
+    "published_date": "2025-12-13"
+  },
+  "supporting_source": {
+    "citation": "Jankowski et al., Excitonic topology and quantum geometry in organic semiconductors, Nature Communications 16, 4661 (2025)",
+    "doi": "10.1038/s41467-025-59257-5"
+  },
+  "published_300K_diffusion_cm2_s": {
+    "polypentacene_topological": 1.76,
+    "polypentacene_bond_reordered_trivial": 0.61,
+    "polyheptacene_topological": 0.44,
+    "polyheptacene_bond_reordered_trivial": 0.103
+  },
+  "published_control_logic": {
+    "type": "bond_reordered_counterfactual",
+    "description": "Swap SSH-like hopping order so topology changes while the two-hopping dispersion is algebraically invariant under t1<->t2.",
+    "polypentacene_t1_eV": 0.33,
+    "polypentacene_t2_eV": 0.52
+  },
+  "reproduction_readiness": {
+    "available": [
+      "published equations and aggregate 300 K diffusion values",
+      "bond-swap control construction",
+      "polypentacene t1/t2 values from figure caption",
+      "DFT method family, cutoffs, k-point count and pseudopotential family",
+      "public supplementary information"
+    ],
+    "not_publicly_resolved_for_exact_transport_reproduction": [
+      "plot numeric datasets stated by authors as available upon request",
+      "first-principles calculation input files stated by authors as available upon request",
+      "exact momentum-resolved exciton energies/group-velocity terms/scattering rates used to reconstruct the reported Eq. 7 totals",
+      "all material-specific transport-run numerical inputs needed for a from-scratch 300 K polyheptacene reproduction",
+      "explicit numerical acoustic/optical hopping-displacement coupling constants were not located in the public article text inspected; the paper ties realistic values to prior oligoacene work"
+    ]
+  },
+  "required_status": {
+    "reproduction_level": "AGGREGATE_VALUES_AND_CONTROL_LOGIC_VERIFIED",
+    "material_transport_reproduction": "BLOCKED_PENDING_NUMERIC_DATA_OR_FULL_INDEPENDENT_RECOMPUTATION",
+    "physical_project_result": "NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY"
+  },
+  "claim_guards": [
+    "Do not call the published 300 K diffusion ratios independently reproduced from aggregate-value arithmetic alone.",
+    "Do not transfer the ~3x/~4.5x narrative ratios to a project material.",
+    "The trivial comparator is a computational bond-reordered counterfactual, not evidence for a separately synthesized trivial material.",
+    "The source paper excludes defects/interfaces from the demonstrated bulk calculation; robustness to realistic disorder is a separate question.",
+    "Topological excitons can have stronger exciton-phonon scattering as well as larger geometric velocity; net transport enhancement is material-dependent."
+  ],
+  "next_gate": "QG0c: reconstruct a material-specific free-exciton band/geometry result from public inputs; QG0d adds phonon-limited transport only after exact transport inputs are obtained or independently reconstructed."
+}

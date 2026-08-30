@@ -1,0 +1,69 @@
+name: qg0b-material-reproduction-v376
+
+on:
+  pull_request:
+    paths:
+      - 'machine/qg0b-material-reproduction-v3.76.json'
+      - 'models/qg0b_material_transport_audit_v376.py'
+      - 'models/qg0b_material_transport_expected_v376.csv'
+      - 'technical/qg0b-material-reproduction-v3.76.md'
+      - 'research/evidence/qg0b-material-reproduction-v3.76.md'
+      - 'research/requests/qg0b-author-data-request-v3.76.md'
+      - 'research/sessions/2026-08-30-qg0b-material-reproduction-v3.76.md'
+      - '.github/workflows/qg0b-material-reproduction-v376.yml'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run frozen QG0b audit
+        run: python models/qg0b_material_transport_audit_v376.py --check-expected
+      - name: Independent aggregate arithmetic and spectral-swap check
+        run: |
+          python - <<'PY'
+          from fractions import Fraction
+          from math import cos, pi, sqrt
+
+          pent = Fraction('1.76') / Fraction('0.61')
+          hept = Fraction('0.44') / Fraction('0.103')
+          assert pent == Fraction(176, 61)
+          assert hept == Fraction(440, 103)
+
+          t1, t2 = 0.33, 0.52
+          worst = 0.0
+          for i in range(4097):
+              k = -pi + 2*pi*i/4096
+              a = sqrt(t1*t1 + t2*t2 + 2*t1*t2*cos(k))
+              b = sqrt(t2*t2 + t1*t1 + 2*t2*t1*cos(k))
+              worst = max(worst, abs(a-b))
+          assert worst <= 1e-14, worst
+          print(f'independent_pentacene_ratio={float(pent):.15f}')
+          print(f'independent_heptacene_ratio={float(hept):.15f}')
+          print(f'independent_swap_spectral_error={worst:.3e}')
+          PY
+      - name: False full-reproduction claim must fail closed
+        shell: bash
+        run: |
+          set +e
+          output="$(python models/qg0b_material_transport_audit_v376.py --claim-reproduced 2>&1)"
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          test "$status" -eq 2
+          printf '%s\n' "$output" | grep -q 'FULL_MATERIAL_REPRODUCTION_CLAIM_REJECTED'
+      - name: No accidental project physical/material reproduction claim
+        shell: bash
+        run: |
+          output="$(python models/qg0b_material_transport_audit_v376.py --check-expected)"
+          printf '%s\n' "$output"
+          ! printf '%s\n' "$output" | grep -q '^material_transport_reproduction=REPRODUCED$'
+          printf '%s\n' "$output" | grep -q '^physical_project_result=NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY$'
