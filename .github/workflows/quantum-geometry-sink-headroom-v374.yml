@@ -1,0 +1,63 @@
+name: quantum-geometry-sink-headroom-v374
+
+on:
+  pull_request:
+    paths:
+      - 'machine/quantum-geometry-sink-headroom-v3.74.json'
+      - 'models/quantum_geometry_sink_headroom_v374.py'
+      - 'models/quantum_geometry_sink_headroom_expected_v374.csv'
+      - 'technical/quantum-geometry-environment-codesign-v3.74.md'
+      - 'research/evidence/quantum-geometry-transport-v3.74.md'
+      - '.github/workflows/quantum-geometry-sink-headroom-v374.yml'
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: python -m py_compile models/quantum_geometry_sink_headroom_v374.py
+      - name: Reproduce analytic table and independent Monte Carlo
+        run: python models/quantum_geometry_sink_headroom_v374.py --check-expected
+      - name: Independent first-passage arithmetic
+        run: |
+          python - <<'PY'
+          import csv, math
+          from pathlib import Path
+
+          # Independent calculation: do not import the production model.
+          x = 2.0
+          G = 4.0
+          p0 = math.exp(-x)
+          p4 = math.exp(-x / math.sqrt(G))
+          ratio = p4 / p0
+          rho_break_even = 1.0 / G
+
+          assert abs(p0 - 0.1353352832366127) < 1e-15
+          assert abs(p4 - 0.36787944117144233) < 1e-15
+          assert abs(ratio - math.e) < 1e-15
+          assert abs(rho_break_even - 0.25) < 1e-15
+
+          rows = list(csv.DictReader(Path('models/quantum_geometry_sink_headroom_expected_v374.csv').open()))
+          hit = [r for r in rows if r['x'] == '2.000000' and r['G_intrinsic'] == '4.000000'][0]
+          assert abs(float(hit['P_reference']) - p0) < 1e-14
+          assert abs(float(hit['P_candidate']) - p4) < 1e-14
+          assert abs(float(hit['capture_gain']) - ratio) < 1e-14
+          assert abs(float(hit['rho_break_even']) - rho_break_even) < 1e-15
+
+          # Negative/control case: relative environment retention below 1/G
+          # must remove the intrinsic diffusion advantage.
+          rho_bad = 0.20
+          G_eff = G * rho_bad
+          assert G_eff < 1.0
+          p_bad = math.exp(-x / math.sqrt(G_eff))
+          assert p_bad < p0
+          print('independent quantum-geometry sink audit: PASS')
+          PY
