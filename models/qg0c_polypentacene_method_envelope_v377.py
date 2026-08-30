@@ -74,7 +74,7 @@ def write_expected(path: Path):
         ("physical_result", "NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY"),
     ])
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, lineterminator="\n")
         writer.writerow(["metric", "value"])
         writer.writerows(rows)
 
