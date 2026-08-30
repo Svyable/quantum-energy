@@ -1,0 +1,79 @@
+name: qg0d-candidate-adjudication-v378
+
+on:
+  pull_request:
+    paths:
+      - 'models/qg0d_candidate_adjudication_v378.py'
+      - 'models/qg0d_candidate_adjudication_expected_v378.csv'
+      - 'machine/qg0d-candidate-adjudication-v3.78.json'
+      - 'research/protocols/qg0d-same-structure-adjudication-v3.78.json'
+      - 'research/evidence/qg0d-candidate-adjudication-v3.78.md'
+      - 'technical/qg0d-candidate-adjudication-v3.78.md'
+      - 'venture/v3.78-qg-candidate-pivot.md'
+      - 'research/sessions/2026-08-30-qg0d-candidate-adjudication-v3.78.md'
+      - '.github/workflows/qg0d-candidate-adjudication-v378.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adjudication:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run frozen QG0d checks
+        run: python models/qg0d_candidate_adjudication_v378.py --check-expected
+      - name: Regenerate deterministic fixture
+        run: |
+          python models/qg0d_candidate_adjudication_v378.py --write-expected /tmp/qg0d_expected.csv
+          diff -u models/qg0d_candidate_adjudication_expected_v378.csv /tmp/qg0d_expected.csv
+      - name: Independent exact arithmetic
+        run: |
+          python - <<'PY'
+          from fractions import Fraction
+          import math
+
+          r5 = Fraction(176, 100) / Fraction(61, 100)
+          r7 = Fraction(44, 100) / Fraction(103, 1000)
+          assert r5 == Fraction(176, 61)
+          assert r7 == Fraction(440, 103)
+          assert Fraction(176, 100) / Fraction(44, 100) == Fraction(4, 1)
+          assert abs(math.sqrt(float(Fraction(44,100) / Fraction(176,100))) - 0.5) < 1e-15
+          assert abs(math.sqrt(float(r5)) - 1.698601160261) < 5e-13
+          assert abs(math.sqrt(float(r7)) - 2.066844130600) < 5e-13
+          print('independent_fraction_check=PASS')
+          PY
+      - name: Reject false same-structure consensus
+        run: |
+          if python models/qg0d_candidate_adjudication_v378.py --assert-same-structure-consensus; then
+            echo 'false same-structure consensus was incorrectly accepted' >&2
+            exit 1
+          fi
+      - name: Reject robust N5 topology claim
+        run: |
+          if python models/qg0d_candidate_adjudication_v378.py --assert-n5-robust-topology; then
+            echo 'false N5 robust-topology claim was incorrectly accepted' >&2
+            exit 1
+          fi
+      - name: Guard protocol claim boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          machine = json.loads(Path('machine/qg0d-candidate-adjudication-v3.78.json').read_text())
+          protocol = json.loads(Path('research/protocols/qg0d-same-structure-adjudication-v3.78.json').read_text())
+          assert machine['decision']['same_structure_method_consensus'].startswith('BLOCKED_')
+          assert protocol['structure_contract']['require_identical_sha256_for_pbe_and_gw'] is True
+          assert protocol['structure_contract']['sha256'] is None
+          assert machine['physical_project_result'] is False
+          print('claim_boundary_guard=PASS')
+          PY
