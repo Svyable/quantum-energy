@@ -1,0 +1,37 @@
+{
+  "schema_version": "3.77",
+  "claim_class": "external-computational-evidence-plus-derived-bounds",
+  "stage": "QG0c",
+  "material": "polypentacene",
+  "public_anchor": {
+    "t1_eV": 0.33,
+    "t2_eV": 0.52,
+    "lattice_parameter_angstrom": 6.89,
+    "reported_DFT_strain_transition_fraction_bracket": [0.05, 0.10]
+  },
+  "derived": {
+    "ssh_classification_from_public_hoppings": "TOPOLOGICAL_SSH",
+    "symmetric_fractional_hopping_order_radius": 0.22352941176470587,
+    "topological_xi2_lower_bound_A2": 11.868025,
+    "topological_xi_lower_bound_A": 3.445,
+    "log_t2_over_t1": 0.4547361571149471,
+    "strain_C2_minus_C1_bracket": [4.547361571149471, 9.094723142298942]
+  },
+  "method_conflict": {
+    "PBE_DFT": "published work places unstrained polypentacene in the topological regime",
+    "GW": "published/cited GW analysis moves the electronic topological transition between N=5 and N=7",
+    "status": "UNRESOLVED_METHOD_DEPENDENCE"
+  },
+  "claim_boundary": {
+    "robust_material_topology": false,
+    "material_quantum_metric_reproduced": false,
+    "free_exciton_transport_reproduced": false,
+    "physical_result": "NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY"
+  },
+  "negative_controls": [
+    "swap t1 and t2: SSH energy spectrum must remain invariant while topology label changes",
+    "--assert-robust-material-topology must fail while DFT/GW conflict is unresolved",
+    "P_exc=0 implies no nonzero topological spread lower bound; it does not imply xi=0"
+  ],
+  "next_gate": "Recompute polypentacene electronic parity/topology and fitted hoppings with versioned PBE and GW-level workflows on the same relaxed structure, then solve the excitonic Wannier problem and compare P_exc and quantum metric without retuning after seeing the answer."
+}
