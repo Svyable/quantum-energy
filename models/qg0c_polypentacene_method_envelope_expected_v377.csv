@@ -7,7 +7,7 @@ ordering_margin_fraction,0.22352941176470587
 xi2_lower_bound_A2,11.868025
 xi_lower_bound_A,3.445
 log_hopping_ratio,0.4547361571149471
-Cdiff_min,4.547361571149471
-Cdiff_max,9.094723142298942
+Cdiff_min,4.54736157114947
+Cdiff_max,9.09472314229894
 material_topology_claim,METHOD_DEPENDENT_NOT_ROBUST
 physical_result,NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY
