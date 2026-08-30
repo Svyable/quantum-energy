@@ -1,0 +1,13 @@
+metric,value
+polypentacene_topological_D_cm2_s,1.76
+polypentacene_trivial_D_cm2_s,0.61
+polypentacene_exact_ratio,2.8852459016393444
+polyheptacene_topological_D_cm2_s,0.44
+polyheptacene_trivial_D_cm2_s,0.103
+polyheptacene_exact_ratio,4.271844660194175
+polypentacene_t1_eV,0.33
+polypentacene_t2_eV,0.52
+ssh_swap_max_abs_spectral_diff,0.0
+reproduction_level,AGGREGATE_VALUES_AND_CONTROL_LOGIC_VERIFIED
+material_transport_reproduction,BLOCKED_PENDING_NUMERIC_DATA_OR_FULL_INDEPENDENT_RECOMPUTATION
+physical_project_result,NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY
