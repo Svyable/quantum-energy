@@ -1,0 +1,61 @@
+{
+  "version": "3.78",
+  "increment": "QG0d-prep candidate adjudication",
+  "claim_class": "external computational evidence plus derived arithmetic",
+  "physical_project_result": false,
+  "primary_sources": [
+    {
+      "title": "Excitonic topology and quantum geometry in organic semiconductors",
+      "doi": "10.1038/s41467-025-59257-5",
+      "use": "PBE topology sequence, cited GW transition placement, structural/method anchors"
+    },
+    {
+      "title": "Topologically enhanced exciton transport",
+      "doi": "10.1038/s41467-025-66276-9",
+      "use": "printed 300 K topological/trivial diffusion values for N=5 and N=7"
+    },
+    {
+      "title": "Excitonic switching across a Z2 topological phase transition: From Mott-Wannier to Frenkel excitons in organic materials",
+      "doi": "10.1103/PhysRevB.106.155122",
+      "use": "GW/BSE method lineage referenced by the 2025 topology work"
+    }
+  ],
+  "frozen_literature_inputs": {
+    "N5": {
+      "material": "polypentacene",
+      "pbe_label": "TOPOLOGICAL",
+      "gw_label": "TRIVIAL",
+      "D_top_cm2_s_printed": 1.76,
+      "D_trivial_cm2_s_printed": 0.61
+    },
+    "N7": {
+      "material": "polyheptacene",
+      "pbe_label": "TOPOLOGICAL",
+      "gw_label": "TOPOLOGICAL",
+      "D_top_cm2_s_printed": 0.44,
+      "D_trivial_cm2_s_printed": 0.103
+    }
+  },
+  "derived_results": {
+    "N5_diffusion_ratio_exact": "176/61",
+    "N7_diffusion_ratio_exact": "440/103",
+    "N5_diffusion_length_amplification_if_equal_lifetime": 1.698601160261,
+    "N7_diffusion_length_amplification_if_equal_lifetime": 2.066844130600,
+    "N7_to_N5_absolute_diffusion_length_if_equal_lifetime": 0.5,
+    "tau7_over_tau5_required_for_equal_absolute_diffusion_length": 4.0
+  },
+  "decision": {
+    "primary_candidate": "polyheptacene",
+    "primary_candidate_reason": "unique cross-study PBE/GW topological label agreement among N=5 and N=7; not same-structure consensus",
+    "method_sensitivity_control": "polypentacene",
+    "same_structure_method_consensus": "BLOCKED_PENDING_IDENTICAL_STRUCTURE_PBE_GW_ADJUDICATION",
+    "transport_metric_priority": "D_times_tau_and_sink_capture_before_relative_enhancement_ratio"
+  },
+  "negative_controls": [
+    "software must reject a same-structure consensus claim for the frozen cross-study fixture",
+    "software must reject robust N=5 topology while the PBE/GW cross-study conflict remains"
+  ],
+  "next_physical_or_computational_discriminator": "Retrieve and hash one coordinate file, run converged PBE and GW-level calculations on that identical structure, compare inversion/parity and Berry/Zak topological markers, then measure or compute lifetime before comparing useful transport reach.",
+  "status": "QG0D_PREP_READY_SAME_STRUCTURE_ADJUDICATION_NOT_YET_PERFORMED",
+  "physical_result": "NONE_EXTERNAL_COMPUTATIONAL_EVIDENCE_ONLY"
+}
