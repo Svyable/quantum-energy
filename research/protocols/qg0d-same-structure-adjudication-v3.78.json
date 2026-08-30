@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "protocol_id": "qg0d-same-structure-adjudication-v3.78",
+  "claim_class": "prospective computational protocol",
+  "purpose": "Adjudicate PBE versus GW-level topology on identical polyacene structures before any phonon-limited transport reproduction claim.",
+  "candidate_order": [
+    {
+      "material": "polyheptacene",
+      "role": "primary topology-adjudication candidate",
+      "reason": "published cross-study PBE/GW labels both place N=7 on the topological side; this is not yet same-structure consensus"
+    },
+    {
+      "material": "polypentacene",
+      "role": "method-sensitivity control",
+      "reason": "published PBE/GW labels disagree for N=5"
+    }
+  ],
+  "structure_contract": {
+    "source": "Jankowski et al. 2025 Supplementary Data 1",
+    "doi": "10.1038/s41467-025-59257-5",
+    "required_local_filename": null,
+    "sha256": null,
+    "require_identical_sha256_for_pbe_and_gw": true,
+    "status": "BLOCKED_UNTIL_VERSIONED_COORDINATE_FILE_IS_RETRIEVED_AND_HASHED"
+  },
+  "pbe_reference_setup": {
+    "source_class": "published method anchor",
+    "software_family": "Quantum ESPRESSO",
+    "exchange_correlation": "PBE",
+    "wavefunction_cutoff_Ry": 80,
+    "charge_density_cutoff_Ry": 500,
+    "chain_k_points": 12,
+    "pseudopotential_family": "ONCV/PBE norm-conserving",
+    "force_threshold_Ry_per_A": 0.0015,
+    "note": "Exact executable/version/pseudopotential files must be pinned before same-structure adjudication."
+  },
+  "gw_setup": {
+    "status": "UNRESOLVED_PENDING_VERSIONED_METHOD_INPUTS_OR_INDEPENDENT_PROTOCOL",
+    "required": [
+      "software and version",
+      "starting mean-field calculation",
+      "pseudopotential files and hashes",
+      "dielectric cutoff and frequency treatment",
+      "number of empty bands",
+      "k-grid and convergence sequence",
+      "self-energy approximation and self-consistency level",
+      "Coulomb truncation / dimensional treatment",
+      "numerical tolerances"
+    ]
+  },
+  "required_outputs_per_material_method": [
+    "structure_sha256",
+    "software_versions",
+    "input_file_sha256s",
+    "convergence_table",
+    "band_gap_eV",
+    "inversion_eigenvalues_at_Gamma_and_X_or_equivalent_occupied_manifold_invariant",
+    "Berry_or_Zak_phase_with_gauge_convention",
+    "Wannier_center_or_equivalent_topological_marker",
+    "SSH_t1_eV_and_t2_eV_if_fit_is_adequate",
+    "SSH_fit_covariance_and_residuals",
+    "topology_label",
+    "method_specific_uncertainty_or_stability_statement"
+  ],
+  "independent_checks": [
+    "parity/inversion classification versus Berry-or-Zak phase",
+    "direct band data versus SSH-fit classification when SSH fit is used",
+    "mesh/cutoff/band-count convergence around the discrete topology boundary"
+  ],
+  "decision_states": {
+    "PROMOTE_N7_TO_QG0D_TRANSPORT_REPRODUCTION": "N=7 is topological under both converged PBE and GW-level calculations on the identical hashed structure; parity/Berry paths agree; classification is stable to frozen convergence and fit uncertainty.",
+    "RETAIN_METHOD_DEPENDENCE": "PBE and GW-level calculations disagree on the identical hashed structure or independent topological markers disagree.",
+    "KILL_OR_PIVOT_POLYACENE_QG_BRANCH": "N=7 becomes trivial at the converged higher-level method or classification cannot be stabilized without discretionary tuning.",
+    "INCOMPLETE": "structure hashes differ, method inputs are unresolved, convergence is inadequate, or required independent markers are missing."
+  },
+  "forbidden_promotions": [
+    "Cross-study label agreement is not same-structure method consensus.",
+    "Published diffusion enhancement is not a project physical result.",
+    "Arithmetic exactness of printed literature values is not physical precision.",
+    "No phonon-limited transport reproduction claim before this adjudication reaches PROMOTE_N7_TO_QG0D_TRANSPORT_REPRODUCTION."
+  ],
+  "physical_result": "NONE_PROSPECTIVE_PROTOCOL_ONLY"
+}
