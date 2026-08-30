@@ -1,0 +1,106 @@
+{
+  "schema_version": "quantum-energy-quantum-geometry-sink-headroom-v3.74",
+  "title": "Quantum-geometry transport headroom for finite-lifetime sink capture",
+  "claim_class": "synthetic/model result with literature-derived motivation",
+  "publication_level": "exploratory",
+  "purpose": "Translate a possible quantum-geometry-driven exciton diffusion enhancement into a conservative sink-capture metric, and quantify how much relative environment/disorder penalty can erase that advantage. This does not reproduce a material-specific topological-exciton calculation or claim a project device has topological excitons.",
+  "source_provenance": [
+    {
+      "type": "primary literature",
+      "citation": "Thompson et al., Topologically enhanced exciton transport, Nature Communications 16, 11448 (2025)",
+      "doi": "10.1038/s41467-025-66276-9",
+      "published": "2025-12-13",
+      "license": "CC BY 4.0",
+      "used_for": [
+        "topological excitons predicted to enhance transport in free, phonon-limited, and polaronic regimes",
+        "up to approximately four-fold transport enhancement in the cited organic polyacene examples",
+        "quantum-metric contribution to exciton group velocity/diffusion",
+        "proposal to probe exciton quantum geometry with non-uniform electric fields",
+        "statement that dielectric environment, chemical modification, and temperature can tune relevant excitonic geometry/topology"
+      ]
+    },
+    {
+      "type": "primary literature",
+      "citation": "Jankowski et al., Excitonic topology and quantum geometry in organic semiconductors, Nature Communications 16, 4661 (2025)",
+      "doi": "10.1038/s41467-025-59257-5",
+      "published": "2025-05-19",
+      "used_for": [
+        "excitonic topology/quantum-geometry framework in organic semiconductors",
+        "topology-related lower bound on exciton centre-of-mass spread"
+      ]
+    },
+    {
+      "type": "primary literature complementary control precedent",
+      "citation": "Yu et al., Exciton Steering via Potential Landscape Engineered by Excited Electron-Hole Phase Transition, Physical Review Letters 136, 246901 (2026)",
+      "doi": "10.1103/sslb-bpc9",
+      "published": "2026-06-17",
+      "used_for": [
+        "all-optical reconfigurable exciton steering is experimentally possible in a different 2D material platform",
+        "future programmable-potential extension only"
+      ]
+    }
+  ],
+  "established_external_evidence": {
+    "topological_exciton_spread_bound": "xi^2 >= a^2 P_exc^2 / 4 in the cited 1D inversion-symmetric framework",
+    "important_boundary": "P_exc=0 removes the nonzero topological lower bound but does not imply a trivial exciton has zero size.",
+    "transport_result_boundary": "The approximately 4x transport enhancement is a result of the cited polyacene calculations, not a universal topological factor and not a project measurement.",
+    "field_probe_boundary": "The cited work proposes non-uniform electric-field gradients as a quantum-metric probe; it is not yet a project experiment."
+  },
+  "model": {
+    "geometry": "1D diffusion toward one absorbing sink a distance L away, with independent exponential exciton loss lifetime tau",
+    "capture_probability": "P_capture = exp[-L/sqrt(D*tau)]",
+    "dimensionless_distance": "x = L/sqrt(D0*tau)",
+    "effective_diffusion_gain": "G_eff = D_candidate/D_reference",
+    "capture_with_gain": "P(G_eff) = exp[-x/sqrt(G_eff)]",
+    "capture_gain": "P(G_eff)/P(1) = exp[x*(1 - 1/sqrt(G_eff))]",
+    "environment_relative_retention": "rho = r_candidate/r_reference, so G_eff = G_intrinsic*rho",
+    "advantage_condition": "G_intrinsic*rho > 1",
+    "break_even_relative_retention": "rho_break_even = 1/G_intrinsic"
+  },
+  "synthetic_fixture": {
+    "classification": "dimensionless software/planning sensitivity only",
+    "x_grid": [0.5, 1.0, 2.0, 3.0],
+    "intrinsic_gain_grid": [1.0, 1.5, 2.0, 4.0],
+    "headline_case": {
+      "x": 2.0,
+      "G_intrinsic": 4.0,
+      "P_reference": 0.1353352832366127,
+      "P_candidate": 0.36787944117144233,
+      "capture_gain": 2.718281828459045,
+      "rho_break_even": 0.25
+    },
+    "note": "The 4x value is included because it is within the cited polyacene calculation results. It is not assigned to any project material. x is dimensionless and is not a measured device geometry."
+  },
+  "independent_verification": {
+    "analytic_derivation": "Solve D u'' - tau^-1 u = 0 with absorbing-sink boundary u(0)=1 and u(infinity)=0.",
+    "monte_carlo": "Independently sample exact Brownian first-passage time T_hit=L^2/(2 D Z^2), Z~N(0,1), and exponential loss time T_loss~Exp(1/tau); estimate P(T_hit<T_loss).",
+    "mc_seed": 20260830,
+    "mc_draws": 100000,
+    "mc_absolute_tolerance": 0.008
+  },
+  "prospective_branch": {
+    "name": "QG-ENAQT: quantum-geometry x environment co-design",
+    "hypothesis": "A material or emulator with a verified quantum-geometric transport contribution can provide diffusion headroom that remains useful under realistic dephasing/phonon/disorder conditions and increases irreversible sink capture without requiring long-lived quantum memory.",
+    "stage_QG0": "Reproduce the dimensionless first-passage headroom model and independently reproduce or benchmark a published topological-exciton transport result.",
+    "stage_QG1": "Compare a topological candidate and a serious trivial/control system using exciton diffusion imaging; separately measure lifetime so D and tau are not conflated.",
+    "stage_QG2": "Apply a calibrated non-uniform electric-field gradient and test the predicted differential transport response while bounding dissociation/free-carrier artifacts.",
+    "stage_QG3": "Map temperature, dielectric environment, and controlled disorder/dephasing to test whether the geometric transport advantage persists or collapses.",
+    "stage_QG4": "Add an irreversible sink/quencher/electrical extraction boundary at controlled distance and test prospective capture gain against the first-passage prediction.",
+    "future_programmable_extension": "Only after QG1-QG4, combine geometry headroom with reconfigurable optical/electric potential landscapes for an exciton router or adaptive sink network."
+  },
+  "falsifiers_and_nulls": [
+    "Matched controls show no diffusion enhancement once exciton lifetime and crystal quality are separated.",
+    "The apparent advantage is explained by chemistry, morphology, defects, absorption, or lifetime rather than quantum geometry/topology.",
+    "Non-uniform fields primarily dissociate excitons or move free carriers, invalidating the proposed metric interpretation.",
+    "Interfaces/defects erase the bulk transport advantage before a useful sink distance is reached.",
+    "The candidate's environment/disorder penalty makes rho <= 1/G_intrinsic, eliminating net diffusion headroom.",
+    "Higher diffusion does not increase irreversible sink delivery or useful electrical work in the actual geometry."
+  ],
+  "explicit_non_claims": [
+    "No project material is claimed to host topological excitons.",
+    "No 4x diffusion enhancement is claimed for D18/PY-IT/eC9, PEA2PbI4, or any current device.",
+    "The first-passage model is not a full exciton-phonon, polaron, interface, or device simulation.",
+    "Topology is not assumed to protect transport from arbitrary disorder or defects.",
+    "This is not evidence of quantum computational advantage or fault-tolerant quantum information processing."
+  ]
+}
