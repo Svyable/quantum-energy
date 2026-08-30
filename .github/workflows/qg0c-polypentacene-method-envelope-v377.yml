@@ -1,0 +1,73 @@
+name: qg0c-polypentacene-method-envelope-v377
+
+on:
+  pull_request:
+    paths:
+      - 'models/qg0c_polypentacene_method_envelope_v377.py'
+      - 'models/qg0c_polypentacene_method_envelope_expected_v377.csv'
+      - 'machine/qg0c-polypentacene-method-envelope-v3.77.json'
+      - 'technical/qg0c-polypentacene-method-envelope-v3.77.md'
+      - 'research/evidence/qg0c-polypentacene-method-envelope-v3.77.md'
+      - 'research/sessions/2026-08-30-qg0c-polypentacene-method-envelope-v3.77.md'
+      - 'venture/v3.77-qg0c-method-dependence-decision.md'
+      - '.github/workflows/qg0c-polypentacene-method-envelope-v377.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Production calculation
+        run: python models/qg0c_polypentacene_method_envelope_v377.py --check-expected
+      - name: Frozen output regeneration
+        run: |
+          python models/qg0c_polypentacene_method_envelope_v377.py --write-expected /tmp/qg0c.csv
+          diff -u models/qg0c_polypentacene_method_envelope_expected_v377.csv /tmp/qg0c.csv
+      - name: False robust-material claim must fail closed
+        run: |
+          if python models/qg0c_polypentacene_method_envelope_v377.py --assert-robust-material-topology; then
+            echo 'ERROR: premature robust material-topology claim was accepted'
+            exit 1
+          fi
+      - name: Independent arithmetic and spectral identity
+        shell: python
+        run: |
+          from fractions import Fraction
+          import math
+          t1 = Fraction(33,100)
+          t2 = Fraction(52,100)
+          a = Fraction(689,100)
+          margin = (t2-t1)/(t2+t1)
+          assert margin == Fraction(19,85)
+          assert a/2 == Fraction(689,200)
+          assert a*a/4 == Fraction(474721,40000)
+          lr = math.log(float(t2/t1))
+          assert abs(lr/0.10 - 4.547361571149471) < 1e-13
+          assert abs(lr/0.05 - 9.094723142298942) < 1e-13
+          for i in range(1001):
+              k = -math.pi + 2*math.pi*i/1000
+              e12 = math.sqrt(float(t1*t1+t2*t2) + 2*float(t1*t2)*math.cos(k))
+              e21 = math.sqrt(float(t2*t2+t1*t1) + 2*float(t2*t1)*math.cos(k))
+              assert abs(e12-e21) < 1e-14
+          print('independent_qg0c_check=PASS')
+      - name: Machine contract blocks robust material claim
+        shell: python
+        run: |
+          import json
+          p = 'machine/qg0c-polypentacene-method-envelope-v3.77.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['method_conflict']['status'] == 'UNRESOLVED_METHOD_DEPENDENCE'
+          assert d['claim_boundary']['robust_material_topology'] is False
+          assert d['claim_boundary']['material_quantum_metric_reproduced'] is False
+          assert d['claim_boundary']['free_exciton_transport_reproduced'] is False
+          print('claim_boundary_guard=PASS')
