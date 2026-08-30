@@ -1,0 +1,37 @@
+name: ssh-exciton-geometry-v375
+on:
+  pull_request:
+    paths:
+      - 'models/ssh_exciton_geometry_replication_v375.py'
+      - 'research/evidence/ssh-exciton-geometry-replication-v3.75.md'
+      - '.github/workflows/ssh-exciton-geometry-v375.yml'
+  workflow_dispatch:
+jobs:
+  replicate:
+    strategy:
+      matrix:
+        python-version: ['3.12','3.13','3.14']
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax
+        run: python -m py_compile models/ssh_exciton_geometry_replication_v375.py
+      - name: Minimal SSH topology and metric replication
+        run: python models/ssh_exciton_geometry_replication_v375.py /tmp/qg.csv
+      - name: Independent output sanity
+        run: |
+          python - <<'PY'
+          import csv
+          with open('/tmp/qg.csv', newline='') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==4
+          by={r['case']:r for r in rows}
+          assert int(by['trivial_0p5']['winding'])==0
+          assert abs(int(by['topological_2']['winding']))==1
+          assert float(by['topological_2']['avg_metric_lattice2']) > float(by['trivial_0p5']['avg_metric_lattice2'])
+          assert float(by['topological_1p25']['avg_metric_lattice2']) > float(by['trivial_0p8']['avg_metric_lattice2'])
+          print('PASS independent CSV assertions')
+          PY
